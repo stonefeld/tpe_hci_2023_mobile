@@ -15,8 +15,16 @@
     <string name="welcome">Welcome!</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="enter_name">Enter name</string>
-    <string name="enter_mail">Enter mail</string>
-    <string name="enter_password">Enter password</string>
+    <string name="enter_username">Username</string>
+    <string name="enter_name">Name</string>
+    <string name="enter_lastname">Lastname</string>
+    <string name="enter_phone">Phone</string>
+    <string name="enter_mail">Mail</string>
+    <string name="enter_password">Password</string>
+    <string name="extra_info">Some extra information</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="terms">Accept terms and conditions</string>
+
 
 </resources>
