@@ -54,6 +54,19 @@ fun NavigationBar(modifier: Modifier = Modifier) {
         NavigationBarItem(
             icon = {
                 Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(stringResource(R.string.profile))
+            },
+            selected = false,
+            onClick = {}
+        )
+        NavigationBarItem(
+            icon = {
+                Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = null
                 )
