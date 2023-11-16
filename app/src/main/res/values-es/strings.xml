@@ -2,4 +2,7 @@
     <string name="app_name">vFit</string>
     <string name="goto_other_screen">Ir A Otra Pantalla</string>
     <string name="received_id">El valor del id es %1$d</string>
+    <string name="loading">Cargando usuarios...</string>
+    <string name="load_users">CARGAR USUARIOS</string>
+    <string name="dismiss">CERRAR</string>
 </resources>

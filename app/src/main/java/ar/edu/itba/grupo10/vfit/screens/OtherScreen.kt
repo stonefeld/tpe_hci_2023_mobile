@@ -1,4 +1,4 @@
-package ar.edu.itba.grupo10.vfit
+package ar.edu.itba.grupo10.vfit.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
 @Composable

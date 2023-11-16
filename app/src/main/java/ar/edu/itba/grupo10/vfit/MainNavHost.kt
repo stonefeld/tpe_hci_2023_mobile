@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import ar.edu.itba.grupo10.vfit.screens.HomeScreen
+import ar.edu.itba.grupo10.vfit.screens.OtherScreen
 
 @Composable
 fun MainNavHost(
