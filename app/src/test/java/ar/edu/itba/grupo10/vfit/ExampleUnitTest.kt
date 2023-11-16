@@ -1,4 +1,4 @@
-package com.grupo10.vfit
+package ar.edu.itba.grupo10.vfit
 
 import org.junit.Test
 
