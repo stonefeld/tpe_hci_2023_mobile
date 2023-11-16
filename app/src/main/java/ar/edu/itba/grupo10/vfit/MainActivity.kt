@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ar.edu.itba.grupo10.vfit.components.NavigationBar
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkData
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import coil.compose.AsyncImage
@@ -43,10 +44,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             VFitTheme {
                 val appState = rememberMyAppState()
-
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { appState.snackbarHostState }
+                    snackbarHost = { appState.snackbarHostState },
+                    bottomBar = { NavigationBar() }
                 ) { contentPadding ->
                     MainScreen(
                         modifier = Modifier.padding(contentPadding),

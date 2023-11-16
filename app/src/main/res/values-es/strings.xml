@@ -5,4 +5,7 @@
     <string name="loading">Cargando usuarios...</string>
     <string name="load_users">CARGAR USUARIOS</string>
     <string name="dismiss">CERRAR</string>
+    <string name="home">Inicio</string>
+    <string name="settings">Ajustes</string>
+    <string name="routines">Rutinas</string>
 </resources>
