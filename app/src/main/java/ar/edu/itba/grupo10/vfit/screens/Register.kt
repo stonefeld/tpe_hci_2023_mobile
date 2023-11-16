@@ -40,7 +40,7 @@ import androidx.compose.ui.res.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun RegisterScreen() {
     Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -49,19 +49,19 @@ fun LoginScreen() {
         ) {
 
             Text(
-                text = stringResource(R.string.welcome_back),
+                text = stringResource(R.string.welcome),
                 fontSize = 40.sp
             )
 
-            Image(
-                modifier = Modifier
-                    .width(width = 250.dp)
-                    .padding(25.dp)
-                    .clip(shape = RoundedCornerShape(size = 12.dp)),
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                )
+            var name by rememberSaveable { mutableStateOf("") };
+
+            TextField(
+                value = name,
+                modifier = Modifier.padding(25.dp),
+                onValueChange = { name = it },
+                label = { Text( text = stringResource(R.string.enter_name)) },
+                singleLine = true
+            )
 
             var mail by rememberSaveable { mutableStateOf("") };
 
@@ -95,7 +95,7 @@ fun LoginScreen() {
                 }
             )
 
-            OutlinedButtonExample {
+            OutlinedButtonRegister {
 
             }
 
@@ -104,17 +104,17 @@ fun LoginScreen() {
 }
 
 @Composable
-fun OutlinedButtonExample(onClick: () -> Unit) {
+fun OutlinedButtonRegister(onClick: () -> Unit) {
     OutlinedButton(onClick = { onClick() }) {
-        Text(text = stringResource(R.string.login),
+        Text(text = stringResource(R.string.register),
             fontSize = 30.sp)
 
     }
 }
 @Preview(showSystemUi = true, locale = "es")
 @Composable
-fun LoginScreenPreview() {
+fun RegisterScreenPreview() {
     VFitTheme {
-        LoginScreen()
+        RegisterScreen()
     }
 }
