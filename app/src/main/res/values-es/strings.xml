@@ -11,4 +11,6 @@
     <string name="profile">Perfil</string>
     <string name="welcome_back">Bienvenido</string>
     <string name="login">Ingresar</string>
+    <string name="home_title">¿Listo para entrenar?</string>
+    <string name="home_subtitle">¡Estás a punto de alcanzar tu objetivo semanal!</string>
 </resources>
