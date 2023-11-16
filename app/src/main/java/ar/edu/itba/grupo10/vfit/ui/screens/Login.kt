@@ -1,4 +1,4 @@
-package ar.edu.itba.grupo10.vfit.screens
+package ar.edu.itba.grupo10.vfit.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -37,10 +37,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
+) {
     Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,7 +66,7 @@ fun LoginScreen() {
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                )
+            )
 
             var mail by rememberSaveable { mutableStateOf("") };
 
@@ -87,30 +92,26 @@ fun LoginScreen() {
                 trailingIcon = {
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
                         val visibilityIcon =
-                            if (passwordHidden) Icons.Default.Add else Icons.Filled.Clear // cambiar iconitos
-                        // Please provide localized description for accessibility services
+                            if (passwordHidden) Icons.Default.Add else Icons.Filled.Clear // TODO: cambiar iconitos
+                        // TODO: IDIOMAS
                         val description = if (passwordHidden) "Show password" else "Hide password"
                         Icon(imageVector = visibilityIcon, contentDescription = description)
                     }
                 }
             )
-
-            OutlinedButtonExample {
-
+            OutlinedButton(onClick = {
+                viewModel.login("username", "password")
+            }) {
+                Text(
+                    text = stringResource(R.string.login),
+                    fontSize = 30.sp
+                )
             }
 
         }
     }
 }
 
-@Composable
-fun OutlinedButtonExample(onClick: () -> Unit) {
-    OutlinedButton(onClick = { onClick() }) {
-        Text(text = stringResource(R.string.login),
-            fontSize = 30.sp)
-
-    }
-}
 @Preview(showSystemUi = true, locale = "es")
 @Composable
 fun LoginScreenPreview() {

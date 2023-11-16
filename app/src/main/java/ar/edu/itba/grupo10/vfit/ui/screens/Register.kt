@@ -1,4 +1,4 @@
-package ar.edu.itba.grupo10.vfit.screens
+package ar.edu.itba.grupo10.vfit.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

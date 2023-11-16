@@ -1,39 +1,47 @@
-package ar.edu.itba.grupo10.vfit.screens
+package ar.edu.itba.grupo10.vfit.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.ui.components.TopBar
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
 @Composable
-fun OtherScreen(id: Int?) {
+fun Settings(
+    @StringRes text: Int,
+) {
     Surface {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(1f)
-        ) {
-            Text(
-                text = stringResource(R.string.received_id, id ?: "null"),
-                fontSize = 30.sp
-            )
+        Column {
+            Row {
+                TopBar(
+                    text = text
+                )
+            }
+            Row {
+
+            }
         }
     }
 }
 
 @Preview(showSystemUi = true, locale = "es")
 @Composable
-fun OtherScreenPreview() {
+fun SettingsPreview() {
     VFitTheme {
-        OtherScreen(id = 1234)
+        Settings(
+            text = R.string.settings
+        )
     }
 }

@@ -1,4 +1,4 @@
-package ar.edu.itba.grupo10.vfit.components
+package ar.edu.itba.grupo10.vfit.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -18,13 +18,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ar.edu.itba.grupo10.vfit.data.network.models.NetworkData
+import ar.edu.itba.grupo10.vfit.data.models.User
 import coil.compose.AsyncImage
 
 @Composable
 fun RoutineCard(
     modifier: Modifier = Modifier,
-    data: NetworkData
+    data: User
 ) {
     Card(
         border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 1.5.dp),
@@ -38,7 +38,7 @@ fun RoutineCard(
             modifier = Modifier.padding(10.dp).fillMaxSize()
         ) {
             AsyncImage(
-                model = data.avatar,
+                model = data.avatarUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

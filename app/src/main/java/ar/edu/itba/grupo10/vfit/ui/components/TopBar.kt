@@ -1,4 +1,4 @@
-package ar.edu.itba.grupo10.vfit.components
+package ar.edu.itba.grupo10.vfit.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
