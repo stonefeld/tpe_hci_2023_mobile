@@ -5,120 +5,105 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.itba.grupo10.vfit.data.DataSourceException
+import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
 import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
+import ar.edu.itba.grupo10.vfit.data.models.Error
+import ar.edu.itba.grupo10.vfit.data.models.Routine
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     sessionManager: SessionManager,
     private val userRepository: UserRepository,
-//    private val routinesRepository: RoutineRepository
+    private val routineRepository: RoutineRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainUIState(isAuthenticated = sessionManager.loadAuthToken() != null))
         private set
 
-    fun login(username: String, password: String) = viewModelScope.launch {
-        uiState = uiState.copy(
-            isLoading = true,
-            message = null
-        )
-        runCatching {
-            userRepository.login(username, password)
-        }.onSuccess {
-            uiState = uiState.copy(
-                isLoading = false,
-                isAuthenticated = true
-            )
-        }.onFailure { e ->
-            uiState = uiState.copy(
-                message = e.message,
-                isLoading = false
-            )
-        }
-    }
+    fun login(username: String, password: String) = runOnViewModelScope(
+        { userRepository.login(username, password) },
+        { state, _ -> state.copy(isAuthenticated = true) }
+    )
 
-    fun logout() = viewModelScope.launch {
-        uiState = uiState.copy(
-            isLoading = true,
-            message = null
-        )
-        runCatching {
-            userRepository.logout()
-        }.onSuccess {
-            uiState = uiState.copy(
-                isLoading = false,
+    fun logout() = runOnViewModelScope(
+        { userRepository.logout() },
+        { state, _ ->
+            state.copy(
                 isAuthenticated = false,
                 currentUser = null,
-//                routines = null
-            )
-        }.onFailure { e ->
-            uiState = uiState.copy(
-                message = e.message,
-                isLoading = false
+                routines = null,
             )
         }
-    }
+    )
 
-    fun register(username: String, email: String, password: String) = viewModelScope.launch {
-        uiState = uiState.copy(
-            isLoading = true,
-            message = null
-        )
-        runCatching {
-            userRepository.register(username, email, password)
-        }.onSuccess {
-            uiState = uiState.copy(
-                isLoading = false,
-                isAuthenticated = true
-            )
-        }.onFailure { e ->
-            uiState = uiState.copy(
-                message = e.message,
-                isLoading = false
+    fun register(username: String, email: String, password: String) = runOnViewModelScope(
+        { userRepository.register(username, email, password) },
+        { state, _ -> state }
+    )
+
+    fun getCurrentUser() = runOnViewModelScope(
+        { userRepository.getCurrentUser(uiState.currentUser == null) },
+        { state, response -> state.copy(currentUser = response) }
+    )
+
+    fun getRoutines() = runOnViewModelScope(
+        { routineRepository.getRoutines(true) },
+        { state, response -> state.copy(routines = response) }
+    )
+
+    fun getRoutine(routineId: Int) = runOnViewModelScope(
+        { routineRepository.getRoutine(routineId) },
+        { state, response -> state.copy(currentRoutine = response) }
+    )
+
+    fun addOrModifyRoutine(routine: Routine) = runOnViewModelScope(
+        {
+            if (routine.id == null)
+                routineRepository.createRoutine(routine)
+            else
+                routineRepository.modifyRoutine(routine)
+        },
+        { state, response ->
+            state.copy(
+                currentRoutine = response,
+                routines = null
             )
         }
-    }
+    )
 
-    fun getCurrentUser() = viewModelScope.launch {
-        uiState = uiState.copy(
-            isLoading = true,
-            message = null
-        )
+    fun deleteRoutine(routineId: Int) = runOnViewModelScope(
+        { routineRepository.deleteRoutine(routineId) },
+        { state, _ ->
+            state.copy(
+                currentRoutine = null,
+                routines = null
+            )
+        }
+    )
+
+    private fun <R> runOnViewModelScope(
+        block: suspend () -> R,
+        updateState: (MainUIState, R) -> MainUIState
+    ): Job = viewModelScope.launch {
+        uiState = uiState.copy(isLoading = true, error = null)
         runCatching {
-            userRepository.getCurrentUser(uiState.currentUser == null)
+            block()
         }.onSuccess { response ->
-            uiState = uiState.copy(
-                isLoading = false,
-                currentUser = response
-            )
+            uiState = updateState(uiState, response).copy(isLoading = false)
         }.onFailure { e ->
-            uiState = uiState.copy(
-                message = e.message,
-                isLoading = false
-            )
+            uiState = uiState.copy(isLoading = false, error = handleError(e))
         }
     }
 
-//    fun getRoutines() = viewModelScope.launch {
-//        uiState = uiState.copy(
-//            isLoading = true,
-//            message = null
-//        )
-//        runCatching {
-//            userRepository.getRoutines(true)
-//        }.onSuccess { response ->
-//            uiState = uiState.copy(
-//                isLoading = false,
-//                routines = response
-//            )
-//        }.onFailure { e ->
-//            uiState = uiState.copy(
-//                message = e.message,
-//                isLoading = false
-//            )
-//        }
-//    }
+    private fun handleError(e: Throwable): Error {
+        return if (e is DataSourceException) {
+            Error(e.code, e.message ?: "", e.details)
+        } else {
+            Error(null, e.message ?: "", null)
+        }
+    }
 
 }
