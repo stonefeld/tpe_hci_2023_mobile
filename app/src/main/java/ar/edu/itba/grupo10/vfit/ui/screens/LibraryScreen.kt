@@ -60,6 +60,8 @@ fun LibraryScreen()
         Column (horizontalAlignment = CenterHorizontally){
 
             ProfileHeader()
+            Divider(thickness=4.dp, color = colorScheme.primary)
+
             LibraryPagination()
         }
     }
@@ -85,7 +87,7 @@ fun ProfileHeader(){
         AsyncImage(model = "",  contentDescription = "FOTO_DE_PERFIL", modifier = Modifier
             .size(100.dp)
             .clip(CircleShape), contentScale = ContentScale.Crop)
-        Divider(thickness=4.dp, color = colorScheme.primary)
+        Text(text = "User Name", fontSize = 20.sp, fontWeight = FontWeight(700), modifier=Modifier.padding(32.dp))
     }
 
 }
@@ -130,7 +132,6 @@ fun LibraryPagination() {
 
 @Composable
 fun PaginationContent(str: String){
-    //Text(text = str, fontSize = 30.sp, modifier = Modifier.padding(8.dp))
     ListRoutineView()
 }
 
@@ -148,82 +149,10 @@ fun ListRoutineView(){
         .fillMaxWidth()
         .padding(horizontal = 6.dp)) {
 
-
-       RoutineItem()
-        // make a 5 routine view
-        //for (i in 0..4) {
-            /*
-            Divider(Modifier.padding(horizontal = 8.dp))
-            Row(
-                modifier = Modifier
-                    .padding(5.dp)
-            ) {
-
-                Text(
-                    text = name,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
-                //AsyncImage(model = "", contentDescription = "FOTO_DE_RUTINA", modifier = Modifier.size(100.dp).clip(CircleShape), contentScale = ContentScale.Crop)
-                Column {
-
-                    Row {
-                        Text(text = titulo, fontSize = 15.sp)
-                        Spacer(modifier = Modifier.size(80.dp))
-
-
-                        //tag
-                        Surface(
-                            color = MaterialTheme.colorScheme.onSecondary,
-                            shape = CircleShape
-                        ) {
-                            Row(modifier = Modifier.padding(2.dp)) {
-                                Icon(//clock icon
-                                    imageVector = Icons.Outlined.DateRange,
-                                    contentDescription = "star",
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Text(text = "$time'", fontSize = 15.sp)
-                            }
-                        }
-
-                        Surface(
-                            color = MaterialTheme.colorScheme.onSecondary,
-                            shape = CircleShape
-                        ) {
-                            Row(modifier = Modifier.padding(2.dp)) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Star,
-                                    contentDescription = "star",
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Text(text = score.toString(), fontSize = 15.sp)
-
-                            }
-                        }
-                        Spacer(modifier = Modifier.size(10.dp))
-
-                        for (i in tags.indices) {
-
-                            Surface(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = CircleShape,
-                                modifier = Modifier
-                                    .width(38.dp)
-                                    .height(22.dp),
-
-                            ) {
-                                Text(text = tags[i], fontSize = 15.sp, textAlign = TextAlign.Center)
-
-                            }
-                        }
-                    }
-                    Text(text = description, fontSize = 15.sp, modifier = Modifier.padding(0.dp))
-
-                }
-            }
+        for (i in 0..6) {
+            RoutineItem()
         }
-    */
+
     }
 }
 
@@ -244,25 +173,29 @@ fun RoutineItem() {
             headlineText = {
                 Text(fontWeight= FontWeight(700) , text="Routine")
             },
-            supportingText = { Text( text = "Secondary text Secondary textSecondary textSecondary textSecondary textSecondary text") },
+            supportingText = { Text( text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s") },
             trailingContent = {
-                Column (verticalArrangement = Arrangement.Top){
-                    Chip(name = "30'", icon = {
+              /*  Column (verticalArrangement = Arrangement.Top){
+                    Chip(name = "4", icon = {
                         Icon(
-                            Icons.Outlined.DateRange,
-                            contentDescription = "Localized description",
-                            modifier = Modifier.size(18.dp)
+                            Icons.Outlined.Star,
+                            contentDescription = "Star",
+                            modifier = Modifier.size(16.dp)
                         )
                     })
 
                 }
 
+               */
+
             },
             leadingContent = {
-                Icon(
-                    Icons.Filled.Favorite,
-                    contentDescription = "Localized description",
-                )
+
+                AsyncImage(model = "", contentDescription = "FOTO_DE_RUTINA", modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape), contentScale = ContentScale.Crop)
+
+
             }
         )
         Divider(Modifier.padding(horizontal = 8.dp))
@@ -272,14 +205,13 @@ fun RoutineItem() {
 @Composable
 fun Chip(name : String, icon : @Composable () -> Unit ) {
     Surface(
-        color = MaterialTheme.colorScheme.primary,
-        shape = RoundedCornerShape(20),
+        shape = RoundedCornerShape(40),
         modifier = Modifier
             .height(22.dp),
     ) {
         Row(modifier = Modifier.padding(horizontal = 1.dp)) {
+            Text(text = name, fontSize = 16.sp)
             icon.invoke()
-            Text(text = name, fontSize = 15.sp)
 
         }
     }
