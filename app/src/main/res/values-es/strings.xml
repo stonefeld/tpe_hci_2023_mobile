@@ -25,7 +25,8 @@
     <string name="male">Masculino</string>
     <string name="female">Femenino</string>
     <string name="terms">Aceptar terminos y condiciones</string>
-
+    <string name="url_photo">Link de la foto</string>
     <string name="color_mode">Habilitar Modo Oscuro</string>
     <string name="detailed_routine">Habilitar detalle de rutina</string>
+    <string name="birthday">Fecha de nacimiento</string>
 </resources>

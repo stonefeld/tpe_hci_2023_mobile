@@ -140,6 +140,26 @@ fun RegisterScreen(
                 singleLine = true
             )
 
+            var URL_photo by rememberSaveable { mutableStateOf("") };
+
+            TextField(
+                value = URL_photo,
+                modifier = Modifier.padding(20.dp),
+                onValueChange = { URL_photo = it },
+                label = { Text(text = stringResource(R.string.url_photo)) },
+                singleLine = true
+            )
+
+            var birthday by rememberSaveable { mutableStateOf("") };
+            // dejo esto como texto xq no hay datepicker de material design 3
+            TextField(
+                value = birthday,
+                modifier = Modifier.padding(20.dp),
+                onValueChange = { birthday = it },
+                label = { Text(text = stringResource(R.string.birthday)) },
+                singleLine = true
+            )
+
             val context = LocalContext.current
             val coffeeDrinks = arrayOf("Male", "Female")
             var expanded by remember { mutableStateOf(false) }
