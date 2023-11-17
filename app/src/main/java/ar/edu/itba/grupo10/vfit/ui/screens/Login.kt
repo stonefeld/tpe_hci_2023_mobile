@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -46,6 +47,7 @@ import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavHostController,
@@ -105,7 +107,7 @@ fun LoginScreen(
             )
             OutlinedButton(
                 onClick = {
-//                    viewModel.login(username, password, onLoginSuccess)
+                    viewModel.login(username, password, onLoginSuccess)
                 },
                 modifier = Modifier
                     .padding(10.dp)
@@ -122,7 +124,7 @@ fun LoginScreen(
             }
             OutlinedButton(
                 onClick = {
-//                    navController.navigate("register")
+                    navController.navigate("register")
                 },
                 modifier = Modifier
                     .padding(10.dp)
@@ -141,11 +143,3 @@ fun LoginScreen(
         }
     }
 }
-
-//@Preview(showSystemUi = true, locale = "es")
-//@Composable
-//fun LoginScreenPreview() {
-//    VFitTheme {
-//        LoginScreen()
-//    }
-//}

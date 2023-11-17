@@ -6,18 +6,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.grupo10.vfit.data.DataSourceException
+import ar.edu.itba.grupo10.vfit.data.models.Cycle
 import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
 import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
 import ar.edu.itba.grupo10.vfit.data.models.Error
 import ar.edu.itba.grupo10.vfit.data.models.Routine
+import ar.edu.itba.grupo10.vfit.data.repository.CycleRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     sessionManager: SessionManager,
     private val userRepository: UserRepository,
-    private val routineRepository: RoutineRepository
+    private val routineRepository: RoutineRepository,
+    private val cycleRepository: CycleRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainUIState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -82,6 +85,41 @@ class MainViewModel(
             state.copy(
                 currentRoutine = null,
                 routines = null
+            )
+        }
+    )
+
+    fun getCycles(routineId: Int) = runOnViewModelScope(
+        { cycleRepository.getCycles(true, routineId) },
+        { state, response -> state.copy(cycles = response) }
+    )
+
+    fun getCycle(routineId: Int, cycleId: Int) = runOnViewModelScope(
+        { cycleRepository.getCycle(routineId, cycleId) },
+        { state, response -> state.copy(currentCycle = response) }
+    )
+
+    fun addOrModifyCycle(routineId: Int, cycle: Cycle) = runOnViewModelScope(
+        {
+            if (cycle.id == null)
+                cycleRepository.createCycle(routineId, cycle)
+            else
+                cycleRepository.modifyCycle(routineId, cycle)
+        },
+        { state, response ->
+            state.copy(
+                currentCycle = response,
+                cycles = null
+            )
+        }
+    )
+
+    fun deleteCycle(routineId: Int, cycleId: Int) = runOnViewModelScope(
+        { cycleRepository.deleteCycle(routineId, cycleId) },
+        { state, _ ->
+            state.copy(
+                currentCycle = null,
+                cycles = null
             )
         }
     )

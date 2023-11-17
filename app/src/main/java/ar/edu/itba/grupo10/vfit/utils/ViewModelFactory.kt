@@ -5,6 +5,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
+import ar.edu.itba.grupo10.vfit.data.repository.CycleRepository
 import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
 import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
@@ -14,6 +15,7 @@ class ViewModelFactory constructor(
     private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val routineRepository: RoutineRepository,
+    private val cycleRepository: CycleRepository,
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -24,7 +26,13 @@ class ViewModelFactory constructor(
         handle: SavedStateHandle
     ) = with(modelClass) {
         when {
-            isAssignableFrom(MainViewModel::class.java) -> MainViewModel(sessionManager, userRepository, routineRepository)
+            isAssignableFrom(MainViewModel::class.java) -> MainViewModel(
+                sessionManager,
+                userRepository,
+                routineRepository,
+                cycleRepository
+            )
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
     } as T

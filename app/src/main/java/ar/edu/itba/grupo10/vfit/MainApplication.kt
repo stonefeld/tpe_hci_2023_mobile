@@ -1,9 +1,11 @@
 package ar.edu.itba.grupo10.vfit
 
 import android.app.Application
+import ar.edu.itba.grupo10.vfit.data.network.CycleRemoteDataSource
 import ar.edu.itba.grupo10.vfit.data.network.RoutineRemoteDataSource
 import ar.edu.itba.grupo10.vfit.data.network.UserRemoteDataSource
 import ar.edu.itba.grupo10.vfit.data.network.api.RetrofitClient
+import ar.edu.itba.grupo10.vfit.data.repository.CycleRepository
 import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
 import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
@@ -16,6 +18,9 @@ class MainApplication : Application() {
     private val routineRemoteDataSource: RoutineRemoteDataSource
         get() = RoutineRemoteDataSource(RetrofitClient.getApiRoutineService(this))
 
+    private val cycleRemoteDataSource: CycleRemoteDataSource
+        get() = CycleRemoteDataSource(RetrofitClient.getApiCycleService(this))
+
     val sessionManager: SessionManager
         get() = SessionManager(this)
 
@@ -24,5 +29,8 @@ class MainApplication : Application() {
 
     val routineRepository: RoutineRepository
         get() = RoutineRepository(routineRemoteDataSource)
+
+    val cycleRepository: CycleRepository
+        get() = CycleRepository(cycleRemoteDataSource)
 
 }
