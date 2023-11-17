@@ -68,7 +68,7 @@ fun LoginScreen(
                 contentScale = ContentScale.Crop,
             )
 
-            var mail by rememberSaveable { mutableStateOf("") };
+            var mail by rememberSaveable { mutableStateOf("") }
 
             TextField(
                 value = mail,

@@ -2,6 +2,7 @@ package ar.edu.itba.grupo10.vfit.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -22,7 +23,7 @@ import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 fun NavigationBar(modifier: Modifier = Modifier) {
     NavigationBar (
         containerColor = colorScheme.primary,
-        contentColor = colorScheme.onPrimary,
+        contentColor = colorScheme.primary,
         modifier = modifier
     ) {
         NavigationBarItem(
@@ -41,7 +42,7 @@ fun NavigationBar(modifier: Modifier = Modifier) {
         NavigationBarItem(
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Person,
+                    imageVector = Icons.Default.FitnessCenter,
                     contentDescription = null
                 )
             },

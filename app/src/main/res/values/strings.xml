@@ -27,4 +27,6 @@
     <string name="terms">Accept terms and conditions</string>
 
 
+    <string name="color_mode">Enable Dark Mode</string>
+    <string name="detailed_routine">Enable Detailed Routine</string>
 </resources>

@@ -27,10 +27,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "API_BASE_URL", "\"http://172.22.0.113:8080/api/\"")
+            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.198:8080/api/\"")
         }
         debug {
-            buildConfigField("String", "API_BASE_URL", "\"http://172.22.0.113:8080/api/\"")
+            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.198:8080/api/\"")
         }
     }
     compileOptions {
@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
 
     /* viewmodels */
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
