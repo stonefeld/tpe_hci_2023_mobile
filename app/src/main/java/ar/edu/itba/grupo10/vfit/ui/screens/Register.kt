@@ -40,7 +40,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -65,7 +64,7 @@ fun RegisterScreen(
                 fontSize = 40.sp
             )
 
-            var username by rememberSaveable { mutableStateOf("") };
+            var username by rememberSaveable { mutableStateOf("") }
 
             TextField(
                 value = username,
@@ -75,7 +74,7 @@ fun RegisterScreen(
                 singleLine = true
             )
 
-            var mail by rememberSaveable { mutableStateOf("") };
+            var mail by rememberSaveable { mutableStateOf("") }
 
             TextField(
                 value = mail,
@@ -112,8 +111,8 @@ fun RegisterScreen(
                 fontSize = 25.sp
             )
 
-            var firstName by rememberSaveable { mutableStateOf("") };
-            var lastName by rememberSaveable { mutableStateOf("") };
+            var firstName by rememberSaveable { mutableStateOf("") }
+            var lastName by rememberSaveable { mutableStateOf("") }
 
             TextField(
                 value = firstName,
@@ -130,7 +129,7 @@ fun RegisterScreen(
                 singleLine = true
             )
 
-            var phone by rememberSaveable { mutableStateOf("") };
+            var phone by rememberSaveable { mutableStateOf("") }
 
             TextField(
                 value = phone,
@@ -196,7 +195,7 @@ fun RegisterScreen(
                 }
             }
 
-            val checkedState by rememberSaveable { mutableStateOf(false) };
+            val checkedState by rememberSaveable { mutableStateOf(false) }
 
             Row(
                 modifier = Modifier

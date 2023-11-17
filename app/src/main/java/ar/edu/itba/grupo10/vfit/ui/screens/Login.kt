@@ -3,7 +3,9 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -11,8 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
@@ -37,9 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,27 +98,44 @@ fun LoginScreen(
                 trailingIcon = {
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
                         val visibilityIcon =
-                            if (passwordHidden) Icons.Default.Add else Icons.Filled.Clear // TODO: cambiar iconitos
+                            if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff // TODO: cambiar iconitos
                         Icon(imageVector = visibilityIcon, contentDescription = null)
                     }
                 }
             )
-            OutlinedButton(onClick = {
+            OutlinedButton(
+                onClick = {
                 viewModel.login(username, password)
-            }) {
-                Text(
-                    text = stringResource(R.string.login),
-                    fontSize = 30.sp
-                )
+            },
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(0.7f),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.login),
+                        fontSize = 25.sp
+                    )
+                }
             }
-            OutlinedButton(onClick = {
+            OutlinedButton(
+                onClick = {
                 navController.navigate("register")
-            }) {
-                Text(
-                    text = stringResource(R.string.register),
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(10.dp)
-                )
+            },
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(0.7f)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.register),
+                        fontSize = 25.sp
+                    )
+                }
             }
 
         }

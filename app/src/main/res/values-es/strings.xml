@@ -29,4 +29,8 @@
     <string name="color_mode">Habilitar Modo Oscuro</string>
     <string name="detailed_routine">Habilitar detalle de rutina</string>
     <string name="birthday">Fecha de nacimiento</string>
+    <string name="verify">Verifique su email</string>
+    <string name="code_email">Debería haber recibido un código via email</string>
+    <string name="resend">Reenviar código</string>
+    <string name="enter_code">Ingrese el código</string>
 </resources>
