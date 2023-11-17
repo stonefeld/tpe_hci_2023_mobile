@@ -18,13 +18,14 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.models.User
 import coil.compose.AsyncImage
 
 @Composable
 fun RoutineCard(
     modifier: Modifier = Modifier,
-    data: User
+    data: Routine
 ) {
     Card(
         border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 1.5.dp),
@@ -38,14 +39,14 @@ fun RoutineCard(
             modifier = Modifier.padding(10.dp).fillMaxSize()
         ) {
             AsyncImage(
-                model = data.avatarUrl,
+                model = "",
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RectangleShape)
             )
-            Text(text = "${data.firstName} ${data.lastName}", fontWeight = FontWeight.W600)
+            Text(text = "${data.name} ${data.detail}", fontWeight = FontWeight.W600)
         }
     }
 }

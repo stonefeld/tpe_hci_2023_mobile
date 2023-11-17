@@ -1,9 +1,6 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
-import android.graphics.drawable.Icon
-import android.util.Log
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,51 +20,40 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ButtonDefaults.elevatedButtonColors
-import androidx.compose.material3.ChipColors
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
-import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import coil.compose.AsyncImage
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
-fun LibraryScreen()
- {
-
+fun LibraryScreen() {
     Surface(modifier = Modifier.fillMaxSize(1f)) {
-        Column (horizontalAlignment = CenterHorizontally){
+        Column(horizontalAlignment = CenterHorizontally) {
             ProfileHeader()
             LibraryPagination()
         }
     }
-
 }
+
 @Preview(showSystemUi = true, locale = "es")
 @Composable
 fun LibraryScreenPreview() {
@@ -77,8 +63,8 @@ fun LibraryScreenPreview() {
 }
 
 @Composable
-fun ProfileHeader(){
-   // need to make a profile photo and background image
+fun ProfileHeader() {
+    // need to make a profile photo and background image
     Box {
         AsyncImage(
             model = "", contentDescription = "FOTO_PORTADA", modifier = Modifier
@@ -97,7 +83,7 @@ fun ProfileHeader(){
                 )
                 Spacer(modifier = Modifier.size(40.dp))
                 Column {
-                    Spacer(modifier = Modifier.size(50.dp)  )
+                    Spacer(modifier = Modifier.size(50.dp))
                     Text(
                         text = "User Name",
                         fontSize = 20.sp,
@@ -108,12 +94,13 @@ fun ProfileHeader(){
             }
         }
     }
-    Divider( modifier = Modifier
-        .fillMaxWidth()
-        .height(4.dp)
-        , color = colorScheme.primary)
-
+    Divider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(4.dp), color = colorScheme.primary
+    )
 }
+
 @Composable
 fun LibraryPagination() {
 
@@ -154,42 +141,39 @@ fun LibraryPagination() {
 }
 
 @Composable
-fun PaginationContent(str: String){
+fun PaginationContent(str: String) {
     ListRoutineView()
 }
 
-
 @Composable
-fun ListRoutineView(){
+fun ListRoutineView() {
     // need to make a list of routines
     val name = "rutina"
     val titulo = "Epic Routine"
     val score = 4
     val tags = listOf<String>("Abs")
     val time = 30
-    val description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    Column(horizontalAlignment = CenterHorizontally, modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 6.dp)) {
-
+    val description =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    Column(
+        horizontalAlignment = CenterHorizontally, modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 6.dp)
+    ) {
         for (i in 0..6) {
             RoutineItem()
-            Divider(Modifier.padding(horizontal = 8.dp))
         }
-
     }
 }
-
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun RoutineItem() {
-
-
-    Row (horizontalArrangement = Arrangement.Start, modifier = Modifier
-        .fillMaxWidth(1f)
-        .padding(vertical = 1.dp)){
-
+    Row(
+        horizontalArrangement = Arrangement.Start, modifier = Modifier
+            .fillMaxWidth(1f)
+            .padding(vertical = 1.dp)
+    ) {
         ListItem(
             modifier = Modifier
                 .height(100.dp)
@@ -197,23 +181,43 @@ fun RoutineItem() {
                 .fillMaxWidth(0.75f)
                 .padding(0.dp),
             headlineText = {
-                Text(fontWeight= FontWeight(700) , text="Routine")
+                Text(fontWeight = FontWeight(700), text = "Routine")
             },
-            supportingText = { Text( modifier = Modifier.fillMaxWidth(0.85f), text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s") },
+            trailingContent = {
+                /*  Column (verticalArrangement = Arrangement.Top){
+                      Chip(name = "4", icon = {
+                          Icon(
+                              Icons.Outlined.Star,
+                              contentDescription = "Star",
+                              modifier = Modifier.size(16.dp)
+                          )
+                      })
+
+                  }
+                 */
+            },
+            supportingText = {
+                Text(
+                    modifier = Modifier.fillMaxWidth(0.85f),
+                    text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+                )
+            },
 
             leadingContent = {
 
-                AsyncImage(model = "", contentDescription = "FOTO_DE_RUTINA", modifier = Modifier
-                    .height(70.dp)
-                    .width(65.dp)
-                    .border(1.dp, colorScheme.primary, RoundedCornerShape(20))
-                    .clip(CircleShape), contentScale = ContentScale.Crop)
+                AsyncImage(
+                    model = "", contentDescription = "FOTO_DE_RUTINA", modifier = Modifier
+                        .height(70.dp)
+                        .width(65.dp)
+                        .border(1.dp, colorScheme.primary, RoundedCornerShape(20))
+                        .clip(CircleShape), contentScale = ContentScale.Crop
+                )
             }
         )
 
-        Row (modifier = Modifier.padding(vertical = 8.dp) ){
+        Row(modifier = Modifier.padding(vertical = 8.dp)) {
 
-            Chip(name = "30'"){
+            Chip(name = "30'") {
 
                 Icon(
                     imageVector = Icons.Outlined.Schedule,
@@ -222,7 +226,7 @@ fun RoutineItem() {
                         .size(20.dp)
                 )
             }
-            Chip(name = "4"){
+            Chip(name = "4") {
 
                 Icon(
                     imageVector = Icons.Outlined.Star,
@@ -233,13 +237,12 @@ fun RoutineItem() {
             }
 
 
-
         }
     }
 }
 
 @Composable
-fun Chip(name : String, icon : @Composable () -> Unit ) {
+fun Chip(name: String, icon: @Composable () -> Unit) {
     Surface(
         shape = RoundedCornerShape(30),
         color = colorScheme.secondary,

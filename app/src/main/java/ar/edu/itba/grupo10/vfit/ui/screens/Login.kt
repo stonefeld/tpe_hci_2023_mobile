@@ -50,7 +50,8 @@ import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    onLoginSuccess: () -> Unit = {}
 ) {
     Surface {
         Column(
@@ -105,8 +106,8 @@ fun LoginScreen(
             )
             OutlinedButton(
                 onClick = {
-                viewModel.login(username, password)
-            },
+                    viewModel.login(username, password, onLoginSuccess)
+                },
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth(0.7f),
@@ -122,8 +123,8 @@ fun LoginScreen(
             }
             OutlinedButton(
                 onClick = {
-                navController.navigate("register")
-            },
+                    navController.navigate("register")
+                },
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth(0.7f)

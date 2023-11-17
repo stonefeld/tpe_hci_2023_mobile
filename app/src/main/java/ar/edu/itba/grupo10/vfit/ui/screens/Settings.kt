@@ -55,7 +55,7 @@ fun SettingsScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.color_mode),
-                                )
+                            )
                         }
                         Column(
                             modifier = Modifier.fillMaxWidth(1f),

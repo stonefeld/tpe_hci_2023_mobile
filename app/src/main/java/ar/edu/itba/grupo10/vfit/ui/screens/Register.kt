@@ -43,12 +43,14 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
+    navController: NavHostController,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
 ) {
     Surface {
@@ -224,14 +226,5 @@ fun RegisterScreen(
                 )
             }
         }
-    }
-}
-
-
-@Preview(showSystemUi = true, locale = "es")
-@Composable
-fun RegisterScreenPreview() {
-    VFitTheme {
-        RegisterScreen()
     }
 }

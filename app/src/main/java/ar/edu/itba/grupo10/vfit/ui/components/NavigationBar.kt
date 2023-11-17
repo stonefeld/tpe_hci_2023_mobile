@@ -1,6 +1,7 @@
 package ar.edu.itba.grupo10.vfit.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -19,109 +20,43 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.ui.main.Screen
 
 @Composable
 fun NavigationBar(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    val items = listOf(
+        Screen.Home,
+        Screen.Routine,
+        Screen.Profile,
+        Screen.Settings
+    )
 
     NavigationBar(
+        modifier = modifier,
         containerColor = colorScheme.primary,
-        contentColor = colorScheme.primary,
-        modifier = modifier
+        contentColor = colorScheme.primary
     ) {
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Home,
-                    contentDescription = null
-                )
-            },
-            label = {
-                Text(stringResource(R.string.home))
-            },
-            selected = currentDestination?.hierarchy?.any {
-                it.route == "home"
-            } == true,
-            onClick = {
-                navController.navigate("home") {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
+
+        items.forEach { screen ->
+            NavigationBarItem(
+                icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                label = { Text(stringResource(screen.resourceId)) },
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
-            }
-        )
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.FitnessCenter,
-                    contentDescription = null
-                )
-            },
-            label = {
-                Text(stringResource(R.string.routines))
-            },
-            selected = currentDestination?.hierarchy?.any {
-                it.route == "routines"
-            } == true,
-            onClick = {
-                navController.navigate("routines") {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
-            }
-        )
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = null
-                )
-            },
-            label = {
-                Text(stringResource(R.string.profile))
-            },
-            selected = currentDestination?.hierarchy?.any {
-                it.route == "profile"
-            } == true,
-            onClick = {
-                navController.navigate("profile") {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
-            }
-        )
-        NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = null
-                )
-            },
-            label = {
-                Text(stringResource(R.string.settings))
-            },
-            selected = currentDestination?.hierarchy?.any {
-                it.route == "settings"
-            } == true,
-            onClick = {
-                navController.navigate("settings") {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
-            }
-        )
+            )
+        }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun BottomNavigationPreview() {
-//    val largePadding = dimensionResource(R.dimen.large_padding)
-//
-//    VFitTheme {
-//        NavigationBar(Modifier.padding(top = largePadding))
-//    }
-//}

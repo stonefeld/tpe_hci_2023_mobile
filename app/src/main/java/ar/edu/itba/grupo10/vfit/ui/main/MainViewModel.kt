@@ -23,12 +23,13 @@ class MainViewModel(
     var uiState by mutableStateOf(MainUIState(isAuthenticated = sessionManager.loadAuthToken() != null))
         private set
 
-    fun login(username: String, password: String) = runOnViewModelScope(
+    fun login(username: String, password: String, onSuccess: () -> Unit) = runOnViewModelScope(
         { userRepository.login(username, password) },
-        { state, _ -> state.copy(isAuthenticated = true) }
+        { state, _ -> state.copy(isAuthenticated = true) },
+        onSuccess
     )
 
-    fun logout() = runOnViewModelScope(
+    fun logout(onSuccess: () -> Unit) = runOnViewModelScope(
         { userRepository.logout() },
         { state, _ ->
             state.copy(
@@ -36,7 +37,8 @@ class MainViewModel(
                 currentUser = null,
                 routines = null,
             )
-        }
+        },
+        onSuccess
     )
 
     fun register(username: String, email: String, password: String) = runOnViewModelScope(
@@ -86,13 +88,15 @@ class MainViewModel(
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (MainUIState, R) -> MainUIState
+        updateState: (MainUIState, R) -> MainUIState,
+        onSuccess: () -> Unit = {}
     ): Job = viewModelScope.launch {
         uiState = uiState.copy(isLoading = true, error = null)
         runCatching {
             block()
         }.onSuccess { response ->
             uiState = updateState(uiState, response).copy(isLoading = false)
+            onSuccess()
         }.onFailure { e ->
             uiState = uiState.copy(isLoading = false, error = handleError(e))
         }
