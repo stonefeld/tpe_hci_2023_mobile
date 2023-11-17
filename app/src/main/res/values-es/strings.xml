@@ -9,7 +9,7 @@
     <string name="settings">Ajustes</string>
     <string name="routines">Rutinas</string>
     <string name="profile">Perfil</string>
-    <string name="welcome_back">Bienvenido otra vez!</string>
+    <string name="welcome_back">Bienvenido</string>
     <string name="login">Ingresar</string>
     <string name="home_title">¿Listo para entrenar?</string>
     <string name="home_subtitle">¡Estás a punto de alcanzar tu objetivo semanal!</string>
@@ -26,4 +26,6 @@
     <string name="female">Femenino</string>
     <string name="terms">Aceptar terminos y condiciones</string>
 
+    <string name="color_mode">Habilitar Modo Oscuro</string>
+    <string name="detailed_routine">Habilitar detalle de rutina</string>
 </resources>
