@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "ar.edu.itba.grupo10.vfit"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -28,9 +28,11 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "API_BASE_URL", "\"http://192.168.1.101:8080/api/\"")
+// paki           buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.198:8080/api/\"")
         }
         debug {
             buildConfigField("String", "API_BASE_URL", "\"http://192.168.1.101:8080/api/\"")
+// paki           buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.198:8080/api/\"")
         }
     }
     compileOptions {
@@ -79,6 +81,7 @@ dependencies {
 
     /* image loading */
     implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("androidx.benchmark:benchmark-macro:1.2.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

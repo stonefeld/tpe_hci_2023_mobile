@@ -25,7 +25,7 @@ import ar.edu.itba.grupo10.vfit.ui.components.TopBar
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
 @Composable
-fun Settings(
+fun SettingsScreen(
     @StringRes text: Int,
 ) {
     Surface {
@@ -38,22 +38,27 @@ fun Settings(
                 )
             }
             Row(
+                modifier = Modifier.fillMaxWidth(1f)
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(1f),
+                        modifier = Modifier
+                            .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 20.dp)
+                            .fillMaxWidth(1f),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(
-                            modifier = Modifier.padding(10.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.Start
                         ) {
-                            Text(text = stringResource(R.string.color_mode))
+                            Text(
+                                text = stringResource(R.string.color_mode),
+                                )
                         }
                         Column(
-                            modifier = Modifier.padding(10.dp),
+                            modifier = Modifier.fillMaxWidth(1f),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.End
                         ) {
@@ -67,17 +72,21 @@ fun Settings(
                         }
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth(1f),
+                        modifier = Modifier
+                            .padding(start = 30.dp, end = 30.dp, bottom = 20.dp)
+                            .fillMaxWidth(1f),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(
-                            modifier = Modifier.padding(10.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.Start
                         ) {
-                            Text(text = stringResource(R.string.detailed_routine))
+                            Text(
+                                text = stringResource(R.string.detailed_routine),
+                            )
                         }
                         Column(
-                            modifier = Modifier.padding(10.dp),
+                            modifier = Modifier.fillMaxWidth(1f),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.End
                         ) {
@@ -100,7 +109,7 @@ fun Settings(
 @Composable
 fun SettingsPreview() {
     VFitTheme {
-        Settings(
+        SettingsScreen(
             text = R.string.settings
         )
     }

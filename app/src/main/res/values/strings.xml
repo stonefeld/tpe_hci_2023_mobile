@@ -27,4 +27,10 @@
     <string name="terms">Accept terms and conditions</string>
     <string name="color_mode">Enable Dark Mode</string>
     <string name="detailed_routine">Enable Detailed Routine</string>
+    <string name="url_photo">URL photo</string>
+    <string name="birthday">Birthday</string>
+    <string name="verify">Verify your Email</string>
+    <string name="code_email">You should have received a code via email</string>
+    <string name="resend">Resend code</string>
+    <string name="enter_code">Enter code</string>
 </resources>
