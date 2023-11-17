@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -41,13 +42,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen() {
-    Surface {
+    Surface{
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -63,7 +65,7 @@ fun RegisterScreen() {
 
             TextField(
                 value = username,
-                modifier = Modifier.padding(25.dp),
+                modifier = Modifier.padding(20.dp),
                 onValueChange = { username = it },
                 label = { Text( text = stringResource(R.string.enter_username)) },
                 singleLine = true
@@ -89,7 +91,7 @@ fun RegisterScreen() {
                 visualTransformation =
                 if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.padding(25.dp),
+                modifier = Modifier.padding(20.dp),
                 trailingIcon = {
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
                         val visibilityIcon =
@@ -113,7 +115,7 @@ fun RegisterScreen() {
 
             TextField(
                 value = name,
-                modifier = Modifier.padding(25.dp),
+                modifier = Modifier.padding(20.dp),
                 onValueChange = { name = it },
                 label = { Text( text = stringResource(R.string.enter_name)) },
                 singleLine = true
@@ -131,7 +133,7 @@ fun RegisterScreen() {
 
             TextField(
                 value = phone,
-                modifier = Modifier.padding(25.dp),
+                modifier = Modifier.padding(20.dp),
                 onValueChange = { phone = it },
                 label = { Text( text = stringResource(R.string.enter_phone)) },
                 singleLine = true
@@ -178,14 +180,22 @@ fun RegisterScreen() {
             var checkedState by rememberSaveable { mutableStateOf(false) };
 
 
-            Row{
+            Row(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .padding(start = 45.dp)
+                    .fillMaxWidth(1f),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Checkbox(
                     checked = checkedState,
-                    onCheckedChange = null // null recommended for accessibility with screenreaders
+                    onCheckedChange = null, // null recommended for accessibility with screenreaders
                 )
                 Text(
                     text = stringResource(R.string.terms),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 10.dp),
                 )
             }
 

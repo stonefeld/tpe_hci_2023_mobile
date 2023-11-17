@@ -61,7 +61,7 @@ fun TopBar(
 
 @Preview(showBackground = true)
 @Composable
-fun FruitSaladTopAppBarPreview() {
+fun TopBarPreview() {
     VFitTheme {
         TopBar(
             text = R.string.app_name
