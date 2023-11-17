@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.DividerDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -36,24 +37,29 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
+) {
     Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(1f)
+            modifier = Modifier
+                .fillMaxSize(1f)
+                .verticalScroll(rememberScrollState())
         ) {
-
             Text(
                 text = stringResource(R.string.welcome),
                 fontSize = 40.sp
@@ -63,9 +69,9 @@ fun RegisterScreen() {
 
             TextField(
                 value = username,
-                modifier = Modifier.padding(25.dp),
+                modifier = Modifier.padding(20.dp),
                 onValueChange = { username = it },
-                label = { Text( text = stringResource(R.string.enter_username)) },
+                label = { Text(text = stringResource(R.string.enter_username)) },
                 singleLine = true
             )
 
@@ -74,7 +80,7 @@ fun RegisterScreen() {
             TextField(
                 value = mail,
                 onValueChange = { mail = it },
-                label = { Text( text = stringResource(R.string.enter_mail)) },
+                label = { Text(text = stringResource(R.string.enter_username)) },
                 singleLine = true
             )
 
@@ -85,11 +91,11 @@ fun RegisterScreen() {
                 value = password,
                 onValueChange = { password = it },
                 singleLine = true,
-                label = { Text( text = stringResource(R.string.enter_password)) },
+                label = { Text(text = stringResource(R.string.enter_password)) },
                 visualTransformation =
                 if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.padding(25.dp),
+                modifier = Modifier.padding(20.dp),
                 trailingIcon = {
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
                         val visibilityIcon =
@@ -101,29 +107,26 @@ fun RegisterScreen() {
                 }
             )
 
-
-            HorizontalDivider()
-
-
             Text(
                 text = stringResource(R.string.extra_info),
                 fontSize = 25.sp
             )
-            var name by rememberSaveable { mutableStateOf("") };
+
+            var firstName by rememberSaveable { mutableStateOf("") };
+            var lastName by rememberSaveable { mutableStateOf("") };
 
             TextField(
-                value = name,
+                value = firstName,
                 modifier = Modifier.padding(25.dp),
-                onValueChange = { name = it },
-                label = { Text( text = stringResource(R.string.enter_name)) },
+                onValueChange = { firstName = it },
+                label = { Text(text = stringResource(R.string.enter_name)) },
                 singleLine = true
             )
-            var lastname by rememberSaveable { mutableStateOf("") };
 
             TextField(
-                value = lastname,
-                onValueChange = { lastname = it },
-                label = { Text( text = stringResource(R.string.enter_lastname)) },
+                value = lastName,
+                onValueChange = { lastName = it },
+                label = { Text(text = stringResource(R.string.enter_lastname)) },
                 singleLine = true
             )
 
@@ -131,14 +134,14 @@ fun RegisterScreen() {
 
             TextField(
                 value = phone,
-                modifier = Modifier.padding(25.dp),
+                modifier = Modifier.padding(20.dp),
                 onValueChange = { phone = it },
-                label = { Text( text = stringResource(R.string.enter_phone)) },
+                label = { Text(text = stringResource(R.string.enter_phone)) },
                 singleLine = true
             )
 
             val context = LocalContext.current
-            val coffeeDrinks = arrayOf("Male","Female")
+            val coffeeDrinks = arrayOf("Male", "Female")
             var expanded by remember { mutableStateOf(false) }
             var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
 
@@ -173,57 +176,36 @@ fun RegisterScreen() {
                 }
             }
 
+            val checkedState by rememberSaveable { mutableStateOf(false) };
 
-
-            var checkedState by rememberSaveable { mutableStateOf(false) };
-
-
-            Row{
+            Row(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .padding(start = 45.dp)
+                    .fillMaxWidth(1f),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Checkbox(
                     checked = checkedState,
-                    onCheckedChange = null // null recommended for accessibility with screenreaders
+                    onCheckedChange = null,
                 )
                 Text(
                     text = stringResource(R.string.terms),
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 10.dp),
                 )
             }
-
-
-
-            OutlinedButtonRegister {
-
+            OutlinedButton(onClick = {
+                viewModel.register(username, mail, password)
+            }) {
+                Text(
+                    text = stringResource(R.string.register),
+                    fontSize = 20.sp
+                )
             }
-
-
-
         }
     }
-}
-
-@Composable
-fun OutlinedButtonRegister(onClick: () -> Unit) {
-    OutlinedButton(onClick = { onClick() }) {
-        Text(text = stringResource(R.string.register),
-            fontSize = 20.sp)
-
-    }
-}
-
-@Composable
-fun OutlinedButtonGender(onClick: () -> Unit, function: () -> Unit) {
-    OutlinedButtonGender(onClick = { onClick() }) {
-
-    }
-}
-
-
-@Composable
-fun HorizontalDivider(
-    modifier: Modifier = Modifier,
-    thickness: Dp = DividerDefaults.Thickness,
-    color: Color = DividerDefaults.color
-): Unit {
 }
 
 

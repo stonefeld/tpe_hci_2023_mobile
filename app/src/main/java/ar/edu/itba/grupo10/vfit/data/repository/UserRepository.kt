@@ -20,6 +20,10 @@ class UserRepository(
         remoteDataSource.logout()
     }
 
+    suspend fun register(username: String, email: String, password: String) {
+        remoteDataSource.register(username, email, password)
+    }
+
     suspend fun getCurrentUser(refresh: Boolean): User? {
         if (refresh || currentUser == null) {
             val result = remoteDataSource.getCurrentUser()

@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
@@ -21,10 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import ar.edu.itba.grupo10.vfit.R
-import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,26 +38,28 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    navController: NavHostController,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
 ) {
     Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(1f)
+            modifier = Modifier
+                .fillMaxSize(1f)
+                .verticalScroll(rememberScrollState())
         ) {
-
             Text(
                 text = stringResource(R.string.welcome_back),
                 fontSize = 40.sp
             )
-
             Image(
                 modifier = Modifier
                     .width(width = 250.dp)
@@ -68,12 +70,12 @@ fun LoginScreen(
                 contentScale = ContentScale.Crop,
             )
 
-            var mail by rememberSaveable { mutableStateOf("") }
+            var username by rememberSaveable { mutableStateOf("") }
 
             TextField(
-                value = mail,
-                onValueChange = { mail = it },
-                label = { Text( text = stringResource(R.string.enter_mail)) },
+                value = username,
+                onValueChange = { username = it },
+                label = { Text(stringResource(R.string.enter_username)) },
                 singleLine = true
             )
 
@@ -84,7 +86,7 @@ fun LoginScreen(
                 value = password,
                 onValueChange = { password = it },
                 singleLine = true,
-                label = { Text( text = stringResource(R.string.enter_password)) },
+                label = { Text(stringResource(R.string.enter_password)) },
                 visualTransformation =
                 if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -93,18 +95,25 @@ fun LoginScreen(
                     IconButton(onClick = { passwordHidden = !passwordHidden }) {
                         val visibilityIcon =
                             if (passwordHidden) Icons.Default.Add else Icons.Filled.Clear // TODO: cambiar iconitos
-                        // TODO: IDIOMAS
-                        val description = if (passwordHidden) "Show password" else "Hide password"
-                        Icon(imageVector = visibilityIcon, contentDescription = description)
+                        Icon(imageVector = visibilityIcon, contentDescription = null)
                     }
                 }
             )
             OutlinedButton(onClick = {
-                viewModel.login("username", "password")
+                viewModel.login(username, password)
             }) {
                 Text(
                     text = stringResource(R.string.login),
                     fontSize = 30.sp
+                )
+            }
+            OutlinedButton(onClick = {
+                navController.navigate("register")
+            }) {
+                Text(
+                    text = stringResource(R.string.register),
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(10.dp)
                 )
             }
 
@@ -112,10 +121,10 @@ fun LoginScreen(
     }
 }
 
-@Preview(showSystemUi = true, locale = "es")
-@Composable
-fun LoginScreenPreview() {
-    VFitTheme {
-        LoginScreen()
-    }
-}
+//@Preview(showSystemUi = true, locale = "es")
+//@Composable
+//fun LoginScreenPreview() {
+//    VFitTheme {
+//        LoginScreen()
+//    }
+//}

@@ -2,6 +2,7 @@ package ar.edu.itba.grupo10.vfit.data.network
 
 import ar.edu.itba.grupo10.vfit.data.network.api.ApiUserService
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkCredentials
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkRegisterCredentials
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkUser
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
 
@@ -20,6 +21,18 @@ class UserRemoteDataSource(
     suspend fun logout() {
         handleApiResponse { apiUserService.logout() }
         sessionManager.removeAuthToken()
+    }
+
+    suspend fun register(username: String, email: String, password: String) {
+        handleApiResponse {
+            apiUserService.register(
+                NetworkRegisterCredentials(
+                    username,
+                    email,
+                    password
+                )
+            )
+        }
     }
 
     suspend fun getCurrentUser(): NetworkUser {

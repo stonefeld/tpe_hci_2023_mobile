@@ -15,7 +15,7 @@
     <string name="home_subtitle">¡Estás a punto de alcanzar tu objetivo semanal!</string>
     <string name="register">Registrarse</string>
     <string name="welcome">Bienvenido!</string>
-    <string name="enter_username">Usuario</string>
+    <string name="enter_username">Nombre de usuario</string>
     <string name="enter_name">Nombre</string>
     <string name="enter_lastname">Apellido</string>
     <string name="enter_mail">Mail</string>
