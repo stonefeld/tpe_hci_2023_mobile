@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import ar.edu.itba.grupo10.vfit.MainNavHost
 import ar.edu.itba.grupo10.vfit.ui.components.NavigationBar
 import ar.edu.itba.grupo10.vfit.ui.screens.HomeScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.LoginScreen
@@ -23,19 +27,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             VFitTheme {
                 val viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
+                val uiState = viewModel.uiState
+                val navController = rememberNavController()
 
-                if (viewModel.uiState.isAuthenticated) {
+                if (uiState.isAuthenticated) {
                     Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        bottomBar = { NavigationBar() }
+                        bottomBar = { NavigationBar(navController) }
                     ) { contentPadding ->
-                        HomeScreen(
-                            modifier = Modifier.padding(contentPadding),
-                            viewModel = viewModel(),
-                        )
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(contentPadding)
+                        ) {
+                            // TODO: el logout no funciona con el navhost. si llamamos directamente al home si
+                            MainNavHost(navController)
+//                            HomeScreen()
+                        }
                     }
                 } else {
-                    LoginScreen(viewModel = viewModel)
+                    LoginScreen(navController = navController)
                 }
             }
         }

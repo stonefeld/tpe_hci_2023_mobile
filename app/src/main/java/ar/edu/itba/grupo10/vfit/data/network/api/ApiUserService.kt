@@ -1,6 +1,7 @@
 package ar.edu.itba.grupo10.vfit.data.network.api
 
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkCredentials
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkRegisterCredentials
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkToken
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkUser
 import retrofit2.Response
@@ -15,6 +16,9 @@ interface ApiUserService {
 
     @POST("users/logout")
     suspend fun logout(): Response<Unit>
+
+    @POST("users")
+    suspend fun register(@Body credentials: NetworkRegisterCredentials): Response<NetworkUser>
 
     @GET("users/current")
     suspend fun getCurrentUser(): Response<NetworkUser>

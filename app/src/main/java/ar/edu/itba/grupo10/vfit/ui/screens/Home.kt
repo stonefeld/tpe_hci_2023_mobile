@@ -103,6 +103,20 @@ fun HomeScreen(
                     modifier = Modifier.padding(8.dp)
                 )
             }
+
+            ElevatedButton(
+                onClick = {
+                    viewModel.logout()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Logout",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 }
