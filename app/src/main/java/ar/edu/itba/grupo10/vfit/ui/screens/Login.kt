@@ -108,6 +108,16 @@ fun LoginScreen(
                 )
             }
 
+            OutlinedButton(onClick = {
+                // TODO: navigate to register
+            }) {
+                Text(
+                    text = stringResource(R.string.register),
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+
         }
     }
 }
