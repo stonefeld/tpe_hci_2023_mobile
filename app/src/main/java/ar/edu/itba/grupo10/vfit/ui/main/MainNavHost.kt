@@ -1,4 +1,4 @@
-package ar.edu.itba.grupo10.vfit
+package ar.edu.itba.grupo10.vfit.ui.main
 
 import android.location.SettingInjectorService
 import androidx.compose.runtime.Composable

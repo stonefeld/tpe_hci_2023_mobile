@@ -8,14 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import ar.edu.itba.grupo10.vfit.MainNavHost
 import ar.edu.itba.grupo10.vfit.ui.components.NavigationBar
-import ar.edu.itba.grupo10.vfit.ui.screens.HomeScreen
-import ar.edu.itba.grupo10.vfit.ui.screens.LoginScreen
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
@@ -45,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 } else {
-                    LoginScreen(navController = navController)
+                    MainNavHost(navController, startDestination = "login")
                 }
             }
         }
