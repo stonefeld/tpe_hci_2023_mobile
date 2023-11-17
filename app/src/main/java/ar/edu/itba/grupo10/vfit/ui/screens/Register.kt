@@ -141,17 +141,17 @@ fun RegisterScreen(
                 singleLine = true
             )
 
-            var URL_photo by rememberSaveable { mutableStateOf("") };
+            var urlphoto by rememberSaveable { mutableStateOf("") }
 
             TextField(
-                value = URL_photo,
+                value = urlphoto,
                 modifier = Modifier.padding(20.dp),
-                onValueChange = { URL_photo = it },
+                onValueChange = { urlphoto = it },
                 label = { Text(text = stringResource(R.string.url_photo)) },
                 singleLine = true
             )
 
-            var birthday by rememberSaveable { mutableStateOf("") };
+            var birthday by rememberSaveable { mutableStateOf("") }
             // dejo esto como texto xq no hay datepicker de material design 3
             TextField(
                 value = birthday,
@@ -228,3 +228,12 @@ fun RegisterScreen(
         }
     }
 }
+
+
+//@Preview(showSystemUi = true, locale = "es")
+//@Composable
+//fun RegisterScreenPreview() {
+//    VFitTheme {
+//        RegisterScreen()
+//    }
+//}

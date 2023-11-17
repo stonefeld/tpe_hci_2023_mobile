@@ -27,15 +27,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
+import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 
 @Composable
 fun ExecuteRoutineScreen() {
+    val windowSize = rememberWindowInfo()
+    var image = R.drawable.execute_routine_phone
+    if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
+        image = R.drawable.execute_routine_phone
+    } else if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
+        image = R.drawable.execute_routine_tablet
+    }
     Box(
-        modifier = with (Modifier){
+        modifier = with(Modifier) {
             fillMaxSize()
                 .paint(
-                    painterResource(id = R.drawable.execute_routine),
-                    contentScale = ContentScale.FillBounds)
+                    painterResource(id = image),
+                    contentScale = ContentScale.FillBounds
+                )
         })
     {
         Column {
@@ -122,9 +132,17 @@ fun ExecuteRoutineScreen() {
     }
 }
 
-@Preview(showSystemUi = true, locale = "es")
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
 @Composable
-fun PreviewExecuteRoutine() {
+fun PreviewExecuteRoutine1() {
+    VFitTheme {
+        ExecuteRoutineScreen()
+    }
+}
+
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+@Composable
+fun PreviewExecuteRoutine2() {
     VFitTheme {
         ExecuteRoutineScreen()
     }

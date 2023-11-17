@@ -174,6 +174,7 @@ fun RoutineItem() {
             .fillMaxWidth(1f)
             .padding(vertical = 1.dp)
     ) {
+        /*
         ListItem(
             modifier = Modifier
                 .height(100.dp)
@@ -184,7 +185,7 @@ fun RoutineItem() {
                 Text(fontWeight = FontWeight(700), text = "Routine")
             },
             trailingContent = {
-                /*  Column (verticalArrangement = Arrangement.Top){
+                  Column (verticalArrangement = Arrangement.Top){
                       Chip(name = "4", icon = {
                           Icon(
                               Icons.Outlined.Star,
@@ -194,8 +195,7 @@ fun RoutineItem() {
                       })
 
                   }
-                 */
-            },
+
             supportingText = {
                 Text(
                     modifier = Modifier.fillMaxWidth(0.85f),
@@ -212,8 +212,12 @@ fun RoutineItem() {
                         .border(1.dp, colorScheme.primary, RoundedCornerShape(20))
                         .clip(CircleShape), contentScale = ContentScale.Crop
                 )
+
             }
         )
+
+         */
+    }
 
         Row(modifier = Modifier.padding(vertical = 8.dp)) {
 
@@ -239,7 +243,7 @@ fun RoutineItem() {
 
         }
     }
-}
+
 
 @Composable
 fun Chip(name: String, icon: @Composable () -> Unit) {

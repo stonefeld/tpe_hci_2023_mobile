@@ -1,5 +1,6 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @Composable
 fun ProfileScreen(
+    @StringRes text: Int,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     onLogoutSuccess: () -> Unit = {}
 ) {
@@ -119,7 +121,6 @@ fun ProfileScreen(
             Row(
                 modifier = Modifier
                     .padding(5.dp)
-                    .padding(start = 25.dp)
                     .fillMaxWidth(1f),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -138,7 +139,6 @@ fun ProfileScreen(
             Row(
                 modifier = Modifier
                     .padding(5.dp)
-                    .padding(start = 25.dp)
                     .fillMaxWidth(1f),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -158,7 +158,6 @@ fun ProfileScreen(
             Row(
                 modifier = Modifier
                     .padding(5.dp)
-                    .padding(start = 25.dp)
                     .fillMaxWidth(1f),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -172,20 +171,19 @@ fun ProfileScreen(
                     fontSize = 24.sp,
                     modifier = Modifier.padding(start = 10.dp),
                 )
-            }
-
-            ElevatedButton(
-                onClick = {
-                    viewModel.logout(onLogoutSuccess)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Logout",
-                    modifier = Modifier.padding(8.dp)
-                )
+                ElevatedButton(
+                    onClick = {
+                        viewModel.logout(onLogoutSuccess)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Logout",
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
         }
     }
@@ -196,6 +194,8 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview() {
     VFitTheme {
-        ProfileScreen()
+        ProfileScreen(
+            text = R.string.profile
+        )
     }
 }

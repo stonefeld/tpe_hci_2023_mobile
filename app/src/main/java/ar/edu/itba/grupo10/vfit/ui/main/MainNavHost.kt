@@ -1,5 +1,6 @@
 package ar.edu.itba.grupo10.vfit.ui.main
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,7 +34,7 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int) {
 fun MainNavHost(
     navController: NavHostController = rememberNavController(),
     startDestination: String = "main",
-    modifier: Modifier = Modifier
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
@@ -54,7 +55,8 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         composable("execute_routine") { ExecuteRoutineScreen() }
         composable("settings") { SettingsScreen(R.string.settings) }
         composable("profile") {
-            ProfileScreen(onLogoutSuccess = {
+            ProfileScreen( R.string.profile,
+                onLogoutSuccess = {
                 navController.navigate("auth") {
                     popUpTo("main") {
                         inclusive = true
