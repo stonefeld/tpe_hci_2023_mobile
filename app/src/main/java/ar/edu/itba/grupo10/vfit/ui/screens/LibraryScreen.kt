@@ -3,6 +3,7 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 import android.graphics.drawable.Icon
 import android.util.Log
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.ButtonDefaults.elevatedButtonColors
 import androidx.compose.material3.ChipColors
@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
@@ -53,6 +54,7 @@ import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import coil.compose.AsyncImage
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun LibraryScreen()
@@ -60,7 +62,6 @@ fun LibraryScreen()
 
     Surface(modifier = Modifier.fillMaxSize(1f)) {
         Column (horizontalAlignment = CenterHorizontally){
-
             ProfileHeader()
             LibraryPagination()
         }
@@ -173,6 +174,7 @@ fun ListRoutineView(){
 
         for (i in 0..6) {
             RoutineItem()
+            Divider(Modifier.padding(horizontal = 8.dp))
         }
 
     }
@@ -184,56 +186,69 @@ fun ListRoutineView(){
 fun RoutineItem() {
 
 
-    Column {
+    Row (horizontalArrangement = Arrangement.Start, modifier = Modifier
+        .fillMaxWidth(1f)
+        .padding(vertical = 1.dp)){
 
         ListItem(
             modifier = Modifier
-                .fillMaxWidth()
                 .height(100.dp)
                 .fillMaxHeight()
+                .fillMaxWidth(0.75f)
                 .padding(0.dp),
             headlineText = {
                 Text(fontWeight= FontWeight(700) , text="Routine")
             },
-            supportingText = { Text( text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s") },
-            trailingContent = {
-              /*  Column (verticalArrangement = Arrangement.Top){
-                    Chip(name = "4", icon = {
-                        Icon(
-                            Icons.Outlined.Star,
-                            contentDescription = "Star",
-                            modifier = Modifier.size(16.dp)
-                        )
-                    })
+            supportingText = { Text( modifier = Modifier.fillMaxWidth(0.85f), text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s") },
 
-                }
-
-               */
-
-            },
             leadingContent = {
 
                 AsyncImage(model = "", contentDescription = "FOTO_DE_RUTINA", modifier = Modifier
-                    .height(70.dp).width(65.dp)
+                    .height(70.dp)
+                    .width(65.dp)
                     .border(1.dp, colorScheme.primary, RoundedCornerShape(20))
                     .clip(CircleShape), contentScale = ContentScale.Crop)
-
-
             }
         )
-        Divider(Modifier.padding(horizontal = 8.dp))
+
+        Row (modifier = Modifier.padding(vertical = 8.dp) ){
+
+            Chip(name = "30'"){
+
+                Icon(
+                    imageVector = Icons.Outlined.Schedule,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+            }
+            Chip(name = "4"){
+
+                Icon(
+                    imageVector = Icons.Outlined.Star,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+            }
+
+
+
+        }
     }
 }
 
 @Composable
 fun Chip(name : String, icon : @Composable () -> Unit ) {
     Surface(
-        shape = RoundedCornerShape(40),
+        shape = RoundedCornerShape(30),
+        color = colorScheme.secondary,
         modifier = Modifier
-            .height(22.dp),
+            .height(22.dp)
+            .padding(horizontal = 2.dp)
     ) {
-        Row(modifier = Modifier.padding(horizontal = 1.dp)) {
-            Text(text = name, fontSize = 16.sp)
+        Row(modifier = Modifier.padding(horizontal = 2.dp)) {
+            Text(text = name, fontSize = 14.sp)
             icon.invoke()
 
         }
