@@ -19,11 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.components.TopBar
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
 @Composable
@@ -31,6 +33,7 @@ fun SettingsScreen(
     @StringRes text: Int,
 ) {
     Surface {
+        var detailedRoutine = rememberDetailedRoutine()
         Column(
             modifier = Modifier.fillMaxSize(1f)
         ) {
@@ -43,54 +46,78 @@ fun SettingsScreen(
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(1f)
+                    modifier = Modifier.fillMaxWidth(1f),
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 10.dp)
+                            .padding(horizontal = 30.dp, vertical = 5.dp)
                             .fillMaxWidth(1f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
-                        Text(
-                            text = stringResource(R.string.color_mode),
-                        )
-                        Spacer(modifier = Modifier.fillMaxWidth(0.8f))
-
-                        var checked by remember { mutableStateOf(true) }
-                        Switch(
-                            checked = checked,
-                            onCheckedChange = {
-                                checked = it
-                            }
-                        )
-
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = stringResource(R.string.color_mode),
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.fillMaxWidth(1f),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            var checked by remember { mutableStateOf(true) }
+                            Switch(
+                                checked = checked,
+                                onCheckedChange = {
+                                    checked = it
+                                }
+                            )
+                        }
                     }
-                    Divider(Modifier.padding(horizontal = 10.dp))
-                    Row (
+
+                    Divider(Modifier.padding(horizontal = 20.dp))
+
+                    Row(
                         modifier = Modifier
-                            .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+                            .padding(horizontal = 30.dp, vertical = 5.dp)
                             .fillMaxWidth(1f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
-                        Text(
-                            text = stringResource(R.string.detailed_routine),
-                        )
-
-                        Spacer(modifier = Modifier.fillMaxWidth(0.8f))
-                        var checked by remember { mutableStateOf(true) }
-                        Switch(
-                            checked = checked,
-                            onCheckedChange = {
-                                checked = it
-                            }
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = stringResource(R.string.detailed_routine),
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.fillMaxWidth(1f),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            var checked by remember { mutableStateOf(true) }
+                            Switch(
+                                checked = checked,
+                                onCheckedChange = {
+                                    checked = it
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun rememberDetailedRoutine(): Boolean {
+    val detailedRoutine = false;
+    return detailedRoutine
 }
 
 @Preview(showSystemUi = true, locale = "es")

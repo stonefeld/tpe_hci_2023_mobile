@@ -52,7 +52,7 @@ fun MainNavHost(
 fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     navigation(startDestination = "home", route = "main") {
         composable(Screen.Home.route) { HomeScreen(navController) }
-        composable("execute_routine") { ExecuteRoutineScreen() }
+        composable("execute_routine") { ExecuteRoutineScreen(true) }
         composable("settings") { SettingsScreen(R.string.settings) }
         composable("profile") {
             ProfileScreen(R.string.profile,
