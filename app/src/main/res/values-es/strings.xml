@@ -18,7 +18,7 @@
     <string name="enter_username">Nombre de usuario</string>
     <string name="enter_name">Nombre</string>
     <string name="enter_lastname">Apellido</string>
-    <string name="enter_mail">Mail</string>
+    <string name="enter_mail">Correo electronico</string>
     <string name="enter_password">Contraseña</string>
     <string name="extra_info">Informacion adicional</string>
     <string name="enter_phone">Telefono</string>
