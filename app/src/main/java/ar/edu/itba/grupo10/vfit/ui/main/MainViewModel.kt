@@ -7,12 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.grupo10.vfit.data.DataSourceException
 import ar.edu.itba.grupo10.vfit.data.models.Cycle
+import ar.edu.itba.grupo10.vfit.data.models.CycleExercise
 import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
 import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
 import ar.edu.itba.grupo10.vfit.data.models.Error
 import ar.edu.itba.grupo10.vfit.data.models.Exercise
 import ar.edu.itba.grupo10.vfit.data.models.Routine
+import ar.edu.itba.grupo10.vfit.data.repository.CycleExerciseRepository
 import ar.edu.itba.grupo10.vfit.data.repository.CycleRepository
 import ar.edu.itba.grupo10.vfit.data.repository.ExerciseRepository
 import kotlinx.coroutines.Job
@@ -23,7 +25,8 @@ class MainViewModel(
     private val userRepository: UserRepository,
     private val routineRepository: RoutineRepository,
     private val cycleRepository: CycleRepository,
-    private val exerciseRepository: ExerciseRepository
+    private val exerciseRepository: ExerciseRepository,
+    private val cycleExerciseRepository: CycleExerciseRepository
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MainUIState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -169,6 +172,41 @@ class MainViewModel(
             state.copy(
                 currentExercise = null,
                 exercises = null
+            )
+        }
+    )
+
+    fun getCycleExercises(cycleId: Int) = runOnViewModelScope(
+        { cycleExerciseRepository.getCycleExercises(true, cycleId) },
+        { state, response -> state.copy(cycleExercises = response) }
+    )
+
+    fun getCycleExercise(cycleId: Int, exerciseId: Int) = runOnViewModelScope(
+        { cycleExerciseRepository.getCycleExercise(cycleId, exerciseId) },
+        { state, response -> state.copy(currentCycleExercise = response) }
+    )
+
+    fun addOrModifyCycleExercise(cycleId: Int, cycleExercise: CycleExercise) = runOnViewModelScope(
+        {
+            if (cycleExercise.exercise?.id == null)
+                cycleExerciseRepository.createCycleExercise(cycleId, cycleExercise)
+            else
+                cycleExerciseRepository.modifyCycleExercise(cycleId, cycleExercise)
+        },
+        { state, response ->
+            state.copy(
+                currentCycleExercise = response,
+                cycleExercises = null
+            )
+        }
+    )
+
+    fun deleteCycleExercise(cycleId: Int, exerciseId: Int) = runOnViewModelScope(
+        { cycleExerciseRepository.deleteCycleExercise(cycleId, exerciseId) },
+        { state, _ ->
+            state.copy(
+                currentCycleExercise = null,
+                cycleExercises = null
             )
         }
     )
