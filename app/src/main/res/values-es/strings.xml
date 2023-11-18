@@ -35,6 +35,6 @@
     <string name="enter_code">Ingrese el código</string>
     <string name="search">Buscar</string>
     <string name="cancel">Cancelar</string>
-    <string name="look_for_results">Búsqueda de resultados</string>
+    <string name="look_for_results">Búsqueda de rutinas</string>
 
 </resources>
