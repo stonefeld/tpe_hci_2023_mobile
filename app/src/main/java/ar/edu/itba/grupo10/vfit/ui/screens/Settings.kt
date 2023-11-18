@@ -4,9 +4,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -45,59 +47,45 @@ fun SettingsScreen(
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 20.dp)
+                            .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 10.dp)
                             .fillMaxWidth(1f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            Text(
-                                text = stringResource(R.string.color_mode),
-                            )
-                        }
-                        Column(
-                            modifier = Modifier.fillMaxWidth(1f),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.End
-                        ) {
-                            var checked by remember { mutableStateOf(true) }
-                            Switch(
-                                checked = checked,
-                                onCheckedChange = {
-                                    checked = it
-                                }
-                            )
-                        }
+
+                        Text(
+                            text = stringResource(R.string.color_mode),
+                        )
+                        Spacer(modifier = Modifier.fillMaxWidth(0.8f))
+
+                        var checked by remember { mutableStateOf(true) }
+                        Switch(
+                            checked = checked,
+                            onCheckedChange = {
+                                checked = it
+                            }
+                        )
+
                     }
-                    Row(
+                    Divider(Modifier.padding(horizontal = 10.dp))
+                    Row (
                         modifier = Modifier
-                            .padding(start = 30.dp, end = 30.dp, bottom = 20.dp)
+                            .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
                             .fillMaxWidth(1f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            Text(
-                                text = stringResource(R.string.detailed_routine),
-                            )
-                        }
-                        Column(
-                            modifier = Modifier.fillMaxWidth(1f),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.End
-                        ) {
-                            var checked by remember { mutableStateOf(true) }
-                            Switch(
-                                checked = checked,
-                                onCheckedChange = {
-                                    checked = it
-                                }
-                            )
-                        }
+
+                        Text(
+                            text = stringResource(R.string.detailed_routine),
+                        )
+
+                        Spacer(modifier = Modifier.fillMaxWidth(0.8f))
+                        var checked by remember { mutableStateOf(true) }
+                        Switch(
+                            checked = checked,
+                            onCheckedChange = {
+                                checked = it
+                            }
+                        )
                     }
                 }
             }
