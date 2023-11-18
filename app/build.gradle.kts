@@ -30,13 +30,13 @@ android {
 //           buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.1:8080/api/\"")  // alguien // TODO: pone tu nombre wachin
 //            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.198:8080/api/\"")  // paki
 //            buildConfigField("String", "API_BASE_URL", "\"http://172.22.0.114:8080/api/\"")  // theo
-            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.184\n:8080/api/\"")  // alber
+            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.184:8080/api/\"")  // alber
         }
         debug {
 //             buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.1:8080/api/\"")  // alguien // TODO: pone tu nombre wachin
 //            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.198:8080/api/\"")  // paki
 //            buildConfigField("String", "API_BASE_URL", "\"http://172.22.0.114:8080/api/\"")  // theo
-            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.184\n:8080/api/\"")  // alber
+            buildConfigField("String", "API_BASE_URL", "\"http://192.168.0.184:8080/api/\"")  // alber
 
         }
     }
