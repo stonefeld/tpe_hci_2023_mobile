@@ -4,9 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,16 +37,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyAcountScreen() {
-    Surface {
+    Surface(modifier = Modifier.fillMaxHeight(1f)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize(1f)
-                .verticalScroll(rememberScrollState())
+            modifier = Modifier.fillMaxHeight(1f)
         ) {
             Text(
                 text = stringResource(R.string.verify),
@@ -77,10 +77,10 @@ fun VerifyAcountScreen() {
             )
 
             OutlinedButton(
+                shape= RoundedCornerShape(size = 12.dp),
                 onClick = {},
                 modifier = Modifier
                     .padding(30.dp)
-                    .fillMaxWidth(0.7f),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -91,6 +91,8 @@ fun VerifyAcountScreen() {
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.padding(20.dp))
         }
     }
 }

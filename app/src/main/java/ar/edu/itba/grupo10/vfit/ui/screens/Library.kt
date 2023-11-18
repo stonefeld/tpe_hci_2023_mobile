@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Star
@@ -159,10 +161,13 @@ fun ListRoutineView() {
         horizontalAlignment = CenterHorizontally, modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 6.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         for (i in 0..6) {
             RoutineItem()
+            Divider()
         }
+        Spacer(modifier = Modifier.size(60.dp))
     }
 }
 
@@ -174,29 +179,19 @@ fun RoutineItem() {
             .fillMaxWidth(1f)
             .padding(vertical = 1.dp)
     ) {
-        /*
+
         ListItem(
             modifier = Modifier
                 .height(100.dp)
                 .fillMaxHeight()
                 .fillMaxWidth(0.75f)
                 .padding(0.dp),
-            headlineText = {
+            headlineContent = {
                 Text(fontWeight = FontWeight(700), text = "Routine")
             },
-            trailingContent = {
-                  Column (verticalArrangement = Arrangement.Top){
-                      Chip(name = "4", icon = {
-                          Icon(
-                              Icons.Outlined.Star,
-                              contentDescription = "Star",
-                              modifier = Modifier.size(16.dp)
-                          )
-                      })
 
-                  }
 
-            supportingText = {
+            supportingContent = {
                 Text(
                     modifier = Modifier.fillMaxWidth(0.85f),
                     text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
@@ -216,8 +211,8 @@ fun RoutineItem() {
             }
         )
 
-         */
-    }
+
+
 
         Row(modifier = Modifier.padding(vertical = 8.dp)) {
 
@@ -243,7 +238,7 @@ fun RoutineItem() {
 
         }
     }
-
+}
 
 @Composable
 fun Chip(name: String, icon: @Composable () -> Unit) {

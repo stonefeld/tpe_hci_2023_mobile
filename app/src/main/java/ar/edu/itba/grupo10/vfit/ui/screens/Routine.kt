@@ -93,7 +93,7 @@ fun RoutineScreen(
                 Cycle(i)
                 Spacer(modifier = Modifier.padding(5.dp))
             }
-
+            Spacer(modifier = Modifier.padding(50.dp))
 
 
         }
