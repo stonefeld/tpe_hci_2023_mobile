@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.rounded.PlayCircleOutline
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
@@ -79,13 +80,22 @@ fun RoutineScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
 
                     ) {
+
+
+                    Icon(
+                        Icons.Rounded.Share,
+                        contentDescription = stringResource(id = R.string.enter_mail),
+                        modifier = Modifier.size(30.dp)
+                            .padding( vertical = 5.dp)
+                        )
+
                     //TODO: que sea un boton a la ejecucion de la rutina
                     Icon(
                         Icons.Rounded.PlayCircleOutline,
                         contentDescription = stringResource(id = R.string.enter_mail),
                         modifier = Modifier.size(60.dp),
 
-                    )
+                        )
                 }
             }
 
