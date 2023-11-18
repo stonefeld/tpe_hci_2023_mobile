@@ -4,6 +4,7 @@ import ar.edu.itba.grupo10.vfit.data.network.api.ApiUserService
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkCredentials
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkRegisterCredentials
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkUser
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkVerifyCredentials
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
 
 class UserRemoteDataSource(
@@ -23,8 +24,8 @@ class UserRemoteDataSource(
         sessionManager.removeAuthToken()
     }
 
-    suspend fun register(username: String, email: String, password: String) {
-        handleApiResponse {
+    suspend fun register(username: String, email: String, password: String): NetworkUser {
+        return handleApiResponse {
             apiUserService.register(
                 NetworkRegisterCredentials(
                     username,
@@ -33,6 +34,10 @@ class UserRemoteDataSource(
                 )
             )
         }
+    }
+
+    suspend fun verifyAccount(email: String, code: String) {
+        handleApiResponse { apiUserService.verifyAccount(NetworkVerifyCredentials(email, code)) }
     }
 
     suspend fun getCurrentUser(): NetworkUser {

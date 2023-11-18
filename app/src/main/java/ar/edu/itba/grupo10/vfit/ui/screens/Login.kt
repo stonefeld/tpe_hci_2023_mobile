@@ -52,7 +52,7 @@ import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 fun LoginScreen(
     navController: NavHostController,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    onLoginSuccess: () -> Unit = {}
+    onLoginSuccess: () -> Unit
 ) {
     Surface {
         Column(

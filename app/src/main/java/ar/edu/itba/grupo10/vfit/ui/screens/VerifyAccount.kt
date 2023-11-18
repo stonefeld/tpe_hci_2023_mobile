@@ -5,11 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,16 +31,23 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VerifyAcountScreen() {
-    Surface(modifier = Modifier.fillMaxHeight(1f)) {
+fun VerifyAccountScreen(
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    onVerifySuccess: () -> Unit
+) {
+    Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxHeight(1f)
+            modifier = Modifier
+                .fillMaxSize(1f)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = stringResource(R.string.verify),
@@ -67,7 +71,16 @@ fun VerifyAcountScreen() {
                 modifier = Modifier.padding(20.dp)
             )
 
+            var email by rememberSaveable { mutableStateOf("") }
             var code by rememberSaveable { mutableStateOf("") }
+
+            // TODO: estilos para estos dos campos
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text(stringResource(R.string.enter_mail)) },
+                singleLine = true
+            )
 
             TextField(
                 value = code,
@@ -78,7 +91,9 @@ fun VerifyAcountScreen() {
 
             OutlinedButton(
                 shape= RoundedCornerShape(size = 12.dp),
-                onClick = {},
+                onClick = {
+                    viewModel.verifyAccount(email, code, onVerifySuccess)
+                },
                 modifier = Modifier
                     .padding(30.dp)
             ) {
@@ -94,13 +109,5 @@ fun VerifyAcountScreen() {
 
             Spacer(modifier = Modifier.padding(20.dp))
         }
-    }
-}
-
-@Preview(showSystemUi = true, locale = "es")
-@Composable
-fun VerifyAccountPreview() {
-    VFitTheme {
-        VerifyAcountScreen()
     }
 }

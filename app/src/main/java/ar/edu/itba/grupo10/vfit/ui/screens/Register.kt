@@ -51,7 +51,8 @@ import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    onRegisterSuccess: () -> Unit
 ) {
     Surface {
         Column(
@@ -152,7 +153,8 @@ fun RegisterScreen(
             )
 
             var birthday by rememberSaveable { mutableStateOf("") }
-            // dejo esto como texto xq no hay datepicker de material design 3
+
+            // TODO: dejo esto como texto xq no hay datepicker de material design 3
             TextField(
                 value = birthday,
                 modifier = Modifier.padding(20.dp),
@@ -218,7 +220,7 @@ fun RegisterScreen(
                 )
             }
             OutlinedButton(onClick = {
-                viewModel.register(username, mail, password)
+                viewModel.register(username, mail, password, onRegisterSuccess)
             }) {
                 Text(
                     text = stringResource(R.string.register),

@@ -17,7 +17,7 @@ import ar.edu.itba.grupo10.vfit.ui.screens.LoginScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.RegisterScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.ProfileScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.SettingsScreen
-import ar.edu.itba.grupo10.vfit.ui.screens.VerifyAcountScreen
+import ar.edu.itba.grupo10.vfit.ui.screens.VerifyAccountScreen
 
 sealed class Screen(val route: String, @StringRes val resourceId: Int) {
     object Home : Screen("home", R.string.home)
@@ -55,27 +55,40 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         composable("execute_routine") { ExecuteRoutineScreen() }
         composable("settings") { SettingsScreen(R.string.settings) }
         composable("profile") {
-            ProfileScreen( R.string.profile,
+            ProfileScreen(R.string.profile,
                 onLogoutSuccess = {
-                navController.navigate("auth") {
-                    popUpTo("main") {
-                        inclusive = true
+                    navController.navigate("auth") {
+                        popUpTo("main") {
+                            inclusive = true
+                        }
                     }
-                }
-            })
+                })
         }
     }
 }
 
 fun NavGraphBuilder.loginGraph(navController: NavHostController) {
     navigation(startDestination = "login", route = "auth") {
-        composable(Screen.Login.route) { LoginScreen(navController,
-            onLoginSuccess = {
-                navController.navigate("main") {
-                    popUpTo("auth") { inclusive = true }
+        composable(Screen.Login.route) {
+            LoginScreen(navController,
+                onLoginSuccess = {
+                    navController.navigate("main") {
+                        popUpTo("auth") { inclusive = true }
+                    }
+                })
+        }
+        composable(Screen.Register.route) {
+            RegisterScreen(navController,
+                onRegisterSuccess = {
+                    navController.navigate(Screen.Verify.route)
+                })
+        }
+        composable(Screen.Verify.route) {
+            VerifyAccountScreen(
+                onVerifySuccess = {
+                    navController.navigate(Screen.Login.route)
                 }
-            }) }
-        composable(Screen.Register.route) { RegisterScreen(navController) }
-        composable(Screen.Verify.route) { VerifyAcountScreen() }
+            )
+        }
     }
 }

@@ -38,15 +38,26 @@ class MainViewModel(
             state.copy(
                 isAuthenticated = false,
                 currentUser = null,
+                currentRoutine = null,
                 routines = null,
+                currentCycle = null,
+                cycles = null
             )
         },
         onSuccess
     )
 
-    fun register(username: String, email: String, password: String) = runOnViewModelScope(
-        { userRepository.register(username, email, password) },
-        { state, _ -> state }
+    fun register(username: String, email: String, password: String, onSuccess: () -> Unit) =
+        runOnViewModelScope(
+            { userRepository.register(username, email, password) },
+            { state, _ -> state },
+            onSuccess
+        )
+
+    fun verifyAccount(email: String, code: String, onSuccess: () -> Unit) = runOnViewModelScope(
+        { userRepository.verifyAccount(email, code) },
+        { state, _ -> state },
+        onSuccess
     )
 
     fun getCurrentUser() = runOnViewModelScope(
@@ -134,6 +145,7 @@ class MainViewModel(
             block()
         }.onSuccess { response ->
             uiState = updateState(uiState, response).copy(isLoading = false)
+            println(uiState.currentUser)
             onSuccess()
         }.onFailure { e ->
             uiState = uiState.copy(isLoading = false, error = handleError(e))

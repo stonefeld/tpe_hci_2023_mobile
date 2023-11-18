@@ -4,6 +4,7 @@ import ar.edu.itba.grupo10.vfit.data.network.models.NetworkCredentials
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkRegisterCredentials
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkToken
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkUser
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkVerifyCredentials
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,6 +20,9 @@ interface ApiUserService {
 
     @POST("users")
     suspend fun register(@Body credentials: NetworkRegisterCredentials): Response<NetworkUser>
+
+    @POST("users/verify_email")
+    suspend fun verifyAccount(@Body credentials: NetworkVerifyCredentials): Response<Unit>
 
     @GET("users/current")
     suspend fun getCurrentUser(): Response<NetworkUser>
