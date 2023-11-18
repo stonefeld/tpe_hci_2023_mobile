@@ -1,0 +1,21 @@
+package ar.edu.itba.grupo10.vfit.data.models
+
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkExercise
+
+data class Exercise(
+    var id: Int?,
+    var name: String,
+    var detail: String,
+    var type: String,
+) {
+
+    fun asNetworkModel(): NetworkExercise {
+        return NetworkExercise(
+            id = id,
+            name = name,
+            detail = detail,
+            type = type
+        )
+    }
+
+}

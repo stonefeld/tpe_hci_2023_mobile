@@ -13,12 +13,14 @@ fun getViewModelFactory(defaultArgs: Bundle? = null) : ViewModelFactory {
     val userRepository = application.userRepository
     val routineRepository = application.routineRepository
     val cycleRepository = application.cycleRepository
+    val exerciseRepository = application.exerciseRepository
 
     return ViewModelFactory(
         sessionManager,
         userRepository,
         routineRepository,
         cycleRepository,
+        exerciseRepository,
         LocalSavedStateRegistryOwner.current,
         defaultArgs
     )
