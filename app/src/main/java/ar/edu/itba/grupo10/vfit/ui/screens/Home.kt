@@ -20,14 +20,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.components.RoutineCard
+import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
+import org.junit.runner.manipulation.Ordering.Context
 
 @Composable
 fun HomeScreen(
@@ -106,3 +110,21 @@ fun HomeScreen(
         }
     }
 }
+
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
+//@Composable
+//fun HomeScreenPreview(
+//    ) {
+//    VFitTheme {
+//        HomeScreen()
+//    }
+//}
+//
+//
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+//@Composable
+//fun HomeScreenPreview1() {
+//    VFitTheme {
+//        HomeScreen()
+//    }
+//}
