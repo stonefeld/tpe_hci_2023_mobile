@@ -50,7 +50,7 @@ fun ProfileScreen(
 ) {
     Surface {
         val windowSize = rememberWindowInfo()
-        if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
+        if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium){
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -372,6 +372,16 @@ fun ProfileScreen(
 //    VFitTheme {
 //        ProfileScreen(
 //            //text = R.string.profile
+//        )
+//    }
+//}
+
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
+//@Composable
+//fun ProfileScreenPreview2() {
+//    VFitTheme {
+//        ProfileScreen(
+//            text = R.string.profile
 //        )
 //    }
 //}

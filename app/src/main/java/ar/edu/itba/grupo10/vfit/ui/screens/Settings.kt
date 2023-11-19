@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.components.TopBar
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
+import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
 @Composable
@@ -34,6 +35,7 @@ fun SettingsScreen(
 ) {
     Surface {
         var detailedRoutine = rememberDetailedRoutine()
+        val windowSize = rememberWindowInfo()
         Column(
             modifier = Modifier.fillMaxSize(1f)
         ) {
@@ -123,6 +125,16 @@ fun rememberDetailedRoutine(): Boolean {
 @Preview(showSystemUi = true, locale = "es")
 @Composable
 fun SettingsPreview() {
+    VFitTheme {
+        SettingsScreen(
+            text = R.string.settings
+        )
+    }
+}
+
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+@Composable
+fun SettingsPreview1() {
     VFitTheme {
         SettingsScreen(
             text = R.string.settings
