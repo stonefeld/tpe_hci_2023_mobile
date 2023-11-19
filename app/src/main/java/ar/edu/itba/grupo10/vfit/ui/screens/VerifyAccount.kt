@@ -31,8 +31,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.ui.main.Screen
+import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +63,7 @@ fun VerifyAccountScreen(
                     .width(width = 250.dp)
                     .padding(25.dp)
                     .clip(shape = RoundedCornerShape(size = 12.dp)),
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = R.drawable.logo_vfit),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
             )
@@ -74,19 +77,20 @@ fun VerifyAccountScreen(
             var email by rememberSaveable { mutableStateOf("") }
             var code by rememberSaveable { mutableStateOf("") }
 
-            // TODO: estilos para estos dos campos
             TextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text(stringResource(R.string.enter_mail)) },
-                singleLine = true
+                singleLine = true,
+                modifier = Modifier.padding(10.dp)
             )
 
             TextField(
                 value = code,
                 onValueChange = { code = it },
                 label = { Text(stringResource(R.string.enter_code)) },
-                singleLine = true
+                singleLine = true,
+                modifier = Modifier.padding(10.dp)
             )
 
             OutlinedButton(
@@ -111,3 +115,11 @@ fun VerifyAccountScreen(
         }
     }
 }
+
+//@Preview(showSystemUi = true, locale = "es")
+//@Composable
+//fun VerifyAccountPreview() {
+//    VFitTheme {
+//        VerifyAccountScreen()
+//    }
+//}

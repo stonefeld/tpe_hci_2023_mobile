@@ -44,11 +44,10 @@ fun ExecuteRoutineScreen(
     detailed: Boolean
 ) {
     val windowSize = rememberWindowInfo()
-    var paused by remember { mutableStateOf(false) }
     var image = R.drawable.execute_routine_phone
     if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
         image = R.drawable.execute_routine_phone
-    } else if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
+    } else if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
         image = R.drawable.execute_routine_tablet
     }
     Box(
@@ -120,141 +119,162 @@ fun ExecuteRoutineScreen(
                                 color = MaterialTheme.colorScheme.background
                             )
                         }
-                        Row(
-                            modifier = Modifier.padding(10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.previous),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(70.dp)
-                            )
-                            if (paused) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.play),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(140.dp)
-                                        .clickable { paused = false }
-                                )
-                            } else {
-                                Image(
-                                    painter = painterResource(id = R.drawable.pause),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(140.dp)
-                                )
+                        if (!detailed) {
+                            AddButtons()
+                            if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
+                                AddNextExercise()
                             }
-                            Image(
-                                painter = painterResource(id = R.drawable.skip),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(70.dp)
-                                    .clickable { paused = false }
-                            )
-                        }
-                        if (detailed || windowSize.screenWidthInfo != WindowInfo.WindowType.Compact) {
-
-                            Row(
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                Text(
-                                    text = "Proximo:",
-                                    fontSize = 25.sp,
-                                    fontFamily = FontFamily.Default,
-                                    color = MaterialTheme.colorScheme.surfaceVariant
-                                )
-                            }
-                            Row(
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                Text(
-                                    text = "Flexiones de Brazo",
-                                    fontSize = 25.sp,
-                                    fontFamily = FontFamily.Default,
-                                    color = MaterialTheme.colorScheme.surfaceVariant
-                                )
-                            }
-                            Row(
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                Text(
-                                    text = "4 x 20 reps |  60’’",
-                                    fontSize = 25.sp,
-                                    fontFamily = FontFamily.Default,
-                                    color = MaterialTheme.colorScheme.surfaceVariant
-                                )
-                            }
+                        } else if (windowSize.screenWidthInfo != WindowInfo.WindowType.Medium) {
+                            AddButtons()
+                            AddNextExercise()
                         }
                     }
                     Column(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        if (detailed && windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
-                            Surface(
-                                color = Color(0x55FFFFFF),
-                                shape = RoundedCornerShape(15),
-                                modifier = Modifier.padding(start = 50.dp)
-                            ) {
-                                Row(
-                                    horizontalArrangement = Arrangement.Center,
-                                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-                                )
-                                {
-                                    Column(
-                                        modifier = Modifier.padding(20.dp),
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(0.25f)
+                        if (detailed) {
+                            if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
+                                Surface(
+                                    color = Color(0x55FFFFFF),
+                                    shape = RoundedCornerShape(15),
+                                    modifier = Modifier.padding(start = 50.dp)
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.Center,
+                                        modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                                    )
+                                    {
+                                        Column(
+                                            modifier = Modifier.padding(20.dp),
                                         ) {
-                                            Text(
-                                                text = "Ciclo 1",
-                                                fontSize = 30.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                fontFamily = FontFamily.Default,
-                                                color = MaterialTheme.colorScheme.background
-                                            )
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(0.25f)
+                                            ) {
+                                                Text(
+                                                    text = "Ciclo 1",
+                                                    fontSize = 30.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontFamily = FontFamily.Default,
+                                                    color = MaterialTheme.colorScheme.background
+                                                )
+                                            }
+                                            AddExercise("Ejercicio 1", "4x10", "120''")
+                                            AddExercise("Ejercicio 2", "3x8", "180''")
+                                            AddExercise("Ejercicio 3", "4x12", "90''")
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(0.25f)
+                                            ) {
+                                                Text(
+                                                    text = "Ciclo 2",
+                                                    fontSize = 30.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontFamily = FontFamily.Default,
+                                                    color = MaterialTheme.colorScheme.background
+                                                )
+                                            }
+                                            AddExercise("Ejercicio 1", "4x10", "120''")
+                                            AddExercise("Ejercicio 2", "3x8", "180''")
+                                            AddExercise("Ejercicio 3", "4x12", "90''")
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(0.25f)
+                                            ) {
+                                                Text(
+                                                    text = "Ciclo 3",
+                                                    fontSize = 30.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontFamily = FontFamily.Default,
+                                                    color = MaterialTheme.colorScheme.background
+                                                )
+                                            }
+                                            AddExercise("Ejercicio 1", "4x10", "120''")
+                                            AddExercise("Ejercicio 2", "3x8", "180''")
+                                            AddExercise("Ejercicio 3", "4x12", "90''")
                                         }
-                                        AddExercise("Ejercicio 1", "4x10", "120''")
-                                        AddExercise("Ejercicio 2", "3x8", "180''")
-                                        AddExercise("Ejercicio 3", "4x12", "90''")
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(0.25f)
-                                        ) {
-                                            Text(
-                                                text = "Ciclo 2",
-                                                fontSize = 30.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                fontFamily = FontFamily.Default,
-                                                color = MaterialTheme.colorScheme.background
-                                            )
-                                        }
-                                        AddExercise("Ejercicio 1", "4x10", "120''")
-                                        AddExercise("Ejercicio 2", "3x8", "180''")
-                                        AddExercise("Ejercicio 3", "4x12", "90''")
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(0.25f)
-                                        ) {
-                                            Text(
-                                                text = "Ciclo 3",
-                                                fontSize = 30.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                fontFamily = FontFamily.Default,
-                                                color = MaterialTheme.colorScheme.background
-                                            )
-                                        }
-                                        AddExercise("Ejercicio 1", "4x10", "120''")
-                                        AddExercise("Ejercicio 2", "3x8", "180''")
-                                        AddExercise("Ejercicio 3", "4x12", "90''")
                                     }
                                 }
+                            } else if (windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
+                                AddButtons()
+                                AddNextExercise()
                             }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AddNextExercise() {
+    Row(
+        modifier = Modifier.padding(5.dp)
+    ) {
+        Text(
+            text = "Proximo:",
+            fontSize = 25.sp,
+            fontFamily = FontFamily.Default,
+            color = MaterialTheme.colorScheme.surfaceVariant
+        )
+    }
+    Row(
+        modifier = Modifier.padding(5.dp)
+    ) {
+        Text(
+            text = "Flexiones de Brazo",
+            fontSize = 25.sp,
+            fontFamily = FontFamily.Default,
+            color = MaterialTheme.colorScheme.surfaceVariant
+        )
+    }
+    Row(
+        modifier = Modifier.padding(5.dp)
+    ) {
+        Text(
+            text = "4 x 20 reps |  60’’",
+            fontSize = 25.sp,
+            fontFamily = FontFamily.Default,
+            color = MaterialTheme.colorScheme.surfaceVariant
+        )
+    }
+}
+
+@Composable
+fun AddButtons() {
+    var paused by remember { mutableStateOf(false) }
+    Row(
+        modifier = Modifier.padding(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.previous),
+            contentDescription = null,
+            modifier = Modifier
+                .size(70.dp)
+        )
+        if (paused) {
+            Image(
+                painter = painterResource(id = R.drawable.play),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(140.dp)
+                    .clickable { paused = false }
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.pause),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(140.dp)
+                    .clickable { paused = true }
+            )
+        }
+        Image(
+            painter = painterResource(id = R.drawable.skip),
+            contentDescription = null,
+            modifier = Modifier
+                .size(70.dp)
+        )
     }
 }
 
@@ -341,7 +361,7 @@ fun PreviewExecuteRoutine2() {
     }
 }
 
-@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
 @Composable
 fun PreviewExecuteRoutine3() {
     VFitTheme {
@@ -349,9 +369,25 @@ fun PreviewExecuteRoutine3() {
     }
 }
 
-@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
 @Composable
 fun PreviewExecuteRoutine4() {
+    VFitTheme {
+        ExecuteRoutineScreen(false)
+    }
+}
+
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+@Composable
+fun PreviewExecuteRoutine5() {
+    VFitTheme {
+        ExecuteRoutineScreen(true)
+    }
+}
+
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+@Composable
+fun PreviewExecuteRoutine6() {
     VFitTheme {
         ExecuteRoutineScreen(false)
     }
