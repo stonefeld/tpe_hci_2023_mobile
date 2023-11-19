@@ -49,7 +49,7 @@ fun RoutineScreen(
 ) {
     Surface {
         val windowSize = rememberWindowInfo()
-        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
+        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded ||  windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -94,20 +94,34 @@ fun RoutineScreen(
                         )
                     }
                 }
-                // Seria for de n/3 +1
-                for (i in 1..(4 / 3 + 1)) {
-                    Row {
-                        Cycle(i)
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        // TODO: hacer if si corresponde o no mostrar este
-                        Cycle(i + 1)
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        // TODO: hacer if si corresponde o no mostrar este
-                        Cycle(i + 2)
-                        Spacer(modifier = Modifier.padding(5.dp))
+                if( windowSize.screenWidthInfo == WindowInfo.WindowType.Medium){
+                    for (i in 1..(4 / 2 + 1)) {
+                        Row {
+                            Cycle(i)
+                            Spacer(modifier = Modifier.padding(5.dp))
+                            // TODO: hacer if si corresponde o no mostrar este
+                            Cycle(i + 1)
+                            Spacer(modifier = Modifier.padding(5.dp))
+                        }
                     }
+                    Spacer(modifier = Modifier.padding(50.dp))
                 }
-                Spacer(modifier = Modifier.padding(50.dp))
+                else {
+                    // Seria for de n/3 +1
+                    for (i in 1..(4 / 3 + 1)) {
+                        Row {
+                            Cycle(i)
+                            Spacer(modifier = Modifier.padding(5.dp))
+                            // TODO: hacer if si corresponde o no mostrar este
+                            Cycle(i + 1)
+                            Spacer(modifier = Modifier.padding(5.dp))
+                            // TODO: hacer if si corresponde o no mostrar este
+                            Cycle(i + 2)
+                            Spacer(modifier = Modifier.padding(5.dp))
+                        }
+                    }
+                    Spacer(modifier = Modifier.padding(50.dp))
+                }
             }
         } else {
             Column(
@@ -250,6 +264,13 @@ fun RoutineScreenPreview() {
 @Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 fun RoutineScreenPreview1() {
+    VFitTheme {
+        RoutineScreen()
+    }
+}
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
+@Composable
+fun RoutineScreenPreview2() {
     VFitTheme {
         RoutineScreen()
     }

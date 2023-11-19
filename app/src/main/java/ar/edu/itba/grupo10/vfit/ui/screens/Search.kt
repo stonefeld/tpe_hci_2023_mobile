@@ -330,3 +330,10 @@ fun SearchScreenPreview1() {
         SearchScreen()
     }
 }
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
+@Composable
+fun SearchScreenPreview2() {
+    VFitTheme {
+        SearchScreen()
+    }
+}
