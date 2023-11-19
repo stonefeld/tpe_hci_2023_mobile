@@ -35,30 +35,21 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     bottomBar = {
-                        if (uiState.isAuthenticated
-                            && (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact
-                                    || windowInfo.screenWidthInfo is WindowInfo.WindowType.Medium)
+                        if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact
+                            || windowInfo.screenWidthInfo is WindowInfo.WindowType.Medium
                         )
                             NavigationBar(navController, navBarVisibility(navController))
                     },
                 ) { contentPadding ->
-                    Surface(
+                    MainNavHost(
+                        navController,
+                        startDestination = if (uiState.isAuthenticated) "main" else "auth",
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(contentPadding)
-                    ) {
-                        MainNavHost(
-                            navController,
-                            startDestination = if (uiState.isAuthenticated) "main" else "auth",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(contentPadding)
-                        )
-                    }
+                    )
                 }
-                if (uiState.isAuthenticated
-                    && (windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded)
-                )
+                if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded)
                     NavigationRail()
             }
         }

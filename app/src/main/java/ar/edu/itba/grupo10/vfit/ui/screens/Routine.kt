@@ -49,15 +49,15 @@ fun RoutineScreen(
 ) {
     Surface {
         val windowSize = rememberWindowInfo()
-        if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
+        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-            ){
+            ) {
                 Row(
-                    modifier= Modifier.padding(35.dp)
-                ){
-                    Column (
+                    modifier = Modifier.padding(35.dp)
+                ) {
+                    Column(
                         modifier = Modifier.fillMaxWidth(0.9f)
                     )
                     {
@@ -81,36 +81,36 @@ fun RoutineScreen(
                         Icon(
                             Icons.Rounded.Share,
                             contentDescription = stringResource(id = R.string.enter_mail),
-                            modifier = Modifier.size(30.dp)
-                                .padding( vertical = 5.dp)
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(vertical = 5.dp)
                         )
 
-                        //TODO: que sea un boton a la ejecucion de la rutina
+                        // TODO: que sea un boton a la ejecucion de la rutina
                         Icon(
                             Icons.Rounded.PlayCircleOutline,
                             contentDescription = stringResource(id = R.string.enter_mail),
                             modifier = Modifier.size(60.dp),
-
-                            )
+                        )
                     }
                 }
                 // Seria for de n/3 +1
-                for (i in 1..(4/3+1)) {
-                    Row{
+                for (i in 1..(4 / 3 + 1)) {
+                    Row {
                         Cycle(i)
                         Spacer(modifier = Modifier.padding(5.dp))
-                        //TODO: hacer if si corresponde o no mostrar este
-                        Cycle(i+1)
+                        // TODO: hacer if si corresponde o no mostrar este
+                        Cycle(i + 1)
                         Spacer(modifier = Modifier.padding(5.dp))
-                        //TODO: hacer if si corresponde o no mostrar este
-                        Cycle(i+2)
+                        // TODO: hacer if si corresponde o no mostrar este
+                        Cycle(i + 2)
                         Spacer(modifier = Modifier.padding(5.dp))
                     }
                 }
                 Spacer(modifier = Modifier.padding(50.dp))
             }
-        }else{
-                Column(
+        } else {
+            Column(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -124,9 +124,9 @@ fun RoutineScreen(
                 )
 
                 Row(
-                    modifier= Modifier.padding(5.dp)
-                ){
-                    Column (
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Column(
                         modifier = Modifier.width(300.dp)
                     )
                     {
@@ -144,15 +144,16 @@ fun RoutineScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
 
-                        ) {
+                    ) {
 
 
                         Icon(
                             Icons.Rounded.Share,
                             contentDescription = stringResource(id = R.string.enter_mail),
-                            modifier = Modifier.size(30.dp)
-                                .padding( vertical = 5.dp)
-                            )
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(vertical = 5.dp)
+                        )
 
                         //TODO: que sea un boton a la ejecucion de la rutina
                         Icon(
@@ -169,18 +170,16 @@ fun RoutineScreen(
                     Spacer(modifier = Modifier.padding(5.dp))
                 }
                 Spacer(modifier = Modifier.padding(50.dp))
-
-
             }
         }
     }
 }
 
 @Composable
-fun  Cycle(num:Int){
+fun Cycle(num: Int) {
     OutlinedCard(
         colors = CardDefaults.cardColors(
-             containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         border = BorderStroke(1.dp, Color.Blue),
         modifier = Modifier
@@ -211,29 +210,30 @@ fun  Cycle(num:Int){
     }
 }
 
-@Composable 
-fun Exercise(name:String, series:String, time:String){
+@Composable
+fun Exercise(name: String, series: String, time: String) {
 
-    Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
-        .fillMaxWidth()
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
+            .fillMaxWidth()
     ) {
         Text(
             text = name,
             modifier = Modifier
-                .padding(vertical=8.dp),
+                .padding(vertical = 8.dp),
         )
         Spacer(modifier = Modifier.padding(5.dp))
 
         Text(
             text = series,
             modifier = Modifier
-                .padding(vertical=8.dp),
+                .padding(vertical = 8.dp),
         )
         Spacer(modifier = Modifier.padding(5.dp))
         Text(
             text = "$time\"",
             modifier = Modifier
-                .padding(vertical=8.dp),
+                .padding(vertical = 8.dp),
         )
     }
 }

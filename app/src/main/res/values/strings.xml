@@ -1,10 +1,6 @@
 <resources>
-    <string name="app_name">vFit</string>
-    <string name="goto_other_screen">Go To Other Screen</string>
-    <string name="received_id">Received id %1$d</string>
-    <string name="loading">Loading users...</string>
-    <string name="load_users">LOAD USERS</string>
-    <string name="dismiss">DISMISS</string>
+    <string name="app_name" translatable="false">vFit</string>
+    <string name="loading">Loading…</string>
     <string name="home_title">Ready to workout?</string>
     <string name="home_subtitle">You almost reach your weekly goal!</string>
     <string name="home">Home</string>
@@ -19,24 +15,23 @@
     <string name="enter_name">First Name</string>
     <string name="enter_lastname">Lastname</string>
     <string name="enter_phone">Phone</string>
-    <string name="enter_mail">Mail</string>
+    <string name="enter_mail">Email</string>
     <string name="enter_password">Password</string>
     <string name="extra_info">Some extra information</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="terms">Accept terms and conditions</string>
-    <string name="color_mode">Enable Dark Mode</string>
-    <string name="detailed_routine">Enable Detailed Routine</string>
-    <string name="url_photo">URL photo</string>
+    <string name="terms_and_conditions">Accept terms and conditions</string>
+    <string name="dark_mode">Enable dark mode</string>
+    <string name="detailed_routine">Enable routine details</string>
+    <string name="url_photo">Avatar URL</string>
     <string name="birthday">Birthday</string>
-    <string name="verify">Verify your Email</string>
+    <string name="verify">Verify your email</string>
     <string name="code_email">You should have received a code via email</string>
-    <string name="resend">Resend code</string>
-    <string name="enter_code">Enter code</string>
+    <string name="resend_code">Resend code</string>
+    <string name="enter_code">Verification code</string>
     <string name="search">Search</string>
     <string name="cancel">Cancel</string>
     <string name="look_for_results">Look for results!</string>
-
-
-
+    <string name="send_code">Verify</string>
+    <string name="create_account">Create your acccount!</string>
 </resources>

@@ -1,10 +1,8 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,20 +27,13 @@ import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
 @Composable
-fun SettingsScreen(
-    @StringRes text: Int,
-) {
+fun SettingsScreen() {
     Surface {
         var detailedRoutine = rememberDetailedRoutine()
         val windowSize = rememberWindowInfo()
         Column(
             modifier = Modifier.fillMaxSize(1f)
         ) {
-            Row {
-                TopBar(
-                    text = text
-                )
-            }
             Row(
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
@@ -62,7 +52,7 @@ fun SettingsScreen(
                             horizontalAlignment = Alignment.Start
                         ) {
                             Text(
-                                text = stringResource(R.string.color_mode),
+                                text = stringResource(R.string.dark_mode),
                             )
                         }
                         Column(
@@ -126,9 +116,7 @@ fun rememberDetailedRoutine(): Boolean {
 @Composable
 fun SettingsPreview() {
     VFitTheme {
-        SettingsScreen(
-            text = R.string.settings
-        )
+        SettingsScreen()
     }
 }
 

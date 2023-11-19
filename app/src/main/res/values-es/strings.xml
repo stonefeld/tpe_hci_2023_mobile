@@ -1,15 +1,10 @@
 <resources>
-    <string name="app_name">vFit</string>
-    <string name="goto_other_screen">Ir A Otra Pantalla</string>
-    <string name="received_id">El valor del id es %1$d</string>
-    <string name="loading">Cargando usuarios...</string>
-    <string name="load_users">CARGAR USUARIOS</string>
-    <string name="dismiss">CERRAR</string>
+    <string name="loading">Cargando…</string>
     <string name="home">Inicio</string>
     <string name="settings">Ajustes</string>
     <string name="routines">Rutinas</string>
     <string name="profile">Perfil</string>
-    <string name="welcome_back">Bienvenido</string>
+    <string name="welcome_back">Bienvenido!</string>
     <string name="login">Ingresar</string>
     <string name="home_title">¿Listo para entrenar?</string>
     <string name="home_subtitle">¡Estás a punto de alcanzar tu objetivo semanal!</string>
@@ -18,23 +13,24 @@
     <string name="enter_username">Nombre de usuario</string>
     <string name="enter_name">Nombre</string>
     <string name="enter_lastname">Apellido</string>
-    <string name="enter_mail">Correo electronico</string>
+    <string name="enter_mail">Correo electrónico</string>
     <string name="enter_password">Contraseña</string>
-    <string name="extra_info">Informacion adicional</string>
-    <string name="enter_phone">Telefono</string>
+    <string name="extra_info">Información adicional</string>
+    <string name="enter_phone">Teléfono</string>
     <string name="male">Masculino</string>
     <string name="female">Femenino</string>
-    <string name="terms">Aceptar terminos y condiciones</string>
-    <string name="url_photo">Link de la foto</string>
-    <string name="color_mode">Habilitar Modo Oscuro</string>
+    <string name="terms_and_conditions">Aceptar terminos y condiciones</string>
+    <string name="url_photo">URL del avatar</string>
+    <string name="dark_mode">Habilitar modo oscuro</string>
     <string name="detailed_routine">Habilitar detalle de rutina</string>
     <string name="birthday">Fecha de nacimiento</string>
     <string name="verify">Verifique su email</string>
     <string name="code_email">Debería haber recibido un código via email</string>
-    <string name="resend">Reenviar código</string>
-    <string name="enter_code">Ingrese el código</string>
+    <string name="resend_code">Reenviar código</string>
+    <string name="enter_code">Código de verificación</string>
     <string name="search">Buscar</string>
     <string name="cancel">Cancelar</string>
-    <string name="look_for_results">Búsqueda de rutinas</string>
-
+    <string name="look_for_results">Búsqueda de rutinas!</string>
+    <string name="send_code">Verificar</string>
+    <string name="create_account">¡Crea tu cuenta!</string>
 </resources>

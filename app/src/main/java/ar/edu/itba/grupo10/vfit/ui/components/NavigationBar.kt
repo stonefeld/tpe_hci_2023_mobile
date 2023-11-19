@@ -40,7 +40,6 @@ fun NavigationBar(
         NavigationBar(
             modifier = modifier,
             containerColor = colorScheme.primary,
-            contentColor = colorScheme.primary
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentDestination = navBackStackEntry?.destination
@@ -48,7 +47,7 @@ fun NavigationBar(
             items.forEach { screen ->
                 NavigationBarItem(
                     icon = { Icon(screen.icon!!, contentDescription = null) },
-                    label = { Text(stringResource(screen.resourceId)) },
+                    label = { Text(stringResource(screen.resourceId!!)) },
                     selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                     onClick = {
                         navController.navigate(screen.route) {

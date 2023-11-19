@@ -3,7 +3,6 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,18 +10,18 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -31,17 +30,30 @@ import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.components.RoutineCard
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
-import org.junit.runner.manipulation.Ordering.Context
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
 ) {
     val uiState = viewModel.uiState
 
-    Surface {
+    OnLifeCycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.getRoutines()
+            }
+
+            else -> {}
+        }
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(uiState.isLoading),
+        onRefresh = { viewModel.getRoutines() }
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
@@ -57,23 +69,19 @@ fun HomeScreen(
                 Text(
                     text = stringResource(R.string.home_title),
                     fontSize = 24.sp,
-                    fontWeight = FontWeight.W600
+                    fontWeight = FontWeight.W600,
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = stringResource(R.string.home_subtitle),
                     fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.secondary,
+                    textAlign = TextAlign.Center
                 )
             }
 
             if (uiState.isLoading) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(text = stringResource(R.string.loading), fontSize = 16.sp)
-                }
+                CircularProgressIndicator()
             } else {
                 val list = uiState.routines.orEmpty()
 
@@ -93,38 +101,6 @@ fun HomeScreen(
                     }
                 }
             }
-
-            ElevatedButton(
-                onClick = {
-                    viewModel.getRoutines()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.load_users),
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
         }
     }
 }
-
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
-//@Composable
-//fun HomeScreenPreview(
-//    ) {
-//    VFitTheme {
-//        HomeScreen()
-//    }
-//}
-//
-//
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
-//@Composable
-//fun HomeScreenPreview1() {
-//    VFitTheme {
-//        HomeScreen()
-//    }
-//}
