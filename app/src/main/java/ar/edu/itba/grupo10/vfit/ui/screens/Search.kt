@@ -1,19 +1,36 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-//import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,13 +46,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
+import coil.compose.AsyncImage
 
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,106 +67,253 @@ fun SearchScreen(
     Surface {
         Column(
             modifier = Modifier
-                .fillMaxSize(1f)
-                .verticalScroll(rememberScrollState()),
+                .fillMaxSize(1f),
+                //.verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
             ) {
             var search by rememberSaveable { mutableStateOf("") }
 
-           Column(
-               horizontalAlignment = Alignment.CenterHorizontally,
-           ) {
+            SearchBar(search) { search = it }
+            if(search.isNotEmpty()) {
 
+                SearchContent(search, windowSize)
+            }
+            else {
+                Spacer(modifier = Modifier.size(10.dp))
+                Pagination()
 
-                Row(
-
-                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
-                ){
-
-                    if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
-                        TextField(
-                            value = search,
-                            onValueChange = { search = it },
-                            label = { Text(stringResource(R.string.search)) },
-                            singleLine = true,
-                            modifier = Modifier.clip(shape = RoundedCornerShape(size = 25.dp))
-                                .width(500.dp),
-                            trailingIcon = {
-                                IconButton(onClick = { /*TODO: search*/ }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Search,
-                                        contentDescription = "Search"
-                                    )
-                                }
-                            }
-                        )
-                    }else{
-
-                            TextField(
-                            value = search,
-                            onValueChange = { search = it },
-                            label = { Text(stringResource(R.string.search)) },
-                            singleLine = true,
-                            modifier = Modifier.clip(shape = RoundedCornerShape(size = 25.dp)),
-                            trailingIcon = {
-                                IconButton(onClick = { /*TODO: search*/ }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Search,
-                                        contentDescription = "Search"
-                                    )
-                                }
-                            }
-                        )
-                    }
-
-                    OutlinedButton(
-                        modifier = Modifier.width(160.dp),
-                        onClick = { search="" }
-                    ) {
-                        Text(stringResource(R.string.cancel))
-                    }
-
-
-                }
-           }
-
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally,
-
-                ){
-                Text(
-                    text = stringResource(R.string.look_for_results),
-                    fontSize = 40.sp,
-                    modifier = Modifier.padding(top = 40.dp)
-                )
-                if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
-                Image(
-                    modifier = Modifier
-                        .width(700.dp)
-                        .padding(top = 25.dp)
-                        .clip(shape = RoundedCornerShape(size = 12.dp)),
-                    painter = painterResource(id = R.drawable.background_search),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )}
-                else{
-                    Image(
-                        modifier = Modifier
-                            .width(400.dp)
-                            .padding(top = 25.dp)
-                            .clip(shape = RoundedCornerShape(size = 12.dp)),
-                        painter = painterResource(id = R.drawable.background_search),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                    )
-                }
             }
 
         }
     }
 }
 
+@Composable
+fun SearchContent(search:String, windowSize: WindowInfo){
 
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+
+        ){
+        Text(
+            text = stringResource(R.string.look_for_results),
+            fontSize = 40.sp,
+            modifier = Modifier.padding(top = 40.dp)
+        )
+        if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
+            Image(
+                modifier = Modifier
+                    .width(700.dp)
+                    .padding(top = 25.dp)
+                    .clip(shape = RoundedCornerShape(size = 12.dp)),
+                painter = painterResource(id = R.drawable.background_search),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )}
+        else{
+            Image(
+                modifier = Modifier
+                    .width(400.dp)
+                    .padding(top = 25.dp)
+                    .clip(shape = RoundedCornerShape(size = 12.dp)),
+                painter = painterResource(id = R.drawable.background_search),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )
+        }
+    }
+}
+@Composable
+fun SearchBar(search:String, onSearchChange: (String) -> Unit){
+    val windowSize = rememberWindowInfo()
+    val expanded = windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded
+    Row(
+        horizontalArrangement = expanded.let { if (it) Arrangement.Center else Arrangement.End },
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(top = 20.dp, bottom = 10.dp)
+            .fillMaxWidth()
+
+    ){
+
+        TextField(
+            value = search,
+            onValueChange = { onSearchChange(it) },
+            label = { Text(stringResource(R.string.search)) },
+            singleLine = true,
+            shape = RoundedCornerShape(size = 10.dp),
+            modifier = Modifier.height(50.dp),
+
+            trailingIcon = {
+                IconButton(onClick = { /*TODO: search*/ }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search"
+                    )
+                }
+            }
+        )
+            TextButton(
+
+                contentPadding = PaddingValues(2.dp),
+                onClick = { onSearchChange("") },
+                shape = RoundedCornerShape(size = 10.dp),
+                modifier = Modifier.padding(horizontal = 5.dp)
+            ) {
+                Text(
+                    stringResource(R.string.cancel),
+                    modifier = Modifier.padding(horizontal = 5.dp)
+                )
+            }
+
+
+
+    }
+
+}
+@Composable
+fun Pagination() {
+
+    Column {
+        val pages = listOf("Your Routines", "Liked", "Follows", "History")
+        var selected = remember { mutableIntStateOf(0) }
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            for (i in pages.indices) {
+                val isSelected = selected.intValue == i
+                val backgroundColor =
+                    if (isSelected) colorScheme.primary else MaterialTheme.colorScheme.surface
+                val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                ElevatedButton(
+                    onClick = { selected.intValue = i },
+                    contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.elevatedButtonColors(
+                        containerColor = backgroundColor,
+                        contentColor = textColor
+                    ),
+                    modifier = Modifier
+                        .width(95.dp)
+                        .height(35.dp)
+                        .padding(4.dp)
+                ) {
+                    Text(
+                        text = pages[i],
+                        fontSize = 13.sp
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.size(10.dp))
+        PaginationContent(pages[selected.intValue])
+    }
+}
+
+@Composable
+fun PaginationContent(str: String) {
+    ListRoutineView()
+}
+
+@Composable
+fun ListRoutineView() {
+    // need to make a list of routines
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 6.dp)
+            .verticalScroll(state = rememberScrollState())
+    ) {
+        for (i in 0..6) {
+            RoutineItem("Routine", "Description Lorem impsum Lorem impsum Lorem impsum Lorem impsum Lorem impsum", 30, 4)
+            Divider()
+        }
+        Spacer(modifier = Modifier.size(60.dp))
+    }
+}
+
+@Composable
+fun RoutineItem(title:String,description:String, time:Int, score:Int) {
+    Row(
+        horizontalArrangement = Arrangement.Start, modifier = Modifier
+            .fillMaxWidth(1f)
+            .padding(vertical = 1.dp)
+    ) {
+
+        ListItem(
+            modifier = Modifier
+                .height(100.dp)
+                .fillMaxHeight()
+                .fillMaxWidth(0.75f)
+                .padding(0.dp),
+            headlineContent = {
+                Text(fontWeight = FontWeight(700), text = title)
+            },
+
+
+            supportingContent = {
+                Text(
+                    modifier = Modifier.fillMaxWidth(0.85f),
+                    text = description
+                )
+            },
+
+            leadingContent = {
+
+                AsyncImage(
+                    model = "", contentDescription = "FOTO_DE_RUTINA", modifier = Modifier
+                        .height(70.dp)
+                        .width(65.dp)
+                        .border(1.dp, colorScheme.primary, RoundedCornerShape(20))
+                        .clip(CircleShape), contentScale = ContentScale.Crop
+                )
+
+            }
+        )
+
+        Row(modifier = Modifier.padding(vertical = 8.dp)) {
+
+            Chip(name = "$time\"") {
+
+                Icon(
+                    imageVector = Icons.Outlined.Schedule,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+            }
+            Chip(name = "4") {
+
+                Icon(
+                    imageVector = Icons.Outlined.Star,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+            }
+
+
+        }
+    }
+}
+
+@Composable
+fun Chip(name: String, icon: @Composable () -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(30),
+        color = colorScheme.secondary,
+        modifier = Modifier
+            .height(22.dp)
+            .padding(horizontal = 2.dp)
+    ) {
+        Row(modifier = Modifier.padding(horizontal = 2.dp)) {
+            Text(text = name, fontSize = 14.sp)
+            icon.invoke()
+
+        }
+    }
+}
 @Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
 @Composable
 fun SearchScreenPreview() {

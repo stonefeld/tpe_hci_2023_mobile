@@ -50,8 +50,8 @@ import coil.compose.AsyncImage
 fun LibraryScreen() {
     Surface(modifier = Modifier.fillMaxSize(1f)) {
         Column(horizontalAlignment = CenterHorizontally) {
-            ProfileHeader()
-            LibraryPagination()
+           // ProfileHeader()
+           // LibraryPagination()
         }
     }
 }
@@ -63,7 +63,7 @@ fun LibraryScreenPreview() {
         LibraryScreen()
     }
 }
-
+/*
 @Composable
 fun ProfileHeader() {
     // need to make a profile photo and background image
@@ -150,21 +150,14 @@ fun PaginationContent(str: String) {
 @Composable
 fun ListRoutineView() {
     // need to make a list of routines
-    val name = "rutina"
-    val titulo = "Epic Routine"
-    val score = 4
-    val tags = listOf<String>("Abs")
-    val time = 30
-    val description =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     Column(
         horizontalAlignment = CenterHorizontally, modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 6.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(state = rememberScrollState())
     ) {
         for (i in 0..6) {
-            RoutineItem()
+            RoutineItem("Routine", "Description Lorem impsum Lorem impsum Lorem impsum Lorem impsum Lorem impsum", 30, 4)
             Divider()
         }
         Spacer(modifier = Modifier.size(60.dp))
@@ -173,7 +166,7 @@ fun ListRoutineView() {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun RoutineItem() {
+fun RoutineItem(title:String,description:String, time:Int, score:Int) {
     Row(
         horizontalArrangement = Arrangement.Start, modifier = Modifier
             .fillMaxWidth(1f)
@@ -187,14 +180,14 @@ fun RoutineItem() {
                 .fillMaxWidth(0.75f)
                 .padding(0.dp),
             headlineContent = {
-                Text(fontWeight = FontWeight(700), text = "Routine")
+                Text(fontWeight = FontWeight(700), text = title)
             },
 
 
             supportingContent = {
                 Text(
                     modifier = Modifier.fillMaxWidth(0.85f),
-                    text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+                    text = description
                 )
             },
 
@@ -216,7 +209,7 @@ fun RoutineItem() {
 
         Row(modifier = Modifier.padding(vertical = 8.dp)) {
 
-            Chip(name = "30'") {
+            Chip(name = "$time\"") {
 
                 Icon(
                     imageVector = Icons.Outlined.Schedule,
@@ -256,3 +249,4 @@ fun Chip(name: String, icon: @Composable () -> Unit) {
         }
     }
 }
+*/
