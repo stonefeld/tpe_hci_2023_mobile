@@ -1,5 +1,6 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
+import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
@@ -54,6 +58,8 @@ fun LoginScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     onLoginSuccess: () -> Unit
 ) {
+    val windowSize = rememberWindowInfo()
+
     Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -111,7 +117,8 @@ fun LoginScreen(
                 },
                 modifier = Modifier
                     .padding(10.dp)
-                    .fillMaxWidth(0.7f),
+                    .width(220.dp),
+
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -127,8 +134,8 @@ fun LoginScreen(
                     navController.navigate("register")
                 },
                 modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth(0.7f)
+                    .padding(20.dp)
+                    .width(220.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -143,3 +150,35 @@ fun LoginScreen(
         }
     }
 }
+
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=891dp,height=411dp")
+//@Composable
+//fun PreviewLoginScreen1() {
+//    VFitTheme {
+//        LoginScreen()
+//    }
+//}
+//
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
+//@Composable
+//fun PreviewLoginScreen2() {
+//    VFitTheme {
+//        LoginScreen()
+//    }
+//}
+//
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+//@Composable
+//fun PreviewLoginScreen3() {
+//    VFitTheme {
+//        LoginScreen()
+//    }
+//}
+//
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+//@Composable
+//fun PreviewLoginScreen4() {
+//    VFitTheme {
+//        LoginScreen()
+//    }
+//}

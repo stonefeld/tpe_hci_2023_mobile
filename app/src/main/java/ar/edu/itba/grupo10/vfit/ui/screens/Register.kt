@@ -7,12 +7,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -45,6 +46,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
+import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +57,7 @@ fun RegisterScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     onRegisterSuccess: () -> Unit
 ) {
+    val windowSize = rememberWindowInfo()
     Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,133 +72,221 @@ fun RegisterScreen(
             )
 
             var username by rememberSaveable { mutableStateOf("") }
-
-            TextField(
-                value = username,
-                modifier = Modifier.padding(20.dp),
-                onValueChange = { username = it },
-                label = { Text(text = stringResource(R.string.enter_username)) },
-                singleLine = true
-            )
-
             var mail by rememberSaveable { mutableStateOf("") }
-
-            TextField(
-                value = mail,
-                onValueChange = { mail = it },
-                label = { Text(text = stringResource(R.string.enter_username)) },
-                singleLine = true
-            )
-
             var password by rememberSaveable { mutableStateOf("") }
             var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                singleLine = true,
-                label = { Text(text = stringResource(R.string.enter_password)) },
-                visualTransformation =
-                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.padding(20.dp),
-                trailingIcon = {
-                    IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                        val visibilityIcon =
-                            if (passwordHidden) Icons.Default.Add else Icons.Filled.Clear // cambiar iconitos
-                        // Please provide localized description for accessibility services
-                        val description = if (passwordHidden) "Show password" else "Hide password"
-                        Icon(imageVector = visibilityIcon, contentDescription = description)
-                    }
+
+
+            if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
+
+                TextField(
+                    value = mail,
+                    onValueChange = { mail = it },
+                    label = { Text(text = stringResource(R.string.enter_mail)) },
+                    singleLine = true,
+                    modifier = Modifier.width(600.dp)
+                )
+
+                Row(
+                    modifier = Modifier.padding(20.dp)
+                    ) {
+
+                    TextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text(text = stringResource(R.string.enter_username)) },
+                        singleLine = true,
+                        modifier = Modifier.padding(end = 35.dp)
+                    )
+
+                    TextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        singleLine = true,
+                        label = { Text(text = stringResource(R.string.enter_password)) },
+                        visualTransformation =
+                        if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        trailingIcon = {
+                            IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                                val visibilityIcon =
+                                    if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff // cambiar iconitos
+                                // Please provide localized description for accessibility services
+                                val description =
+                                    if (passwordHidden) "Show password" else "Hide password"
+                                Icon(imageVector = visibilityIcon, contentDescription = description)
+                            }
+                        }
+                    )
                 }
-            )
+            }else{
+
+                TextField(
+                    value = mail,
+                    onValueChange = { mail = it },
+                    label = { Text(text = stringResource(R.string.enter_mail)) },
+                    singleLine = true
+                )
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text(text = stringResource(R.string.enter_username)) },
+                    singleLine = true,
+                    modifier = Modifier.padding(20.dp)
+                )
+
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    singleLine = true,
+                    label = { Text(text = stringResource(R.string.enter_password)) },
+                    visualTransformation =
+                    if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                            val visibilityIcon =
+                                if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff // cambiar iconitos
+                            // Please provide localized description for accessibility services
+                            val description =
+                                if (passwordHidden) "Show password" else "Hide password"
+                            Icon(imageVector = visibilityIcon, contentDescription = description)
+                        }
+                    }
+                )
+            }
 
             Text(
                 text = stringResource(R.string.extra_info),
                 fontSize = 25.sp
             )
-
             var firstName by rememberSaveable { mutableStateOf("") }
             var lastName by rememberSaveable { mutableStateOf("") }
-
-            TextField(
-                value = firstName,
-                modifier = Modifier.padding(25.dp),
-                onValueChange = { firstName = it },
-                label = { Text(text = stringResource(R.string.enter_name)) },
-                singleLine = true
-            )
-
-            TextField(
-                value = lastName,
-                onValueChange = { lastName = it },
-                label = { Text(text = stringResource(R.string.enter_lastname)) },
-                singleLine = true
-            )
-
             var phone by rememberSaveable { mutableStateOf("") }
-
-            TextField(
-                value = phone,
-                modifier = Modifier.padding(20.dp),
-                onValueChange = { phone = it },
-                label = { Text(text = stringResource(R.string.enter_phone)) },
-                singleLine = true
-            )
-
-            var urlphoto by rememberSaveable { mutableStateOf("") }
-
-            TextField(
-                value = urlphoto,
-                modifier = Modifier.padding(20.dp),
-                onValueChange = { urlphoto = it },
-                label = { Text(text = stringResource(R.string.url_photo)) },
-                singleLine = true
-            )
-
-            var birthday by rememberSaveable { mutableStateOf("") }
-
-            // TODO: dejo esto como texto xq no hay datepicker de material design 3
-            TextField(
-                value = birthday,
-                modifier = Modifier.padding(20.dp),
-                onValueChange = { birthday = it },
-                label = { Text(text = stringResource(R.string.birthday)) },
-                singleLine = true
-            )
-
             val context = LocalContext.current
             val coffeeDrinks = arrayOf("Male", "Female")
             var expanded by remember { mutableStateOf(false) }
             var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
 
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
+            if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
+
+                Row(){
+                    TextField(
+                        value = firstName,
+                         onValueChange = { firstName = it },
+                        label = { Text(text = stringResource(R.string.enter_name)) },
+                        singleLine = true,
+                        modifier = Modifier.padding(end = 35.dp)
+                    )
+
+                    TextField(
+                        value = lastName,
+                        onValueChange = { lastName = it },
+                        label = { Text(text = stringResource(R.string.enter_lastname)) },
+                        singleLine = true
+                    )
                 }
-            ) {
+
+                    Row(
+                        modifier=Modifier.padding(top=25.dp)
+                    ){
+                    TextField(
+                        value = phone,
+                        onValueChange = { phone = it },
+                        label = { Text(text = stringResource(R.string.enter_phone)) },
+                        singleLine = true,
+                        modifier = Modifier.padding(end = 35.dp)
+                    )
+
+
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = {
+                            expanded = !expanded
+                        }
+                    ) {
+                        TextField(
+                            value = selectedText,
+                            onValueChange = {},
+                            readOnly = true,
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            modifier = Modifier.menuAnchor()
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            coffeeDrinks.forEach { item ->
+                                DropdownMenuItem(
+                                    text = { Text(text = item) },
+                                    onClick = {
+                                        selectedText = item
+                                        expanded = false
+                                        Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            } else{
+
                 TextField(
-                    value = selectedText,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor()
+                    value = firstName,
+                    modifier = Modifier.padding(25.dp),
+                    onValueChange = { firstName = it },
+                    label = { Text(text = stringResource(R.string.enter_name)) },
+                    singleLine = true
                 )
 
-                ExposedDropdownMenu(
+                TextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    label = { Text(text = stringResource(R.string.enter_lastname)) },
+                    singleLine = true
+                )
+
+
+                TextField(
+                    value = phone,
+                    modifier = Modifier.padding(20.dp),
+                    onValueChange = { phone = it },
+                    label = { Text(text = stringResource(R.string.enter_phone)) },
+                    singleLine = true
+                )
+
+
+
+                ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
                 ) {
-                    coffeeDrinks.forEach { item ->
-                        DropdownMenuItem(
-                            text = { Text(text = item) },
-                            onClick = {
-                                selectedText = item
-                                expanded = false
-                                Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                            }
-                        )
+                    TextField(
+                        value = selectedText,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        coffeeDrinks.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item) },
+                                onClick = {
+                                    selectedText = item
+                                    expanded = false
+                                    Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -204,9 +296,8 @@ fun RegisterScreen(
             Row(
                 modifier = Modifier
                     .padding(15.dp)
-                    .padding(start = 45.dp)
                     .fillMaxWidth(1f),
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(
@@ -231,10 +322,17 @@ fun RegisterScreen(
     }
 }
 
-
-//@Preview(showSystemUi = true, locale = "es")
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
 //@Composable
 //fun RegisterScreenPreview() {
+//    VFitTheme {
+//        RegisterScreen()
+//    }
+//}
+//
+//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+//@Composable
+//fun RegisterScreenPreview2() {
 //    VFitTheme {
 //        RegisterScreen()
 //    }

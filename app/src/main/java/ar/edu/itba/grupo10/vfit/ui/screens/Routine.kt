@@ -36,6 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
+import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,66 +48,130 @@ fun RoutineScreen(
 //    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
 ) {
     Surface {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-        ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.routine_top),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.width(400.dp)
-            )
-
-            Row(
-                modifier= Modifier.padding(5.dp)
+        val windowSize = rememberWindowInfo()
+        if(windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded){
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
             ){
-                Column (
-                    modifier = Modifier.width(300.dp)
-                )
-                {
-                    Text(
-                        text = "Title",
-                        fontSize = 40.sp
+                Row(
+                    modifier= Modifier.padding(35.dp)
+                ){
+                    Column (
+                        modifier = Modifier.fillMaxWidth(0.9f)
                     )
-                    Text(
-                        text = "Description Description Description Description Description Description Description",
-                        fontSize = 15.sp
-                    )
-                }
-                Column(
-                    modifier = Modifier.width(60.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    {
+                        Text(
+                            text = "Title",
+                            fontSize = 40.sp
+                        )
+                        Text(
+                            text = "Description Description Description Description Description Description Description",
+                            fontSize = 15.sp
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(0.1f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
 
                     ) {
 
 
-                    Icon(
-                        Icons.Rounded.Share,
-                        contentDescription = stringResource(id = R.string.enter_mail),
-                        modifier = Modifier.size(30.dp)
-                            .padding( vertical = 5.dp)
+                        Icon(
+                            Icons.Rounded.Share,
+                            contentDescription = stringResource(id = R.string.enter_mail),
+                            modifier = Modifier.size(30.dp)
+                                .padding( vertical = 5.dp)
                         )
 
-                    //TODO: que sea un boton a la ejecucion de la rutina
-                    Icon(
-                        Icons.Rounded.PlayCircleOutline,
-                        contentDescription = stringResource(id = R.string.enter_mail),
-                        modifier = Modifier.size(60.dp),
+                        //TODO: que sea un boton a la ejecucion de la rutina
+                        Icon(
+                            Icons.Rounded.PlayCircleOutline,
+                            contentDescription = stringResource(id = R.string.enter_mail),
+                            modifier = Modifier.size(60.dp),
 
-                        )
+                            )
+                    }
                 }
+                // Seria for de n/3 +1
+                for (i in 1..(4/3+1)) {
+                    Row{
+                        Cycle(i)
+                        Spacer(modifier = Modifier.padding(5.dp))
+                        //TODO: hacer if si corresponde o no mostrar este
+                        Cycle(i+1)
+                        Spacer(modifier = Modifier.padding(5.dp))
+                        //TODO: hacer if si corresponde o no mostrar este
+                        Cycle(i+2)
+                        Spacer(modifier = Modifier.padding(5.dp))
+                    }
+                }
+                Spacer(modifier = Modifier.padding(50.dp))
             }
+        }else{
+                Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+            ) {
 
-            for (i in 1..3) {
-                Cycle(i)
-                Spacer(modifier = Modifier.padding(5.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.routine_top),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.width(400.dp)
+                )
+
+                Row(
+                    modifier= Modifier.padding(5.dp)
+                ){
+                    Column (
+                        modifier = Modifier.width(300.dp)
+                    )
+                    {
+                        Text(
+                            text = "Title",
+                            fontSize = 40.sp
+                        )
+                        Text(
+                            text = "Description Description Description Description Description Description Description",
+                            fontSize = 15.sp
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.width(60.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+
+                        ) {
+
+
+                        Icon(
+                            Icons.Rounded.Share,
+                            contentDescription = stringResource(id = R.string.enter_mail),
+                            modifier = Modifier.size(30.dp)
+                                .padding( vertical = 5.dp)
+                            )
+
+                        //TODO: que sea un boton a la ejecucion de la rutina
+                        Icon(
+                            Icons.Rounded.PlayCircleOutline,
+                            contentDescription = stringResource(id = R.string.enter_mail),
+                            modifier = Modifier.size(60.dp),
+
+                            )
+                    }
+                }
+
+                for (i in 1..3) {
+                    Cycle(i)
+                    Spacer(modifier = Modifier.padding(5.dp))
+                }
+                Spacer(modifier = Modifier.padding(50.dp))
+
+
             }
-            Spacer(modifier = Modifier.padding(50.dp))
-
-
         }
     }
 }
@@ -173,9 +239,17 @@ fun Exercise(name:String, series:String, time:String){
 }
 
 
-@Preview(showSystemUi = true, locale = "es")
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=400dp,height=891dp")
 @Composable
 fun RoutineScreenPreview() {
+    VFitTheme {
+        RoutineScreen()
+    }
+}
+
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
+@Composable
+fun RoutineScreenPreview1() {
     VFitTheme {
         RoutineScreen()
     }
