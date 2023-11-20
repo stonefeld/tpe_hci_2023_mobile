@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -37,8 +38,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -62,8 +65,12 @@ import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.OnLifeCycleEvent
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import ar.edu.itba.grupo10.vfit.utils.stringToRes
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.squareup.wire.internal.copyOf
+import java.util.Arrays.copyOf
 import java.util.Date
 
 @Composable
@@ -72,45 +79,44 @@ fun RoutineScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     routineID: Int?
 ) {
-    var liked by remember { mutableStateOf(false) }
-    val windowSize = rememberWindowInfo()
-    val sendIntent: Intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
-        type = "text/plain"
-    }
-    OnLifeCycleEvent { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                if (routineID != null) {
+    if (routineID != null) {
+        var liked by remember { mutableStateOf(false) }
+        val windowSize = rememberWindowInfo()
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+
+        OnLifeCycleEvent { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
                     viewModel.getRoutine(routineID)
                     viewModel.getCycles(routineID)
                 }
+
+                else -> {}
             }
-
-            else -> {}
         }
-    }
-    var currentRoutine = viewModel.uiState.currentRoutine
-    val cyclesList = viewModel.uiState.cycles
-    val shareIntent = Intent.createChooser(sendIntent, null)
 
-    if (routineID != null) {
         SwipeRefresh(
             state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
             onRefresh = {
                 viewModel.getRoutine(routineID)
-                currentRoutine = viewModel.uiState.currentRoutine
+                viewModel.getCycles(routineID)
             }
         ) {
             //TODO: no entra siempre en el if por lo qual hay que chequear el estado de currentRoutine en cada llamado
-            if (currentRoutine != null) {
+            if (viewModel.uiState.currentRoutine != null) {
+                val currentRoutine = viewModel.uiState.currentRoutine
+                val cyclesList = viewModel.uiState.cycles
+
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize(1f)
+                        modifier = Modifier.fillMaxSize(1f)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(1f),
@@ -123,6 +129,14 @@ fun RoutineScreen(
                                     .heightIn(0.dp, 150.dp),
                                 color = MaterialTheme.colorScheme.background,
                             ) {
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(if (currentRoutine?.metadata != null) currentRoutine.metadata!!.image else R.drawable.execute_routine_tablet)
+                                        .crossfade(true).build(),
+                                    placeholder = painterResource(R.drawable.execute_routine_tablet),
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(bottom = 5.dp)
+                                )
                                 Box(
                                     modifier = Modifier
                                         .padding(16.dp)
@@ -171,18 +185,6 @@ fun RoutineScreen(
                                         }
                                     }
                                 }
-//                    AsyncImage(
-//                    model = "",
-//                    contentDescription = null,
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier
-//                        .size(40.dp)
-//                        .clip(RectangleShape)
-//                )
-                                Image(
-                                    painter = painterResource(id = R.drawable.exercise),
-                                    contentDescription = null,
-                                )
                             }
                         }
                         Divider(
@@ -213,13 +215,13 @@ fun RoutineScreen(
                                         )
                                         Text(
                                             text = stringResource(R.string.difficulty) + " " + stringResource(
-                                                stringToRes(currentRoutine!!.difficulty)
+                                                stringToRes(currentRoutine.difficulty)
                                             ),
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.padding(vertical = 5.dp)
                                         )
                                         Text(
-                                            text = currentRoutine!!.date.toString(),
+                                            text = currentRoutine.date.toString(),
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.padding(top = 5.dp)
                                         )
@@ -239,11 +241,12 @@ fun RoutineScreen(
                                                 horizontalArrangement = Arrangement.Center
                                             ) {
                                                 Image(
-                                                    painter = painterResource(id = R.drawable.play),
+                                                    painter = painterResource(R.drawable.play),
                                                     contentDescription = null,
                                                     contentScale = ContentScale.Crop,
                                                     modifier = Modifier
                                                         .padding(end = 10.dp)
+                                                        .clip(CircleShape)
                                                         .clickable {
                                                             /*TODO:*/
                                                         }
@@ -251,7 +254,7 @@ fun RoutineScreen(
                                                 IconButton(onClick = { /*startActivity(shareIntent)*/ }) {
                                                     Icon(
                                                         Icons.Rounded.Share,
-                                                        contentDescription = stringResource(id = R.string.enter_mail),
+                                                        contentDescription = stringResource(R.string.enter_mail),
                                                         modifier = Modifier
                                                             .padding(vertical = 5.dp)
                                                     )
@@ -274,26 +277,18 @@ fun RoutineScreen(
                                 }
                                 if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
                                     cyclesList?.forEach {
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(1f)
-                                        ) {
+                                        Row(modifier = Modifier.fillMaxWidth()) {
                                             AddCycle(it)
                                         }
                                     }
                                 } else {
                                     cyclesList?.forEach {
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(1f)
-                                        ) {
+                                        Row(modifier = Modifier.fillMaxWidth()) {
                                             //TODO: arreglar dos ciclos por row
-                                            Column(
-                                                modifier = Modifier.fillMaxWidth(0.5f)
-                                            ) {
+                                            Column(modifier = Modifier.fillMaxWidth(0.5f)) {
                                                 AddCycle(it)
                                             }
-                                            Column(
-                                                modifier = Modifier.fillMaxWidth(1f)
-                                            ) {
+                                            Column(modifier = Modifier.fillMaxWidth()) {
                                                 AddCycle(it)
                                             }
                                         }
@@ -305,7 +300,6 @@ fun RoutineScreen(
                 }
             }
         }
-
     }
 }
 
@@ -323,30 +317,34 @@ fun AddCycle(
             else -> {}
         }
     }
-    val exercisesList = viewModel.uiState.cycleExercises
-    Card(
-        border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 1.5.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .padding(10.dp)
-    ) {
-        Row(
+
+    if (viewModel.uiState.cycleExercises != null) {
+        val exercisesList = viewModel.uiState.cycleExercises
+
+        Card(
+            border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 1.5.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .padding(horizontal = 10.dp, vertical = 5.dp)
+                .padding(10.dp)
         ) {
-            Text(
-                text = cycle.name,
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Default,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        }
-        exercisesList?.forEach {
-            AddExerciseRoutine(it)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+            ) {
+                Text(
+                    text = cycle.name,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Default,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
+            exercisesList?.forEach {
+                AddExerciseRoutine(it)
+            }
         }
     }
 }
@@ -411,7 +409,6 @@ fun AddExerciseRoutine(
                 }
             }
         }
-
     }
 }
 

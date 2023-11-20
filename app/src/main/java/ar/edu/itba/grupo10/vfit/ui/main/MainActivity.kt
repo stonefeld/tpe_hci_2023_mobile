@@ -55,12 +55,12 @@ class MainActivity : ComponentActivity() {
 fun navBarVisibility(
     navController: NavController
 ): MutableState<Boolean> {
-    val state = rememberSaveable { mutableStateOf(true) }
+    val state = rememberSaveable { mutableStateOf(false) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     when (navBackStackEntry?.destination?.route) {
-        Screen.Login.route, Screen.Register.route, Screen.Verify.route -> state.value = false
-        else -> state.value = true
+        Screen.Home.route, Screen.Library.route, Screen.Profile.route -> state.value = true
+        else -> state.value = false
     }
 
     return state
