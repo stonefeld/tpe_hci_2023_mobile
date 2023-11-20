@@ -51,6 +51,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.data.models.Cycle
+import ar.edu.itba.grupo10.vfit.data.models.CycleExercise
 import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.models.User
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
@@ -82,6 +84,7 @@ fun RoutineScreen(
             Lifecycle.Event.ON_RESUME -> {
                 if (routineID != null) {
                     viewModel.getRoutine(routineID)
+                    viewModel.getCycles(routineID)
                 }
             }
 
@@ -89,85 +92,85 @@ fun RoutineScreen(
         }
     }
     var currentRoutine = viewModel.uiState.currentRoutine
+    val cyclesList = viewModel.uiState.cycles
     val shareIntent = Intent.createChooser(sendIntent, null)
 
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
-        onRefresh = {
-            if (routineID != null) {
+    if (routineID != null) {
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
+            onRefresh = {
                 viewModel.getRoutine(routineID)
                 currentRoutine = viewModel.uiState.currentRoutine
             }
-        }
-    ) {
-        //TODO: no entra siempre en el if por lo qual hay que chequear el estado de currentRoutine en cada llamado
-        if (currentRoutine != null) {
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(1f)
+        ) {
+            //TODO: no entra siempre en el if por lo qual hay que chequear el estado de currentRoutine en cada llamado
+            if (currentRoutine != null) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(1f),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(1f)
                     ) {
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .heightIn(0.dp, 150.dp),
-                            color = MaterialTheme.colorScheme.background,
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1f),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
+                            Surface(
                                 modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxSize()
+                                    .fillMaxWidth(1f)
+                                    .heightIn(0.dp, 150.dp),
+                                color = MaterialTheme.colorScheme.background,
                             ) {
-                                FloatingActionButton(
-                                    modifier = Modifier.align(alignment = Alignment.TopStart),
-                                    onClick = {
-                                        navController.popBackStack()
-                                    },
-                                    containerColor = MaterialTheme.colorScheme.background,
-                                    contentColor = MaterialTheme.colorScheme.onBackground
+                                Box(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxSize()
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowBack,
-                                        contentDescription = null
-                                    )
-                                }
-                                if (liked) {
                                     FloatingActionButton(
-                                        modifier = Modifier.align(alignment = Alignment.TopEnd),
+                                        modifier = Modifier.align(alignment = Alignment.TopStart),
                                         onClick = {
-                                            liked = false
+                                            navController.popBackStack()
                                         },
                                         containerColor = MaterialTheme.colorScheme.background,
-                                        contentColor = MaterialTheme.colorScheme.primary
+                                        contentColor = MaterialTheme.colorScheme.onBackground
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Default.Favorite,
-                                            contentDescription = null,
+                                            imageVector = Icons.Default.ArrowBack,
+                                            contentDescription = null
                                         )
                                     }
-                                } else {
-                                    FloatingActionButton(
-                                        modifier = Modifier.align(alignment = Alignment.TopEnd),
-                                        onClick = {
-                                            liked = true
-                                        },
-                                        containerColor = MaterialTheme.colorScheme.background,
-                                        contentColor = MaterialTheme.colorScheme.primary
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.FavoriteBorder,
-                                            contentDescription = null,
-                                        )
+                                    if (liked) {
+                                        FloatingActionButton(
+                                            modifier = Modifier.align(alignment = Alignment.TopEnd),
+                                            onClick = {
+                                                liked = false
+                                            },
+                                            containerColor = MaterialTheme.colorScheme.background,
+                                            contentColor = MaterialTheme.colorScheme.primary
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Favorite,
+                                                contentDescription = null,
+                                            )
+                                        }
+                                    } else {
+                                        FloatingActionButton(
+                                            modifier = Modifier.align(alignment = Alignment.TopEnd),
+                                            onClick = {
+                                                liked = true
+                                            },
+                                            containerColor = MaterialTheme.colorScheme.background,
+                                            contentColor = MaterialTheme.colorScheme.primary
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.FavoriteBorder,
+                                                contentDescription = null,
+                                            )
+                                        }
                                     }
                                 }
-                            }
 //                    AsyncImage(
 //                    model = "",
 //                    contentDescription = null,
@@ -176,156 +179,124 @@ fun RoutineScreen(
 //                        .size(40.dp)
 //                        .clip(RectangleShape)
 //                )
-                            Image(
-                                painter = painterResource(id = R.drawable.exercise),
-                                contentDescription = null,
-                            )
+                                Image(
+                                    painter = painterResource(id = R.drawable.exercise),
+                                    contentDescription = null,
+                                )
+                            }
                         }
-                    }
-                    Divider(
-                        thickness = 5.dp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Row {
-                        Column(
-                            modifier = Modifier
-                                .verticalScroll(state = rememberScrollState())
-                                .fillMaxHeight(1f)
-                        ) {
-                            Row(
+                        Divider(
+                            thickness = 5.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Row {
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxWidth(1f)
-                                    .padding(10.dp)
+                                    .verticalScroll(state = rememberScrollState())
+                                    .fillMaxHeight(1f)
                             ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.65f)
-                                        .padding(5.dp)
-                                ) {
-                                    Text(
-                                        text = currentRoutine!!.name,
-                                        fontSize = 30.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(bottom = 5.dp)
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.difficulty) + " " + stringResource(
-                                            stringToRes(currentRoutine!!.difficulty)
-                                        ),
-                                        fontWeight = FontWeight.SemiBold,
-                                        modifier = Modifier.padding(vertical = 5.dp)
-                                    )
-                                    Text(
-                                        text = currentRoutine!!.date.toString(),
-                                        fontWeight = FontWeight.SemiBold,
-                                        modifier = Modifier.padding(top = 5.dp)
-                                    )
-                                }
                                 Row(
-                                    modifier = Modifier.fillMaxHeight(1f)
+                                    modifier = Modifier
+                                        .fillMaxWidth(1f)
+                                        .padding(10.dp)
                                 ) {
                                     Column(
                                         modifier = Modifier
-                                            .fillMaxHeight(1f)
-                                            .fillMaxSize(1f),
-                                        verticalArrangement = Arrangement.Center,
-                                        horizontalAlignment = Alignment.CenterHorizontally
+                                            .fillMaxWidth(0.65f)
+                                            .padding(5.dp)
                                     ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.Center
+                                        Text(
+                                            text = currentRoutine!!.name,
+                                            fontSize = 30.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.padding(bottom = 5.dp)
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.difficulty) + " " + stringResource(
+                                                stringToRes(currentRoutine!!.difficulty)
+                                            ),
+                                            fontWeight = FontWeight.SemiBold,
+                                            modifier = Modifier.padding(vertical = 5.dp)
+                                        )
+                                        Text(
+                                            text = currentRoutine!!.date.toString(),
+                                            fontWeight = FontWeight.SemiBold,
+                                            modifier = Modifier.padding(top = 5.dp)
+                                        )
+                                    }
+                                    Row(
+                                        modifier = Modifier.fillMaxHeight(1f)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxHeight(1f)
+                                                .fillMaxSize(1f),
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            Image(
-                                                painter = painterResource(id = R.drawable.play),
-                                                contentDescription = null,
-                                                contentScale = ContentScale.Crop,
-                                                modifier = Modifier
-                                                    .padding(end = 10.dp)
-                                                    .clickable {
-                                                        /*TODO:*/
-                                                    }
-                                            )
-                                            IconButton(onClick = { /*startActivity(shareIntent)*/ }) {
-                                                Icon(
-                                                    Icons.Rounded.Share,
-                                                    contentDescription = stringResource(id = R.string.enter_mail),
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.Center
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(id = R.drawable.play),
+                                                    contentDescription = null,
+                                                    contentScale = ContentScale.Crop,
                                                     modifier = Modifier
-                                                        .padding(vertical = 5.dp)
+                                                        .padding(end = 10.dp)
+                                                        .clickable {
+                                                            /*TODO:*/
+                                                        }
                                                 )
+                                                IconButton(onClick = { /*startActivity(shareIntent)*/ }) {
+                                                    Icon(
+                                                        Icons.Rounded.Share,
+                                                        contentDescription = stringResource(id = R.string.enter_mail),
+                                                        modifier = Modifier
+                                                            .padding(vertical = 5.dp)
+                                                    )
+                                                }
+
+
                                             }
-
-
                                         }
                                     }
                                 }
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .padding(horizontal = 15.dp)
-                                    .fillMaxWidth(1f)
-                            ) {
-                                Text(
-                                    text = currentRoutine!!.detail,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                            if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
                                 Row(
-                                    modifier = Modifier.fillMaxWidth(1f)
+                                    modifier = Modifier
+                                        .padding(horizontal = 15.dp)
+                                        .fillMaxWidth(1f)
                                 ) {
-                                    AddCycle()
+                                    Text(
+                                        text = currentRoutine!!.detail,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
                                 }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(1f)
-                                ) {
-                                    AddCycle()
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(1f)
-                                ) {
-                                    AddCycle()
-                                }
-                            } else {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(1f)
-                                ) {
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(0.5f)
-                                    ) {
-                                        AddCycle()
+                                if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
+                                    cyclesList?.forEach {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(1f)
+                                        ) {
+                                            AddCycle(it)
+                                        }
                                     }
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(1f)
-                                    ) {
-                                        AddCycle()
-                                    }
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(1f)
-                                ) {
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(0.5f)
-                                    ) {
-                                        AddCycle()
-                                    }
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(1f)
-                                    ) {
-                                        AddCycle()
-                                    }
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(1f)
-                                ) {
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(0.5f)
-                                    ) {
-                                        AddCycle()
-                                    }
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(1f)
-                                    ) {
-                                        AddCycle()
+                                } else {
+                                    cyclesList?.forEach {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(1f)
+                                        ) {
+                                            //TODO: arreglar dos ciclos por row
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(0.5f)
+                                            ) {
+                                                AddCycle(it)
+                                            }
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(1f)
+                                            ) {
+                                                AddCycle(it)
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -334,11 +305,25 @@ fun RoutineScreen(
                 }
             }
         }
+
     }
 }
 
 @Composable
-fun AddCycle() {
+fun AddCycle(
+    cycle: Cycle,
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+) {
+    OnLifeCycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                cycle.id?.let { viewModel.getCycleExercises(it) }
+            }
+
+            else -> {}
+        }
+    }
+    val exercisesList = viewModel.uiState.cycleExercises
     Card(
         border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 1.5.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -353,24 +338,22 @@ fun AddCycle() {
                 .padding(horizontal = 10.dp, vertical = 5.dp)
         ) {
             Text(
-                text = "Ciclo",
+                text = cycle.name,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Default,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         }
-        AddExerciseRoutine("Ejercicio 1", "4x10", "120''")
-        AddExerciseRoutine("Ejercicio 2", "3x8", "180''")
-        AddExerciseRoutine("Ejercicio 3", "4x12", "90''")
+        exercisesList?.forEach {
+            AddExerciseRoutine(it)
+        }
     }
 }
 
 @Composable
 fun AddExerciseRoutine(
-    exName: String,
-    exReps: String,
-    exTime: String,
+    cycleExercise: CycleExercise
 ) {
     Surface(
         color = Color(0xCCFFFFFF),
@@ -388,12 +371,14 @@ fun AddExerciseRoutine(
             Box(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(
-                    text = exName,
-                    modifier = Modifier.align(Alignment.CenterStart),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontWeight = FontWeight.SemiBold
-                )
+                cycleExercise.exercise?.let {
+                    Text(
+                        text = it.name,
+                        modifier = Modifier.align(Alignment.CenterStart),
+                        color = MaterialTheme.colorScheme.tertiary,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
                 Row(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
@@ -405,7 +390,7 @@ fun AddExerciseRoutine(
                             )
                     ) {
                         Text(
-                            text = exReps,
+                            text = cycleExercise.repetitions.toString() + " reps",
                             color = MaterialTheme.colorScheme.tertiary,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -418,7 +403,7 @@ fun AddExerciseRoutine(
                             )
                     ) {
                         Text(
-                            text = exTime,
+                            text = cycleExercise.duration.toString() + "''",
                             color = MaterialTheme.colorScheme.tertiary,
                             fontWeight = FontWeight.SemiBold
                         )

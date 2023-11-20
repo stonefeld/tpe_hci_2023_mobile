@@ -21,6 +21,7 @@ import androidx.navigation.navigation
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.screens.ExecuteRoutineScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.RoutineScreen
+import ar.edu.itba.grupo10.vfit.ui.screens.LibraryScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.HomeScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.LoginScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.ProfileScreen
@@ -77,6 +78,7 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAp
                 routineID = backstackEntry.arguments?.getInt("routine_id"),
             )
         }
+        composable(Screen.Library.route) { LibraryScreen() }
         composable(Screen.ExecuteRoutine.route) { ExecuteRoutineScreen(true) }
         composable(Screen.Profile.route) {
             ProfileScreen {
