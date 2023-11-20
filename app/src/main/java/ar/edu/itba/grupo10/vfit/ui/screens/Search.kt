@@ -3,6 +3,7 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,18 +15,36 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.withConsumedWindowInsets
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxColors
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -49,10 +68,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
@@ -175,10 +198,11 @@ fun SearchBar(search:String, onSearchChange: (String) -> Unit){
 fun Pagination() {
 
     Column {
-        val pages = listOf("Your Routines", "Liked", "Follows", "History")
+        val pages = listOf("Your Routines", "Liked", "All")
         var selected = remember { mutableIntStateOf(0) }
+        val openDialog = remember { mutableStateOf(false) }
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
 
@@ -205,11 +229,54 @@ fun Pagination() {
                     )
                 }
             }
+            ExtendedFloatingActionButton(
+                onClick = { openDialog.value = true },
+                modifier= Modifier
+                    .width(110.dp)
+                    .height(35.dp)
+                    .padding(4.dp),
+                contentColor = colorScheme.onPrimary, containerColor = colorScheme.secondary,
+                icon = { Icon(Icons.Default.FilterAlt, "Filter", modifier=Modifier.size(16.dp)) },
+                text = { Text(text = "Sort", fontSize = 13.sp) },
+            )
+
+
         }
         Spacer(modifier = Modifier.size(10.dp))
+        when    {
+
+            openDialog.value ->{
+                FilterDialog(onDismissRequest = { openDialog.value = false })
+            }
+        }
         PaginationContent(pages[selected.intValue])
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterDialog(onDismissRequest: () -> Unit) {
+    AlertDialog(onDismissRequest = { onDismissRequest() }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+
+            Spacer(modifier = Modifier.size(30.dp))
+
+
+        }
+    }
+}
+
+@Composable 
+fun DropD(){
+
+
+}
+
+
 
 @Composable
 fun PaginationContent(str: String) {
