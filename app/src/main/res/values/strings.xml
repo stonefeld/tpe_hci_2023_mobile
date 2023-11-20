@@ -12,8 +12,8 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="enter_username">Username</string>
-    <string name="enter_name">First Name</string>
-    <string name="enter_lastname">Lastname</string>
+    <string name="enter_name">First name</string>
+    <string name="enter_lastname">Last name</string>
     <string name="enter_phone">Phone</string>
     <string name="enter_mail">Email</string>
     <string name="enter_password">Password</string>

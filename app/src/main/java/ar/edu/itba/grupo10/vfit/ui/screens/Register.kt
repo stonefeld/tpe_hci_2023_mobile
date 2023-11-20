@@ -95,6 +95,7 @@ fun RegisterScreen(
                 modifier = Modifier.width(600.dp)
             )
 
+            // TODO: arreglar el horizontal de esto
             Row(modifier = Modifier.padding(20.dp)) {
                 TextField(
                     value = username,

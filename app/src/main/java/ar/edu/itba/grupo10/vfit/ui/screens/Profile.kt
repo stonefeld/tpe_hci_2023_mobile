@@ -1,19 +1,16 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -21,10 +18,6 @@ import androidx.compose.material.icons.filled.Panorama
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.Transgender
-import androidx.compose.material.icons.rounded.Cake
-import androidx.compose.material.icons.rounded.Mail
-import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.Transgender
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -37,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,7 +44,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -59,9 +52,10 @@ import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
-import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.OnLifeCycleEvent
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
+import ar.edu.itba.grupo10.vfit.utils.resToString
+import ar.edu.itba.grupo10.vfit.utils.stringToRes
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -80,16 +74,6 @@ fun ProfileScreen(
 
     var edit by rememberSaveable { mutableStateOf(false) }
 
-    var firstName by rememberSaveable { mutableStateOf(user?.firstName!!) }
-    var lastName by rememberSaveable { mutableStateOf(user?.lastName!!) }
-    var phone by rememberSaveable { mutableStateOf(user?.phone!!) }
-    var avatar by rememberSaveable { mutableStateOf(user?.avatarUrl!!) }
-
-    // TODO: gender que tome del user
-    var expanded by remember { mutableStateOf(false) }
-    val genders = arrayOf("Male", "Female")
-    var gender by remember { mutableStateOf(genders[0]) }
-
     OnLifeCycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
@@ -100,89 +84,76 @@ fun ProfileScreen(
         }
     }
 
-    if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .width(600.dp)
-                .padding(35.dp)
-        ) {
-            Row(
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(uiState.isLoading),
+        onRefresh = { viewModel.getCurrentUser(true) }
+    ) {
+        if (user != null) {
+            var firstName by rememberSaveable { mutableStateOf(user.firstName) }
+            var lastName by rememberSaveable { mutableStateOf(user.lastName) }
+            var phone by rememberSaveable { mutableStateOf(user.phone!!) }
+            var avatar by rememberSaveable { mutableStateOf(user.avatarUrl!!) }
+
+            var expanded by rememberSaveable { mutableStateOf(false) }
+            val genders = arrayOf(R.string.male, R.string.female)
+            var gender by rememberSaveable { mutableIntStateOf(stringToRes(user.gender!!)) }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(5.dp)
-                    .padding(start = 25.dp)
-                    .fillMaxWidth(1f),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(user?.avatarUrl)
-                        .crossfade(true).build(),
-                    placeholder = painterResource(R.drawable.guest),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                )
-                Text(
-                    text = user?.username!!,
-                    textAlign = TextAlign.Center,
-                    fontSize = 32.sp,
-                    modifier = Modifier.padding(start = 10.dp),
-                )
-
-            }
-            Box(
-                modifier = Modifier.fillMaxWidth(0.8f)
-            ) {
-                Column {
-                    TextField(
-                        value = firstName,
-                        onValueChange = { firstName = it },
-                        readOnly = !edit,
-                        label = { Text(stringResource(R.string.enter_name)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 8.dp, top = 16.dp),
-                        leadingIcon = { Icon(Icons.Default.TextFields, contentDescription = null) },
-                        singleLine = true
-                    )
-
-                    TextField(
-                        value = phone,
-                        onValueChange = { phone = it },
-                        readOnly = !edit,
-                        label = { Text(text = stringResource(R.string.enter_phone)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 8.dp),
-                        leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
-                        singleLine = true
-                    )
-
-
-
-
-                }
-
-                Column(
-                    modifier = Modifier.padding(start = 400.dp)
-
-                ) {
+                if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
                     Row(
                         modifier = Modifier
-                            .padding(5.dp)
-                            .padding(start = 25.dp)
-                            .fillMaxWidth(1f),
-                        horizontalArrangement = Arrangement.Start,
+                            .fillMaxWidth()
+                            .padding(top = 32.dp),
+                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(user.avatarUrl)
+                                .crossfade(true).build(),
+                            placeholder = painterResource(R.drawable.guest),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                        )
+                        Text(
+                            text = user.username,
+                            textAlign = TextAlign.Center,
+                            fontSize = 32.sp,
+                            modifier = Modifier.padding(start = 10.dp),
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 16.dp, bottom = 8.dp)
+                    ) {
+                        TextField(
+                            value = firstName,
+                            onValueChange = { firstName = it },
+                            readOnly = !edit,
+                            label = { Text(stringResource(R.string.enter_name)) },
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .padding(end = 4.dp),
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.TextFields,
+                                    contentDescription = null
+                                )
+                            },
+                            singleLine = true
+                        )
 
                         TextField(
                             value = lastName,
@@ -191,9 +162,33 @@ fun ProfileScreen(
                             label = { Text(stringResource(R.string.enter_lastname)) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(bottom = 8.dp),
-                            leadingIcon = { Icon(Icons.Default.TextFields, contentDescription = null) },
+                                .padding(start = 4.dp),
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.TextFields,
+                                    contentDescription = null
+                                )
+                            },
+                            singleLine = true
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 8.dp)
+                    ) {
+                        TextField(
+                            value = phone,
+                            onValueChange = { phone = it },
+                            readOnly = !edit,
+                            label = { Text(text = stringResource(R.string.enter_phone)) },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .padding(end = 4.dp),
+                            leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
                             singleLine = true
                         )
 
@@ -202,14 +197,13 @@ fun ProfileScreen(
                             onExpandedChange = { if (edit) expanded = !expanded }
                         ) {
                             TextField(
-                                value = gender,
+                                value = stringResource(gender),
                                 onValueChange = {},
                                 readOnly = true,
                                 modifier = Modifier
                                     .menuAnchor()
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                                    .padding(bottom = 8.dp),
+                                    .padding(start = 4.dp),
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Transgender,
@@ -225,7 +219,7 @@ fun ProfileScreen(
                             ) {
                                 genders.forEach { item ->
                                     DropdownMenuItem(
-                                        text = { Text(text = item) },
+                                        text = { Text(stringResource(item)) },
                                         onClick = {
                                             gender = item
                                             expanded = false
@@ -235,136 +229,7 @@ fun ProfileScreen(
                             }
                         }
                     }
-
-                    Row(
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .padding(start = 25.dp)
-                            .fillMaxWidth(1f),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Rounded.Transgender,
-                            contentDescription = stringResource(id = R.string.enter_mail)
-                        )
-                        Text(
-                            text = "Gender",
-                            fontSize = 24.sp,
-                            modifier = Modifier.padding(start = 10.dp),
-                        )
-                    }
-                }
-            }
-
-            if (!edit) {
-                ElevatedButton(
-                    onClick = { edit = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.edit_profile),
-                        modifier = Modifier.padding(vertical = 10.dp)
-                    )
-                }
-
-                ElevatedButton(
-                    onClick = {
-                        viewModel.logout(onLogoutSuccess)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    if (viewModel.uiState.isLoading)
-                        CircularProgressIndicator()
-                    else
-                        Text(
-                            text = stringResource(R.string.logout),
-                            modifier = Modifier.padding(vertical = 10.dp)
-                        )
-                }
-            } else
-            {
-                TextField(
-                    value = avatar,
-                    onValueChange = { avatar = it },
-                    label = { Text(text = stringResource(R.string.url_photo)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 8.dp),
-                    leadingIcon = {
-                        Icon(
-                            Icons.Default.Panorama,
-                            contentDescription = null
-                        )
-                    },
-                    singleLine = true
-                )
-
-                ElevatedButton(
-                    onClick = {
-                        viewModel.modifyCurrentUser(
-                            firstName,
-                            lastName,
-                            phone,
-                            gender.lowercase(),
-                            avatar,
-                            onModifySuccess = { edit = false }
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.save_changes),
-                        modifier = Modifier.padding(vertical = 10.dp)
-                    )
-                }
-
-                ElevatedButton(
-                    onClick = {
-                        firstName = user!!.firstName
-                        lastName = user.lastName
-                        phone = user.phone!!
-                        gender = user.gender!!
-                        avatar = user.avatarUrl!!
-                        edit = false
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.cancel),
-                        modifier = Modifier.padding(vertical = 10.dp)
-                    )
-                }
-            }
-
-        }
-    } else {
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(uiState.isLoading),
-            onRefresh = { viewModel.getCurrentUser(true) }
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator()
-                } else if (uiState.currentUser != null) {
+                } else {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -373,7 +238,7 @@ fun ProfileScreen(
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(user?.avatarUrl)
+                                .data(user.avatarUrl)
                                 .crossfade(true).build(),
                             placeholder = painterResource(R.drawable.guest),
                             contentDescription = null,
@@ -383,13 +248,11 @@ fun ProfileScreen(
                                 .clip(CircleShape)
                         )
                         Text(
-                            text = user?.username!!,
+                            text = user.username,
                             textAlign = TextAlign.Center,
-                            fontSize = 32.sp,
-                            modifier = Modifier.padding(start = 10.dp),
+                            fontSize = 32.sp
                         )
                     }
-
 
                     TextField(
                         value = firstName,
@@ -436,7 +299,7 @@ fun ProfileScreen(
                         onExpandedChange = { if (edit) expanded = !expanded }
                     ) {
                         TextField(
-                            value = gender,
+                            value = stringResource(gender),
                             onValueChange = {},
                             readOnly = true,
                             modifier = Modifier
@@ -459,7 +322,7 @@ fun ProfileScreen(
                         ) {
                             genders.forEach { item ->
                                 DropdownMenuItem(
-                                    text = { Text(text = item) },
+                                    text = { Text(stringResource(item)) },
                                     onClick = {
                                         gender = item
                                         expanded = false
@@ -468,96 +331,96 @@ fun ProfileScreen(
                             }
                         }
                     }
+                }
 
-                    if (!edit) {
-                        ElevatedButton(
-                            onClick = { edit = true },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.edit_profile),
-                                modifier = Modifier.padding(vertical = 10.dp)
-                            )
-                        }
-
-                        ElevatedButton(
-                            onClick = {
-                                viewModel.logout(onLogoutSuccess)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            if (viewModel.uiState.isLoading)
-                                CircularProgressIndicator()
-                            else
-                                Text(
-                                    text = stringResource(R.string.logout),
-                                    modifier = Modifier.padding(vertical = 10.dp)
-                                )
-                        }
-                    } else {
-                        TextField(
-                            value = avatar,
-                            onValueChange = { avatar = it },
-                            label = { Text(text = stringResource(R.string.url_photo)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(bottom = 8.dp),
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.Panorama,
-                                    contentDescription = null
-                                )
-                            },
-                            singleLine = true
+                if (!edit) {
+                    ElevatedButton(
+                        onClick = { edit = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.edit_profile),
+                            modifier = Modifier.padding(vertical = 10.dp)
                         )
+                    }
 
-                        ElevatedButton(
-                            onClick = {
-                                viewModel.modifyCurrentUser(
-                                    firstName,
-                                    lastName,
-                                    phone,
-                                    gender.lowercase(),
-                                    avatar,
-                                    onModifySuccess = { edit = false }
-                                )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp)
-                        ) {
+                    ElevatedButton(
+                        onClick = {
+                            viewModel.logout(onLogoutSuccess)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        if (viewModel.uiState.isLoading)
+                            CircularProgressIndicator()
+                        else
                             Text(
-                                text = stringResource(R.string.save_changes),
+                                text = stringResource(R.string.logout),
                                 modifier = Modifier.padding(vertical = 10.dp)
                             )
-                        }
-
-                        ElevatedButton(
-                            onClick = {
-                                firstName = user!!.firstName
-                                lastName = user.lastName
-                                phone = user.phone!!
-                                gender = user.gender!!
-                                avatar = user.avatarUrl!!
-                                edit = false
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.cancel),
-                                modifier = Modifier.padding(vertical = 10.dp)
+                    }
+                } else {
+                    TextField(
+                        value = avatar,
+                        onValueChange = { avatar = it },
+                        label = { Text(text = stringResource(R.string.url_photo)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 8.dp),
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Panorama,
+                                contentDescription = null
                             )
-                        }
+                        },
+                        singleLine = true
+                    )
+
+                    ElevatedButton(
+                        onClick = {
+                            viewModel.modifyCurrentUser(
+                                firstName,
+                                lastName,
+                                phone,
+                                resToString(gender),
+                                avatar,
+                                onModifySuccess = { edit = false }
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.save_changes),
+                            modifier = Modifier.padding(vertical = 10.dp)
+                        )
+                    }
+
+                    ElevatedButton(
+                        onClick = {
+                            firstName = user.firstName!!
+                            lastName = user.lastName
+                            phone = user.phone!!
+                            gender = stringToRes(user.gender!!)
+                            avatar = user.avatarUrl!!
+                            edit = false
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.cancel),
+                            modifier = Modifier.padding(vertical = 10.dp)
+                        )
                     }
                 }
             }
