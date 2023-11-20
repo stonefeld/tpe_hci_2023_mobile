@@ -70,6 +70,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.benchmark:benchmark-macro:1.2.1")
+    implementation("com.google.android.material:material:1.10.0")
 
     /* viewmodels */
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
@@ -83,9 +85,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
     /* image loading */
-    implementation("io.coil-kt:coil-compose:2.2.2")
-    implementation("androidx.benchmark:benchmark-macro:1.2.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     /* windows managment */
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))

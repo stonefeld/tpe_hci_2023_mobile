@@ -40,4 +40,8 @@
     <string name="advanced">Avanzada</string>
     <string name="expert">Experta</string>
     <string name="not_found">Error:No encontrada</string>
+    <string name="dismiss">Cerrar</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="save_changes">Guardar cambios</string>
 </resources>

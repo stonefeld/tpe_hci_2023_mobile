@@ -1,17 +1,20 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Mail
+import androidx.compose.material.icons.filled.Panorama
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.TextFields
@@ -37,7 +40,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
@@ -65,7 +68,7 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Text(
@@ -83,50 +86,90 @@ fun RegisterScreen(
         var password by rememberSaveable { mutableStateOf("") }
         var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
-        TextField(
-            value = mail,
-            onValueChange = { mail = it },
-            label = { Text(text = stringResource(R.string.enter_mail)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.Mail, contentDescription = null) },
-            singleLine = true
-        )
-        TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text(text = stringResource(R.string.enter_username)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-            singleLine = true,
-        )
+        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
+            TextField(
+                value = mail,
+                onValueChange = { mail = it },
+                label = { Text(text = stringResource(R.string.enter_mail)) },
+                singleLine = true,
+                modifier = Modifier.width(600.dp)
+            )
 
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            singleLine = true,
-            label = { Text(text = stringResource(R.string.enter_password)) },
-            visualTransformation =
-            if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-            trailingIcon = {
-                IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                    Icon(
-                        imageVector = if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff,
-                        contentDescription = null
-                    )
-                }
+            Row(modifier = Modifier.padding(20.dp)) {
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text(text = stringResource(R.string.enter_username)) },
+                    singleLine = true,
+                    modifier = Modifier.padding(end = 35.dp)
+                )
+
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    singleLine = true,
+                    label = { Text(text = stringResource(R.string.enter_password)) },
+                    visualTransformation =
+                    if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                            val visibilityIcon =
+                                if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff // cambiar iconitos
+                            // Please provide localized description for accessibility services
+                            val description =
+                                if (passwordHidden) "Show password" else "Hide password"
+                            Icon(imageVector = visibilityIcon, contentDescription = description)
+                        }
+                    }
+                )
             }
-        )
+        } else {
+            TextField(
+                value = mail,
+                onValueChange = { mail = it },
+                label = { Text(text = stringResource(R.string.enter_mail)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = { Icon(Icons.Default.Mail, contentDescription = null) },
+                singleLine = true
+            )
+            TextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text(text = stringResource(R.string.enter_username)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                singleLine = true,
+            )
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                singleLine = true,
+                label = { Text(text = stringResource(R.string.enter_password)) },
+                visualTransformation =
+                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                trailingIcon = {
+                    IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                        Icon(
+                            imageVector = if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+        }
 
         Text(
             text = stringResource(R.string.extra_info),
@@ -140,81 +183,159 @@ fun RegisterScreen(
         var firstName by rememberSaveable { mutableStateOf("") }
         var lastName by rememberSaveable { mutableStateOf("") }
         var phone by rememberSaveable { mutableStateOf("") }
-        val context = LocalContext.current
-        val coffeeDrinks = arrayOf("Male", "Female")
+        var avatar by rememberSaveable { mutableStateOf("") }
+
         var expanded by remember { mutableStateOf(false) }
-        var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
+        val genders = arrayOf("Male", "Female")
+        var gender by remember { mutableStateOf(genders[0]) }
 
-        TextField(
-            value = firstName,
-            onValueChange = { firstName = it },
-            label = { Text(text = stringResource(R.string.enter_name)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.TextFields, contentDescription = null) },
-            singleLine = true
-        )
+        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
+            Row {
+                TextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    label = { Text(text = stringResource(R.string.enter_name)) },
+                    singleLine = true,
+                    modifier = Modifier.padding(end = 35.dp)
+                )
 
-        TextField(
-            value = lastName,
-            onValueChange = { lastName = it },
-            label = { Text(text = stringResource(R.string.enter_lastname)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.TextFields, contentDescription = null) },
-            singleLine = true
-        )
-
-        TextField(
-            value = phone,
-            onValueChange = { phone = it },
-            label = { Text(text = stringResource(R.string.enter_phone)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
-            singleLine = true
-        )
-
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
+                TextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    label = { Text(text = stringResource(R.string.enter_lastname)) },
+                    singleLine = true
+                )
             }
-        ) {
+
+            Row(
+                modifier = Modifier.padding(top = 25.dp)
+            ) {
+                TextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = { Text(text = stringResource(R.string.enter_phone)) },
+                    singleLine = true,
+                    modifier = Modifier.padding(end = 35.dp)
+                )
+
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
+                ) {
+                    TextField(
+                        value = gender,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        genders.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item) },
+                                onClick = {
+                                    gender = item
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        } else {
             TextField(
-                value = selectedText,
-                onValueChange = {},
-                readOnly = true,
+                value = firstName,
+                onValueChange = { firstName = it },
+                label = { Text(text = stringResource(R.string.enter_name)) },
                 modifier = Modifier
-                    .menuAnchor()
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 8.dp),
-                leadingIcon = { Icon(Icons.Default.Transgender, contentDescription = null) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                leadingIcon = { Icon(Icons.Default.TextFields, contentDescription = null) },
+                singleLine = true
             )
 
-            ExposedDropdownMenu(
+            TextField(
+                value = lastName,
+                onValueChange = { lastName = it },
+                label = { Text(text = stringResource(R.string.enter_lastname)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = { Icon(Icons.Default.TextFields, contentDescription = null) },
+                singleLine = true
+            )
+
+            TextField(
+                value = phone,
+                onValueChange = { phone = it },
+                label = { Text(text = stringResource(R.string.enter_phone)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
+                singleLine = true
+            )
+
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onExpandedChange = { expanded = !expanded }
             ) {
-                coffeeDrinks.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            selectedText = item
-                            expanded = false
-                        }
-                    )
+                TextField(
+                    value = gender,
+                    onValueChange = {},
+                    readOnly = true,
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 8.dp),
+                    leadingIcon = { Icon(Icons.Default.Transgender, contentDescription = null) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    genders.forEach { item ->
+                        DropdownMenuItem(
+                            text = { Text(text = item) },
+                            onClick = {
+                                gender = item
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
+
+            TextField(
+                value = avatar,
+                onValueChange = { avatar = it },
+                label = { Text(text = stringResource(R.string.url_photo)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Panorama,
+                        contentDescription = null
+                    )
+                },
+                singleLine = true
+            )
         }
 
         var checkedState by rememberSaveable { mutableStateOf(false) }

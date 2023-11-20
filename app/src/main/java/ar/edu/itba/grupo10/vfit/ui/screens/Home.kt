@@ -59,7 +59,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Top,
             modifier = modifier
                 .fillMaxSize()
-                .padding(2.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             Column(

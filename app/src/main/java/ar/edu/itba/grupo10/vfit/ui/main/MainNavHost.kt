@@ -62,14 +62,13 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         composable(Screen.Home.route) { HomeScreen() }
         composable(Screen.ExecuteRoutine.route) { ExecuteRoutineScreen(true) }
         composable(Screen.Profile.route) {
-            ProfileScreen(R.string.profile,
-                onLogoutSuccess = {
-                    navController.navigate("auth") {
-                        popUpTo("main") {
-                            inclusive = true
-                        }
+            ProfileScreen {
+                navController.navigate("auth") {
+                    popUpTo("main") {
+                        inclusive = true
                     }
-                })
+                }
+            }
         }
         composable(Screen.Settings.route) { SettingsScreen() }
     }

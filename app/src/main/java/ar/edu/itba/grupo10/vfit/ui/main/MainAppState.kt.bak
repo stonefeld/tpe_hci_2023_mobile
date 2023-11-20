@@ -1,10 +1,12 @@
-package ar.edu.itba.grupo10.vfit
+package ar.edu.itba.grupo10.vfit.ui.main
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import ar.edu.itba.grupo10.vfit.MainApplication
+import ar.edu.itba.grupo10.vfit.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -38,7 +40,7 @@ class MainAppState(
 }
 
 @Composable
-fun rememberMyAppState(
+fun rememberMainAppState(
     scope: CoroutineScope = rememberCoroutineScope(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) = remember(scope, snackbarHostState) {

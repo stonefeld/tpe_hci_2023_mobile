@@ -1,8 +1,10 @@
 package ar.edu.itba.grupo10.vfit.ui.main
 
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.grupo10.vfit.data.DataSourceException
@@ -31,6 +33,10 @@ class MainViewModel(
 
     var uiState by mutableStateOf(MainUIState(isAuthenticated = sessionManager.loadAuthToken() != null))
         private set
+
+    fun dismissMessage() {
+        uiState = uiState.copy(error = null)
+    }
 
     fun login(username: String, password: String, onSuccess: () -> Unit) = runOnViewModelScope(
         { userRepository.login(username, password) },
@@ -66,9 +72,15 @@ class MainViewModel(
         onSuccess
     )
 
-    fun getCurrentUser() = runOnViewModelScope(
-        { userRepository.getCurrentUser(uiState.currentUser == null) },
+    fun getCurrentUser(refresh: Boolean = false) = runOnViewModelScope(
+        { userRepository.getCurrentUser(refresh || uiState.currentUser == null) },
         { state, response -> state.copy(currentUser = response) }
+    )
+
+    fun modifyCurrentUser(firstName: String, lastName: String, phone: String, gender: String, avatarUrl: String, onModifySuccess: () -> Unit) = runOnViewModelScope(
+        { userRepository.modifyCurrentUser(firstName, lastName, phone, gender, avatarUrl) },
+        { state, response -> state.copy(currentUser = response) },
+        onModifySuccess
     )
 
     fun getRoutines() = runOnViewModelScope(
@@ -221,7 +233,7 @@ class MainViewModel(
             block()
         }.onSuccess { response ->
             uiState = updateState(uiState, response).copy(isLoading = false)
-            println(uiState.currentUser)
+            println(uiState.currentUser?.avatarUrl)
             onSuccess()
         }.onFailure { e ->
             uiState = uiState.copy(isLoading = false, error = handleError(e))

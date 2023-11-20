@@ -33,7 +33,7 @@
     <string name="cancel">Cancel</string>
     <string name="look_for_results">Look for results!</string>
     <string name="send_code">Verify</string>
-    <string name="create_account">Create your acccount!</string>
+    <string name="create_account">Create your account!</string>
     <string name="difficulty">Difficulty:</string>
     <string name="rookie">Rookie</string>
     <string name="beginner">Beginner</string>
@@ -41,4 +41,8 @@
     <string name="advanced">Advanced</string>
     <string name="expert">Expert</string>
     <string name="not_found">Error:Not found</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="logout">Logout</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="save_changes">Save changes</string>
 </resources>

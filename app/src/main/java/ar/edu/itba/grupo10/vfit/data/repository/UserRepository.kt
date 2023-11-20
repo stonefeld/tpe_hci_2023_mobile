@@ -38,4 +38,27 @@ class UserRepository(
         return currentUserMutex.withLock { this.currentUser }
     }
 
+    suspend fun modifyCurrentUser(
+        firstName: String,
+        lastName: String,
+        phone: String,
+        gender: String,
+        avatarUrl: String
+    ): User? {
+        val user = currentUserMutex.withLock {
+            this.currentUser?.copy(
+                firstName = firstName,
+                lastName = lastName,
+                phone = phone,
+                gender = gender,
+                avatarUrl = avatarUrl
+            )
+        }
+        val result = remoteDataSource.modifyCurrentUser(user!!.asNetworkModel())
+        currentUserMutex.withLock {
+            this.currentUser = result.asModel()
+        }
+        return currentUserMutex.withLock { this.currentUser }
+    }
+
 }

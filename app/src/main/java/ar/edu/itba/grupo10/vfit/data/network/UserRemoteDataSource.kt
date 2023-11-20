@@ -44,4 +44,8 @@ class UserRemoteDataSource(
         return handleApiResponse { apiUserService.getCurrentUser() }
     }
 
+    suspend fun modifyCurrentUser(user: NetworkUser): NetworkUser {
+        return handleApiResponse { apiUserService.modifyCurrentUser(user) }
+    }
+
 }
