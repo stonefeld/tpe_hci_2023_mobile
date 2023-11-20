@@ -50,6 +50,7 @@ import ar.edu.itba.grupo10.vfit.data.models.User
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
+import ar.edu.itba.grupo10.vfit.utils.stringToRes
 import java.util.Date
 
 @Composable
@@ -57,12 +58,6 @@ fun RoutineCard(
     modifier: Modifier = Modifier,
     data: Routine
 ) {
-    val rookie = "rookie"
-    val beginner = "beginner"
-    val intermediate = "intermediate"
-    val advanced = "advanced"
-    val expert = "expert"
-    var diff: Int
     var liked by remember { mutableStateOf(false) }
     val windowSize = rememberWindowInfo()
 
@@ -169,18 +164,8 @@ fun RoutineCard(
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(bottom = 5.dp)
                             )
-                            diff = when (data.difficulty) {
-                                rookie -> R.string.rookie
-                                beginner -> R.string.beginner
-                                intermediate -> R.string.intermediate
-                                advanced -> R.string.advanced
-                                expert -> R.string.expert
-                                else -> {
-                                    R.string.not_found
-                                }
-                            }
                             Text(
-                                text = stringResource(R.string.difficulty) + " " + stringResource(id = diff),
+                                text = stringResource(R.string.difficulty) + " " + stringResource(stringToRes(data.difficulty)),
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(vertical = 5.dp)
                             )
@@ -211,8 +196,8 @@ fun RoutineCard(
                                         modifier = Modifier
                                             .padding(end = 10.dp)
                                             .clickable {
-                                            /*TODO:*/
-                                        }
+                                                /*TODO:*/
+                                            }
                                     )
                                     Icon(
                                         Icons.Rounded.Share,
@@ -411,7 +396,10 @@ fun RoutinePreview1() {
                     "Paki",
                     "Quian",
                     null,
-                    null
+                    null,
+                    null,
+                    null,
+                    true
                 ),
                 null,
                 Date(2023, 10, 31),
@@ -438,7 +426,10 @@ fun RoutinePreview2() {
                     "Paki",
                     "Quian",
                     null,
-                    null
+                    null,
+                    null,
+                    null,
+                    true
                 ),
                 null,
                 Date(2023, 10, 31),
@@ -465,7 +456,10 @@ fun RoutinePreview3() {
                     "Paki",
                     "Quian",
                     null,
-                    null
+                    null,
+                    null,
+                    null,
+                    true
                 ),
                 null,
                 Date(2023, 10, 31),
