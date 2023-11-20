@@ -88,7 +88,7 @@ fun HomeScreen(
                 LazyHorizontalGrid(
                     state = rememberLazyGridState(),
                     rows = GridCells.Fixed(1),
-                    modifier = Modifier.heightIn(max = 140.dp)
+                    modifier = Modifier.heightIn(max = 260.dp)
                 ) {
                     items(
                         count = list.size,

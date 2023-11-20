@@ -26,7 +26,9 @@ data class NetworkRoutine(
             difficulty = difficulty,
             isPublic = isPublic,
             user = user,
-            date = date
+            date = date,
+            score = score,
+            metadata = metadata
         )
     }
 

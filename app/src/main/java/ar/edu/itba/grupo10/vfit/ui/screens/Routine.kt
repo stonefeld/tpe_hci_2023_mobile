@@ -402,7 +402,9 @@ fun RoutinePreview1() {
                     true
                 ),
                 Date(2023, 10, 31),
-            )
+                null,
+                null
+            ),
         )
     }
 }
@@ -431,6 +433,8 @@ fun RoutinePreview2() {
                     true
                 ),
                 Date(2023, 10, 31),
+                null,
+                null
             )
         )
     }
@@ -460,6 +464,8 @@ fun RoutinePreview3() {
                     true
                 ),
                 Date(2023, 10, 31),
+                null,
+                null
             )
         )
     }
