@@ -2,6 +2,7 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -50,6 +51,7 @@ fun HomeScreen(
             else -> {}
         }
     }
+
     SwipeRefresh(
         state = rememberSwipeRefreshState(uiState.isLoading),
         onRefresh = { viewModel.getRoutines() }
@@ -59,12 +61,11 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Top,
             modifier = modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.padding(vertical = 24.dp)
             ) {
                 Text(
                     text = stringResource(R.string.home_title),
@@ -88,7 +89,9 @@ fun HomeScreen(
                 LazyHorizontalGrid(
                     state = rememberLazyGridState(),
                     rows = GridCells.Fixed(1),
-                    modifier = Modifier.heightIn(max = 260.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 5.dp)
+                        .heightIn(max = 260.dp)
                 ) {
                     items(
                         count = list.size,
