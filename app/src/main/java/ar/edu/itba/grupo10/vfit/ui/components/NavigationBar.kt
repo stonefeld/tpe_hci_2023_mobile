@@ -28,8 +28,7 @@ fun NavigationBar(
     val items = listOf(
         Screen.Home,
         Screen.Routine,
-        Screen.Profile,
-        Screen.Settings
+        Screen.Profile
     )
 
     AnimatedVisibility(

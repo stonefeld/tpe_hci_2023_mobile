@@ -233,7 +233,6 @@ class MainViewModel(
             block()
         }.onSuccess { response ->
             uiState = updateState(uiState, response).copy(isLoading = false)
-            println(uiState.currentUser?.avatarUrl)
             onSuccess()
         }.onFailure { e ->
             uiState = uiState.copy(isLoading = false, error = handleError(e))

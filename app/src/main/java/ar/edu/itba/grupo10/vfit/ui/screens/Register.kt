@@ -341,8 +341,7 @@ fun RegisterScreen(
         var checkedState by rememberSaveable { mutableStateOf(false) }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {

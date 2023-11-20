@@ -10,7 +10,6 @@ data class Routine(
     var difficulty: String,
     var isPublic: Boolean,
     var user: User,
-    var metadata: String?,
     var date: Date?
 ) {
 
@@ -22,7 +21,6 @@ data class Routine(
             difficulty = difficulty,
             isPublic = isPublic,
             user = user,
-            metadata = metadata,
             date = date
         )
     }

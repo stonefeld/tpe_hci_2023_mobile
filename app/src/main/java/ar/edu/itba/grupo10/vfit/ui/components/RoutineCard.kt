@@ -255,7 +255,6 @@ fun RoutinePreview1() {
                 null,
                 true
             ),
-            null,
             Date(2023, 10, 31),
         )
         RoutineCard(Modifier, routine)

@@ -401,7 +401,6 @@ fun RoutinePreview1() {
                     null,
                     true
                 ),
-                null,
                 Date(2023, 10, 31),
             )
         )
@@ -431,7 +430,6 @@ fun RoutinePreview2() {
                     null,
                     true
                 ),
-                null,
                 Date(2023, 10, 31),
             )
         )
@@ -461,7 +459,6 @@ fun RoutinePreview3() {
                     null,
                     true
                 ),
-                null,
                 Date(2023, 10, 31),
             )
         )

@@ -1,7 +1,5 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -68,12 +66,11 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    onLogoutSuccess: () -> Unit = {}
+    onLogoutSuccess: () -> Unit
 ) {
     val windowSize = rememberWindowInfo()
     val uiState = viewModel.uiState

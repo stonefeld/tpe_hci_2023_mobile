@@ -14,7 +14,7 @@ data class NetworkUser(
     @SerializedName("email") var email: String,
     @SerializedName("phone") var phone: String? = null,
     @SerializedName("avatarUrl") var avatarUrl: String? = null,
-    @SerializedName("metadata") var metadata: NetworkUserMetadata? = null,
+    @SerializedName("metadata") var metadata: NetworkMetadata? = null,
     @SerializedName("lastActivity") var lastActivity: Date? = null,
     @SerializedName("verified") var verified: Boolean
 ) {

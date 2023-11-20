@@ -14,8 +14,8 @@ data class NetworkRoutine(
     @SerializedName("date") var date: Date? = null,
     @SerializedName("score") var score: Int? = null,
     @SerializedName("category") var category: List<Unit> = arrayListOf(),
-    @SerializedName("metadata") var metadata: String? = null,
-    @SerializedName("user") var user: User
+    @SerializedName("user") var user: User,
+    @SerializedName("metadata") var metadata: NetworkMetadata? = null
 ) {
 
     fun asModel(): Routine {
@@ -26,7 +26,6 @@ data class NetworkRoutine(
             difficulty = difficulty,
             isPublic = isPublic,
             user = user,
-            metadata = metadata,
             date = date
         )
     }
