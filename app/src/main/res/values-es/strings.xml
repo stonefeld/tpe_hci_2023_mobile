@@ -33,4 +33,11 @@
     <string name="look_for_results">Búsqueda de rutinas!</string>
     <string name="send_code">Verificar</string>
     <string name="create_account">¡Crea tu cuenta!</string>
+    <string name="difficulty">Dificultad:</string>
+    <string name="rookie">Novato</string>
+    <string name="beginner">Principiante</string>
+    <string name="intermediate">Intermedia</string>
+    <string name="advanced">Avanzada</string>
+    <string name="expert">Experta</string>
+    <string name="not_found">Error:No encontrada</string>
 </resources>

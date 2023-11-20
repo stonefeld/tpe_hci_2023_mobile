@@ -50,7 +50,6 @@ fun HomeScreen(
             else -> {}
         }
     }
-
     SwipeRefresh(
         state = rememberSwipeRefreshState(uiState.isLoading),
         onRefresh = { viewModel.getRoutines() }

@@ -1,6 +1,7 @@
 package ar.edu.itba.grupo10.vfit.data.network.models
 
 import ar.edu.itba.grupo10.vfit.data.models.Routine
+import ar.edu.itba.grupo10.vfit.data.models.User
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
@@ -12,7 +13,9 @@ data class NetworkRoutine(
     @SerializedName("isPublic") var isPublic: Boolean,
     @SerializedName("date") var date: Date? = null,
     @SerializedName("score") var score: Int? = null,
-    @SerializedName("category") var category: List<Unit> = arrayListOf()
+    @SerializedName("category") var category: List<Unit> = arrayListOf(),
+    @SerializedName("metadata") var metadata: String? = null,
+    @SerializedName("user") var user: User
 ) {
 
     fun asModel(): Routine {
@@ -21,7 +24,10 @@ data class NetworkRoutine(
             name = name,
             detail = detail,
             difficulty = difficulty,
-            isPublic = isPublic
+            isPublic = isPublic,
+            user = user,
+            metadata = metadata,
+            date = date
         )
     }
 

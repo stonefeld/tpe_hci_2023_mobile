@@ -2,276 +2,474 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.rounded.PlayCircleOutline
-import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.data.models.Routine
+import ar.edu.itba.grupo10.vfit.data.models.User
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
+import java.util.Date
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoutineScreen(
-//    navController: NavHostController,
-//    modifier: Modifier = Modifier,
-//    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+fun RoutineCard(
+    modifier: Modifier = Modifier,
+    data: Routine
 ) {
-    Surface {
-        val windowSize = rememberWindowInfo()
-        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded ||  windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
+    val rookie = "rookie"
+    val beginner = "beginner"
+    val intermediate = "intermediate"
+    val advanced = "advanced"
+    val expert = "expert"
+    var diff: Int
+    var liked by remember { mutableStateOf(false) }
+    val windowSize = rememberWindowInfo()
+
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceVariant,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(1f)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(1f),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.padding(35.dp)
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .heightIn(0.dp, 150.dp),
+                    color = MaterialTheme.colorScheme.background,
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(0.9f)
-                    )
-                    {
-                        Text(
-                            text = "Title",
-                            fontSize = 40.sp
-                        )
-                        Text(
-                            text = "Description Description Description Description Description Description Description",
-                            fontSize = 15.sp
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(0.1f),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxSize()
                     ) {
-
-
-                        Icon(
-                            Icons.Rounded.Share,
-                            contentDescription = stringResource(id = R.string.enter_mail),
-                            modifier = Modifier
-                                .size(30.dp)
-                                .padding(vertical = 5.dp)
-                        )
-
-                        // TODO: que sea un boton a la ejecucion de la rutina
-                        Icon(
-                            Icons.Rounded.PlayCircleOutline,
-                            contentDescription = stringResource(id = R.string.enter_mail),
-                            modifier = Modifier.size(60.dp),
-                        )
-                    }
-                }
-                if( windowSize.screenWidthInfo == WindowInfo.WindowType.Medium){
-                    for (i in 1..(4 / 2 + 1)) {
-                        Row {
-                            Cycle(i)
-                            Spacer(modifier = Modifier.padding(5.dp))
-                            // TODO: hacer if si corresponde o no mostrar este
-                            Cycle(i + 1)
-                            Spacer(modifier = Modifier.padding(5.dp))
+                        FloatingActionButton(
+                            modifier = Modifier.align(alignment = Alignment.TopStart),
+                            onClick = {
+                                // TODO
+                            },
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onBackground
+                        ) {
+                            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                        }
+                        if (liked) {
+                            FloatingActionButton(
+                                modifier = Modifier.align(alignment = Alignment.TopEnd),
+                                onClick = {
+                                    liked = false
+                                },
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.primary
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Favorite,
+                                    contentDescription = null,
+                                )
+                            }
+                        } else {
+                            FloatingActionButton(
+                                modifier = Modifier.align(alignment = Alignment.TopEnd),
+                                onClick = {
+                                    liked = true
+                                },
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.primary
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.FavoriteBorder,
+                                    contentDescription = null,
+                                )
+                            }
                         }
                     }
-                    Spacer(modifier = Modifier.padding(50.dp))
-                }
-                else {
-                    // Seria for de n/3 +1
-                    for (i in 1..(4 / 3 + 1)) {
-                        Row {
-                            Cycle(i)
-                            Spacer(modifier = Modifier.padding(5.dp))
-                            // TODO: hacer if si corresponde o no mostrar este
-                            Cycle(i + 1)
-                            Spacer(modifier = Modifier.padding(5.dp))
-                            // TODO: hacer if si corresponde o no mostrar este
-                            Cycle(i + 2)
-                            Spacer(modifier = Modifier.padding(5.dp))
-                        }
-                    }
-                    Spacer(modifier = Modifier.padding(50.dp))
+//                    AsyncImage(
+//                    model = "",
+//                    contentDescription = null,
+//                    contentScale = ContentScale.Crop,
+//                    modifier = Modifier
+//                        .size(40.dp)
+//                        .clip(RectangleShape)
+//                )
+                    Image(
+                        painter = painterResource(id = R.drawable.exercise),
+                        contentDescription = null,
+                    )
                 }
             }
-        } else {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-            ) {
-
-                Image(
-                    painter = painterResource(id = R.drawable.routine_top),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.width(400.dp)
-                )
-
-                Row(
-                    modifier = Modifier.padding(5.dp)
+            Divider(
+                thickness = 5.dp,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Row {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(state = rememberScrollState())
+                        .fillMaxHeight(1f)
                 ) {
-                    Column(
-                        modifier = Modifier.width(300.dp)
-                    )
-                    {
-                        Text(
-                            text = "Title",
-                            fontSize = 40.sp
-                        )
-                        Text(
-                            text = "Description Description Description Description Description Description Description",
-                            fontSize = 15.sp
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.width(60.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(1f)
+                            .padding(10.dp)
                     ) {
-
-
-                        Icon(
-                            Icons.Rounded.Share,
-                            contentDescription = stringResource(id = R.string.enter_mail),
+                        Column(
                             modifier = Modifier
-                                .size(30.dp)
-                                .padding(vertical = 5.dp)
-                        )
-
-                        //TODO: que sea un boton a la ejecucion de la rutina
-                        Icon(
-                            Icons.Rounded.PlayCircleOutline,
-                            contentDescription = stringResource(id = R.string.enter_mail),
-                            modifier = Modifier.size(60.dp),
-
+                                .fillMaxWidth(0.65f)
+                                .padding(5.dp)
+                        ) {
+                            Text(
+                                text = data.name,
+                                fontSize = 30.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 5.dp)
                             )
+                            diff = when (data.difficulty) {
+                                rookie -> R.string.rookie
+                                beginner -> R.string.beginner
+                                intermediate -> R.string.intermediate
+                                advanced -> R.string.advanced
+                                expert -> R.string.expert
+                                else -> {
+                                    R.string.not_found
+                                }
+                            }
+                            Text(
+                                text = stringResource(R.string.difficulty) + " " + stringResource(id = diff),
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(vertical = 5.dp)
+                            )
+                            Text(
+                                text = data.date.toString(),
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxHeight(1f)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight(1f)
+                                    .fillMaxSize(1f),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.play),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .padding(end = 10.dp)
+                                            .clickable {
+                                            /*TODO:*/
+                                        }
+                                    )
+                                    Icon(
+                                        Icons.Rounded.Share,
+                                        contentDescription = stringResource(id = R.string.enter_mail),
+                                        modifier = Modifier
+                                            .padding(vertical = 5.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .fillMaxWidth(1f)
+                    ) {
+                        Text(
+                            text = data.detail,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1f)
+                        ) {
+                            AddCycle()
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1f)
+                        ) {
+                            AddCycle()
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1f)
+                        ) {
+                            AddCycle()
+                        }
+                    } else {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1f)
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(0.5f)
+                            ) {
+                                AddCycle()
+                            }
+                            Column(
+                                modifier = Modifier.fillMaxWidth(1f)
+                            ) {
+                                AddCycle()
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1f)
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(0.5f)
+                            ) {
+                                AddCycle()
+                            }
+                            Column(
+                                modifier = Modifier.fillMaxWidth(1f)
+                            ) {
+                                AddCycle()
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1f)
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(0.5f)
+                            ) {
+                                AddCycle()
+                            }
+                            Column(
+                                modifier = Modifier.fillMaxWidth(1f)
+                            ) {
+                                AddCycle()
+                            }
+                        }
                     }
                 }
-
-                for (i in 1..3) {
-                    Cycle(i)
-                    Spacer(modifier = Modifier.padding(5.dp))
-                }
-                Spacer(modifier = Modifier.padding(50.dp))
             }
         }
     }
 }
 
 @Composable
-fun Cycle(num: Int) {
-    OutlinedCard(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
-        border = BorderStroke(1.dp, Color.Blue),
+fun AddCycle() {
+    Card(
+        border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 1.5.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
         modifier = Modifier
-            .width(width = 390.dp)
+            .fillMaxWidth(1f)
+            .padding(10.dp)
     ) {
-        Text(
-            text = "Ciclo $num",
-            modifier = Modifier
-                .padding(16.dp),
-            textAlign = TextAlign.Center,
-        )
-
-        ElevatedCard(
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 1.dp
-            ),
+        Row(
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .padding(horizontal = 10.dp, vertical = 5.dp)
         ) {
-            // TODO: que no sea tan bostero y poner posiciones relativas
+            Text(
+                text = "Ciclo",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Default,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        }
+        AddExerciseRoutine("Ejercicio 1", "4x10", "120''")
+        AddExerciseRoutine("Ejercicio 2", "3x8", "180''")
+        AddExerciseRoutine("Ejercicio 3", "4x12", "90''")
+    }
+}
 
-            for (i in 1..3) {
-                Exercise("Excercise $i", "Series $i", "Time $i")
-                Divider()
+@Composable
+fun AddExerciseRoutine(
+    exName: String,
+    exReps: String,
+    exTime: String,
+) {
+    Surface(
+        color = Color(0xCCFFFFFF),
+        shape = RoundedCornerShape(50),
+        modifier = Modifier
+            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+            .fillMaxWidth(1f)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    text = exName,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Row(
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                start = 4.dp,
+                                end = 4.dp
+                            )
+                    ) {
+                        Text(
+                            text = exReps,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                start = 4.dp,
+                                end = 4.dp
+                            )
+                    ) {
+                        Text(
+                            text = exTime,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
             }
         }
+
     }
 }
 
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
 @Composable
-fun Exercise(name: String, series: String, time: String) {
-
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Text(
-            text = name,
-            modifier = Modifier
-                .padding(vertical = 8.dp),
-        )
-        Spacer(modifier = Modifier.padding(5.dp))
-
-        Text(
-            text = series,
-            modifier = Modifier
-                .padding(vertical = 8.dp),
-        )
-        Spacer(modifier = Modifier.padding(5.dp))
-        Text(
-            text = "$time\"",
-            modifier = Modifier
-                .padding(vertical = 8.dp),
-        )
-    }
-}
-
-
-@Preview(showSystemUi = true, locale = "es", device = "spec:width=400dp,height=891dp")
-@Composable
-fun RoutineScreenPreview() {
+fun RoutinePreview1() {
     VFitTheme {
-        RoutineScreen()
+        RoutineCard(
+            Modifier, Routine(
+                1,
+                "LOREM",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non semper ante, in finibus erat.",
+                "advanced",
+                true,
+                User(
+                    1,
+                    "paki",
+                    "gmail",
+                    "Paki",
+                    "Quian",
+                    null,
+                    null
+                ),
+                null,
+                Date(2023, 10, 31),
+            )
+        )
+    }
+}
+
+@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
+@Composable
+fun RoutinePreview2() {
+    VFitTheme {
+        RoutineCard(
+            Modifier, Routine(
+                1,
+                "LOREM",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non semper ante, in finibus erat.",
+                "advanced",
+                true,
+                User(
+                    1,
+                    "paki",
+                    "gmail",
+                    "Paki",
+                    "Quian",
+                    null,
+                    null
+                ),
+                null,
+                Date(2023, 10, 31),
+            )
+        )
     }
 }
 
 @Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
-fun RoutineScreenPreview1() {
+fun RoutinePreview3() {
     VFitTheme {
-        RoutineScreen()
-    }
-}
-@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
-@Composable
-fun RoutineScreenPreview2() {
-    VFitTheme {
-        RoutineScreen()
+        RoutineCard(
+            Modifier, Routine(
+                1,
+                "LOREM",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non semper ante, in finibus erat.",
+                "advanced",
+                true,
+                User(
+                    1,
+                    "paki",
+                    "gmail",
+                    "Paki",
+                    "Quian",
+                    null,
+                    null
+                ),
+                null,
+                Date(2023, 10, 31),
+            )
+        )
     }
 }
