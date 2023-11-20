@@ -1,5 +1,6 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -37,6 +38,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun HomeScreen(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
 ) {
@@ -98,7 +100,12 @@ fun HomeScreen(
                         key = { index -> list[index].id.toString() }
                     ) { index ->
                         RoutineCard(
-                            modifier = Modifier.padding(horizontal = 5.dp),
+                            modifier = Modifier
+                                .clickable {
+                                    uiState.currentRoutine = list[index]
+                                    navController.navigate("routine/${uiState.currentRoutine!!.id}")
+                                }
+                                .padding(horizontal = 5.dp),
                             data = list[index]
                         )
                     }

@@ -11,7 +11,7 @@ data class MainUIState(
     val isAuthenticated: Boolean = false,
     val isLoading: Boolean = false,
     val currentUser: User? = null,
-    val currentRoutine: Routine? = null,
+    var currentRoutine: Routine? = null,
     val routines: List<Routine>? = null,
     val currentCycle: Cycle? = null,
     val cycles: List<Cycle>? = null,

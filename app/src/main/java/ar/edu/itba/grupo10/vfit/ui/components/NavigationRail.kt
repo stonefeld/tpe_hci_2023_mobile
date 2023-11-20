@@ -1,9 +1,9 @@
 package ar.edu.itba.grupo10.vfit.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -21,8 +21,8 @@ import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 @Composable
 fun NavigationRail() {
     var selectedItem by remember { mutableIntStateOf(0) }
-    val items = listOf("Home", "Profile", "Settings")
-    val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.Settings)
+    val items = listOf("Home", "Routines", "Profile")
+    val icons = listOf(Icons.Filled.Home, Icons.Filled.FitnessCenter, Icons.Filled.AccountCircle)
     NavigationRail(
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) {
