@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,14 +30,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @Composable
 fun VerifyAccountScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    appState: MainAppState,
     onVerifySuccess: () -> Unit
 ) {
+    val uiState = viewModel.uiState
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -97,7 +102,7 @@ fun VerifyAccountScreen(
                 .padding(horizontal = 16.dp)
                 .padding(top = 8.dp)
         ) {
-            if (viewModel.uiState.isLoading)
+            if (uiState.isLoading)
                 CircularProgressIndicator()
             else
                 Text(
@@ -114,13 +119,21 @@ fun VerifyAccountScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            if (viewModel.uiState.isLoading)
+            if (uiState.isLoading)
                 CircularProgressIndicator()
             else
                 Text(
                     text = stringResource(R.string.resend_code),
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
+        }
+
+        if (uiState.error != null) {
+            appState.showSnackbar(
+                uiState.error.message,
+                { viewModel.dismissMessage() },
+                { viewModel.dismissMessage() }
+            )
         }
     }
 }

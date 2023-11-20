@@ -3,15 +3,11 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -23,10 +19,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,16 +43,21 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.Screen
+import ar.edu.itba.grupo10.vfit.ui.main.rememberMainAppState
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @Composable
 fun LoginScreen(
     navController: NavHostController,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    appState: MainAppState,
     onLoginSuccess: () -> Unit
 ) {
+    val uiState = viewModel.uiState
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -117,15 +118,13 @@ fun LoginScreen(
         )
 
         ElevatedButton(
-            onClick = {
-                viewModel.login(username, password, onLoginSuccess)
-            },
+            onClick = { viewModel.login(username, password, onLoginSuccess) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .padding(top = 8.dp)
         ) {
-            if (viewModel.uiState.isLoading)
+            if (uiState.isLoading)
                 CircularProgressIndicator()
             else
                 Text(
@@ -144,6 +143,14 @@ fun LoginScreen(
             Text(
                 text = stringResource(R.string.create_account),
                 modifier = Modifier.padding(vertical = 10.dp)
+            )
+        }
+
+        if (uiState.error != null) {
+            appState.showSnackbar(
+                uiState.error.message,
+                { viewModel.dismissMessage() },
+                { viewModel.dismissMessage() }
             )
         }
     }

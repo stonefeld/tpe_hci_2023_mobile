@@ -1,6 +1,5 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
@@ -59,13 +60,15 @@ import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 @Composable
 fun RegisterScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    appState: MainAppState,
     onRegisterSuccess: () -> Unit
 ) {
     val windowSize = rememberWindowInfo()
+    val uiState = viewModel.uiState
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
@@ -75,7 +78,7 @@ fun RegisterScreen(
             text = stringResource(R.string.create_account),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .padding(vertical = 16.dp),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 40.sp
@@ -363,15 +366,24 @@ fun RegisterScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp, bottom = 32.dp)
         ) {
-            if (viewModel.uiState.isLoading)
+            if (uiState.isLoading)
                 CircularProgressIndicator()
             else
                 Text(
                     text = stringResource(R.string.register),
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
+        }
+
+        if (uiState.error != null) {
+            appState.showSnackbar(
+                uiState.error.message,
+                { viewModel.dismissMessage() },
+                { viewModel.dismissMessage() }
+            )
         }
     }
 }

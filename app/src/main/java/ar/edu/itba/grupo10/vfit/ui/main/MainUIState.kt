@@ -19,5 +19,5 @@ data class MainUIState(
     val exercises: List<Exercise>? = null,
     val currentCycleExercise: CycleExercise? = null,
     val cycleExercises: List<CycleExercise>? = null,
-    val error: Error? = null
+    val error: Error? = null,
 )

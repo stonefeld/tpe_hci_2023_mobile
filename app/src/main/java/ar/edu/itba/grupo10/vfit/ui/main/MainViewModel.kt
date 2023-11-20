@@ -1,24 +1,22 @@
 package ar.edu.itba.grupo10.vfit.ui.main
 
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ar.edu.itba.grupo10.vfit.data.DataSourceException
 import ar.edu.itba.grupo10.vfit.data.models.Cycle
 import ar.edu.itba.grupo10.vfit.data.models.CycleExercise
-import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
-import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
-import ar.edu.itba.grupo10.vfit.utils.SessionManager
 import ar.edu.itba.grupo10.vfit.data.models.Error
 import ar.edu.itba.grupo10.vfit.data.models.Exercise
 import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.repository.CycleExerciseRepository
 import ar.edu.itba.grupo10.vfit.data.repository.CycleRepository
 import ar.edu.itba.grupo10.vfit.data.repository.ExerciseRepository
+import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
+import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
+import ar.edu.itba.grupo10.vfit.utils.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -77,7 +75,14 @@ class MainViewModel(
         { state, response -> state.copy(currentUser = response) }
     )
 
-    fun modifyCurrentUser(firstName: String, lastName: String, phone: String, gender: String, avatarUrl: String, onModifySuccess: () -> Unit) = runOnViewModelScope(
+    fun modifyCurrentUser(
+        firstName: String,
+        lastName: String,
+        phone: String,
+        gender: String,
+        avatarUrl: String,
+        onModifySuccess: () -> Unit
+    ) = runOnViewModelScope(
         { userRepository.modifyCurrentUser(firstName, lastName, phone, gender, avatarUrl) },
         { state, response -> state.copy(currentUser = response) },
         onModifySuccess

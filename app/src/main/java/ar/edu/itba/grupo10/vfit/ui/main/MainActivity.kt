@@ -6,8 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -17,7 +19,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ar.edu.itba.grupo10.vfit.ui.components.NavigationBar
-import ar.edu.itba.grupo10.vfit.ui.components.NavigationRail
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
@@ -30,26 +31,21 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
                 val uiState = viewModel.uiState
-                val windowInfo = rememberWindowInfo()
+                val appState = rememberMainAppState()
 
                 Scaffold(
-                    bottomBar = {
-                        if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact
-                            || windowInfo.screenWidthInfo is WindowInfo.WindowType.Medium
-                        )
-                            NavigationBar(navController, navBarVisibility(navController))
-                    },
+                    bottomBar = { NavigationBar(navController, navBarVisibility(navController)) },
+                    snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
                 ) { contentPadding ->
                     MainNavHost(
-                        navController,
-                        startDestination = if (uiState.isAuthenticated) "main" else "auth",
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(contentPadding)
+                            .padding(contentPadding),
+                        navController,
+                        startDestination = if (uiState.isAuthenticated) "main" else "auth",
+                        appState
                     )
                 }
-                if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded)
-                    NavigationRail()
             }
         }
     }

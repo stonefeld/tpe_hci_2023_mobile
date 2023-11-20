@@ -1,6 +1,5 @@
 package ar.edu.itba.grupo10.vfit.ui.main
 
-import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
@@ -45,9 +44,10 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int?, val icon
 
 @Composable
 fun MainNavHost(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = "main",
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
+    appState: MainAppState
 ) {
     NavHost(
         navController = navController,
@@ -55,14 +55,14 @@ fun MainNavHost(
         modifier = modifier
     ) {
         /* main */
-        mainGraph(navController)
+        mainGraph(navController, appState)
 
         /* auth */
-        loginGraph(navController)
+        loginGraph(navController, appState)
     }
 }
 
-fun NavGraphBuilder.mainGraph(navController: NavHostController) {
+fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAppState) {
     navigation(startDestination = Screen.Home.route, route = "main") {
         composable(Screen.Home.route) { HomeScreen(navController) }
         composable(Screen.Routine.route,
@@ -91,10 +91,10 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 }
 
-fun NavGraphBuilder.loginGraph(navController: NavHostController) {
+fun NavGraphBuilder.loginGraph(navController: NavHostController, appState: MainAppState) {
     navigation(startDestination = Screen.Login.route, route = "auth") {
         composable(Screen.Login.route) {
-            LoginScreen(navController,
+            LoginScreen(navController, appState = appState,
                 onLoginSuccess = {
                     navController.navigate("main") {
                         popUpTo("auth") { inclusive = true }
@@ -102,12 +102,12 @@ fun NavGraphBuilder.loginGraph(navController: NavHostController) {
                 })
         }
         composable(Screen.Register.route) {
-            RegisterScreen(onRegisterSuccess = {
+            RegisterScreen(appState = appState, onRegisterSuccess = {
                 navController.navigate(Screen.Verify.route)
             })
         }
         composable(Screen.Verify.route) {
-            VerifyAccountScreen(
+            VerifyAccountScreen(appState = appState,
                 onVerifySuccess = {
                     navController.navigate(Screen.Login.route)
                 }

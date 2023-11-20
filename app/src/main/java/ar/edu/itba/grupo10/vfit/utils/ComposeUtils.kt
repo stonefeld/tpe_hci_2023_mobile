@@ -5,9 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import ar.edu.itba.grupo10.vfit.MainApplication
+import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
+import ar.edu.itba.grupo10.vfit.ui.main.rememberMainAppState
 
 @Composable
-fun getViewModelFactory(defaultArgs: Bundle? = null) : ViewModelFactory {
+fun getViewModelFactory(defaultArgs: Bundle? = null): ViewModelFactory {
     val application = (LocalContext.current.applicationContext as MainApplication)
     val sessionManager = application.sessionManager
     val userRepository = application.userRepository

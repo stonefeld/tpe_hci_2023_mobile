@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MainAppState(
-    val scope: CoroutineScope,
+    private val scope: CoroutineScope,
     val snackbarHostState: SnackbarHostState
 ) {
 
@@ -27,12 +27,8 @@ class MainAppState(
             )
 
             when (result) {
-                SnackbarResult.ActionPerformed -> {
-                    actionPerformed()
-                }
-                SnackbarResult.Dismissed -> {
-                    dismissed()
-                }
+                SnackbarResult.ActionPerformed -> actionPerformed()
+                SnackbarResult.Dismissed -> dismissed()
             }
         }
     }
