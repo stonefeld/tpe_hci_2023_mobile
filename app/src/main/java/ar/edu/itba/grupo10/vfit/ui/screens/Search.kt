@@ -292,11 +292,18 @@ fun ListRoutineView() {
             .padding(horizontal = 6.dp)
             .verticalScroll(state = rememberScrollState())
     ) {
-        for (i in 0..6) {
-            RoutineItem("Routine", "Description Lorem impsum Lorem impsum Lorem impsum Lorem impsum Lorem impsum", 30, 4)
-            Divider()
-        }
-        Spacer(modifier = Modifier.size(60.dp))
+
+            for (i in 0..6) {
+                RoutineItem(
+                    "Routine",
+                    "Description Lorem impsum Lorem impsum Lorem impsum Lorem impsum Lorem impsum",
+                    30,
+                    4
+                )
+                Divider()
+            }
+            Spacer(modifier = Modifier.size(60.dp))
+
     }
 }
 

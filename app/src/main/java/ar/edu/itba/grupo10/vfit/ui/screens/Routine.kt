@@ -1,5 +1,6 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.models.User
@@ -60,6 +63,13 @@ fun RoutineCard(
 ) {
     var liked by remember { mutableStateOf(false) }
     val windowSize = rememberWindowInfo()
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, null)
 
     Surface(
         color = MaterialTheme.colorScheme.surfaceVariant,
@@ -199,12 +209,16 @@ fun RoutineCard(
                                                 /*TODO:*/
                                             }
                                     )
-                                    Icon(
-                                        Icons.Rounded.Share,
-                                        contentDescription = stringResource(id = R.string.enter_mail),
-                                        modifier = Modifier
-                                            .padding(vertical = 5.dp)
-                                    )
+                                    IconButton(onClick = { /*startActivity(shareIntent)*/ }) {
+                                        Icon(
+                                            Icons.Rounded.Share,
+                                            contentDescription = stringResource(id = R.string.enter_mail),
+                                            modifier = Modifier
+                                                .padding(vertical = 5.dp)
+                                        )
+                                    }
+
+
                                 }
                             }
                         }
@@ -439,6 +453,8 @@ fun RoutinePreview2() {
         )
     }
 }
+
+
 
 @Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable

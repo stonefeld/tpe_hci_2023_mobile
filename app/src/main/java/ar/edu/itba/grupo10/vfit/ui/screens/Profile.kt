@@ -88,23 +88,22 @@ fun ProfileScreen(
         state = rememberSwipeRefreshState(uiState.isLoading),
         onRefresh = { viewModel.getCurrentUser(true) }
     ) {
-        if (user != null) {
-            var firstName by rememberSaveable { mutableStateOf(user.firstName) }
-            var lastName by rememberSaveable { mutableStateOf(user.lastName) }
-            var phone by rememberSaveable { mutableStateOf(user.phone!!) }
-            var avatar by rememberSaveable { mutableStateOf(user.avatarUrl!!) }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            if (user != null) {
+                var firstName by rememberSaveable { mutableStateOf(user.firstName) }
+                var lastName by rememberSaveable { mutableStateOf(user.lastName) }
+                var phone by rememberSaveable { mutableStateOf(user.phone!!) }
+                var avatar by rememberSaveable { mutableStateOf(user.avatarUrl!!) }
 
-            var expanded by rememberSaveable { mutableStateOf(false) }
-            val genders = arrayOf(R.string.male, R.string.female)
-            var gender by rememberSaveable { mutableIntStateOf(stringToRes(user.gender!!)) }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
+                var expanded by rememberSaveable { mutableStateOf(false) }
+                val genders = arrayOf(R.string.male, R.string.female)
+                var gender by rememberSaveable { mutableIntStateOf(stringToRes(user.gender!!)) }
                 if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
                     Row(
                         modifier = Modifier
@@ -116,7 +115,7 @@ fun ProfileScreen(
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
                                 .data(user.avatarUrl)
-                                .crossfade(true).build(),
+                                 .crossfade(true).build(),
                             placeholder = painterResource(R.drawable.guest),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,

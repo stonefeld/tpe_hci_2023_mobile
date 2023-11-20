@@ -1,5 +1,6 @@
 package ar.edu.itba.grupo10.vfit.ui.components
 
+import android.graphics.drawable.shapes.Shape
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -36,9 +38,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +53,8 @@ import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.models.User
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.stringToRes
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import java.util.Date
 
 @Composable
@@ -66,186 +74,184 @@ fun RoutineCard(
     ) {
         Box(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxSize()
         ) {
-            if (liked) {
-                FloatingActionButton(
-                    modifier = Modifier.align(alignment = Alignment.TopEnd),
-                    onClick = {
-                        liked = false
-                    },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = null,
-                    )
-                }
-            } else {
-                FloatingActionButton(
-                    modifier = Modifier.align(alignment = Alignment.TopEnd),
-                    onClick = {
-                        liked = true
-                    },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = null,
-                    )
-                }
+            FloatingActionButton(
+                modifier = Modifier.align(alignment = Alignment.TopEnd),
+                onClick = { liked = !liked },
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = null
+                )
             }
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxHeight(0.5f)
-                        .fillMaxWidth(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
                 ) {
-                    Image(
-                        painter = painterResource(R.drawable.execute_routine_tablet),
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(if (data.metadata != null) data.metadata!!.image else R.drawable.execute_routine_tablet)
+                            .crossfade(true).build(),
+                        placeholder = painterResource(R.drawable.execute_routine_tablet),
                         contentDescription = null,
-                        modifier = Modifier.fillMaxHeight(0.7f),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize(0.45f)
+                            .padding(bottom = 5.dp)
                     )
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = 5.dp)
-                        .fillMaxWidth(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
                     Text(
                         text = data.name,
+                        textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp
+                        fontSize = 20.sp
                     )
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 5.dp),
+
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.tertiary,
-                            shadowElevation = 10.dp,
-                            modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
+                        Column(
+                            modifier = Modifier.padding(horizontal = 5.dp),
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.padding(horizontal = 3.dp, vertical = 3.dp)
+                            Surface(
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shadowElevation = 10.dp,
+                                modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.AccessTime,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.background,
-                                    modifier = Modifier.padding(end = 3.dp)
-                                )
-                                Text(
-                                    text = "30'",
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
-                        }
-                    }
-                    Column(
-                        modifier = Modifier.padding(horizontal = 5.dp),
-                    ) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.tertiary,
-                            shadowElevation = 10.dp,
-                            modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.FitnessCenter,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.background,
-                                    modifier = Modifier.padding(end = 6.dp)
-                                )
-                                Text(
-                                    text = stringResource(stringToRes(data.difficulty)),
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
-                        }
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .padding(top = 5.dp)
-                        .fillMaxWidth(1f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 5.dp),
-                    ) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.tertiary,
-                            shadowElevation = 10.dp,
-                            modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Star,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.background,
-                                    modifier = Modifier.padding(end = 6.dp)
-                                )
-                                Text(
-                                    text = data.score.toString(),
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
-                        }
-                    }
-                    Column(
-                        modifier = Modifier.padding(horizontal = 5.dp),
-                    ) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.tertiary,
-                            shadowElevation = 10.dp,
-                            modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.AccountCircle,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.background,
-                                    modifier = Modifier.padding(end = 6.dp)
-                                )
-                                Text(
-                                    text = data.user.username,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                if (data.user.verified) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                ) {
                                     Icon(
-                                        imageVector = Icons.Default.Verified,
+                                        imageVector = Icons.Default.AccessTime,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.background,
-                                        modifier = Modifier.size(10.dp)
+                                        modifier = Modifier
+                                            .padding(end = 3.dp)
+                                            .size(12.dp)
                                     )
+                                    Text(
+                                        text = "30'",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                }
+                            }
+                        }
+                        Column(
+                            modifier = Modifier.padding(horizontal = 5.dp),
+                        ) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shadowElevation = 10.dp,
+                                modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.FitnessCenter,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.background,
+                                        modifier = Modifier
+                                            .padding(end = 6.dp)
+                                            .size(12.dp)
+                                    )
+                                    Text(
+                                        text = stringResource(stringToRes(data.difficulty)),
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 5.dp)
+                            .fillMaxWidth(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(horizontal = 5.dp),
+                        ) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shadowElevation = 10.dp,
+                                modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Star,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.background,
+                                        modifier = Modifier
+                                            .padding(end = 6.dp)
+                                            .size(12.dp)
+                                    )
+                                    Text(
+                                        text = data.score.toString(),
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                }
+                            }
+                        }
+                        Column(
+                            modifier = Modifier.padding(horizontal = 5.dp),
+                        ) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shadowElevation = 10.dp,
+                                modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.AccountCircle,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.background,
+                                        modifier = Modifier
+                                            .padding(end = 6.dp)
+                                            .size(12.dp)
+                                    )
+                                    Text(
+                                        text = data.user.username,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                    if (data.user.verified) {
+                                        Icon(
+                                            imageVector = Icons.Default.Verified,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.background,
+                                            modifier = Modifier.size(10.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
