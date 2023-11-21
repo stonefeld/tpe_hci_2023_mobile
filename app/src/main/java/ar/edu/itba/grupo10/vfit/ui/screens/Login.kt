@@ -47,6 +47,7 @@ import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.Screen
 import ar.edu.itba.grupo10.vfit.ui.main.rememberMainAppState
+import ar.edu.itba.grupo10.vfit.utils.codeToMessage
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @Composable
@@ -148,7 +149,7 @@ fun LoginScreen(
 
         if (uiState.error != null) {
             appState.showSnackbar(
-                uiState.error.message,
+                stringResource(codeToMessage(uiState.error)),
                 { viewModel.dismissMessage() },
                 { viewModel.dismissMessage() }
             )

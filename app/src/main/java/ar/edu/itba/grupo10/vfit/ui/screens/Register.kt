@@ -34,6 +34,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -54,7 +55,10 @@ import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
+import ar.edu.itba.grupo10.vfit.utils.codeToMessage
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
+import ar.edu.itba.grupo10.vfit.utils.resToString
+import ar.edu.itba.grupo10.vfit.utils.stringToRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -189,70 +193,70 @@ fun RegisterScreen(
         var phone by rememberSaveable { mutableStateOf("") }
         var avatar by rememberSaveable { mutableStateOf("") }
 
-        var expanded by remember { mutableStateOf(false) }
-        val genders = arrayOf("Male", "Female")
-        var gender by remember { mutableStateOf(genders[0]) }
+        var expanded by rememberSaveable { mutableStateOf(false) }
+        val genders = arrayOf(R.string.male, R.string.female)
+        var gender by rememberSaveable { mutableIntStateOf(genders[0]) }
 
         if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
-            Row {
-                TextField(
-                    value = firstName,
-                    onValueChange = { firstName = it },
-                    label = { Text(text = stringResource(R.string.enter_name)) },
-                    singleLine = true,
-                    modifier = Modifier.padding(end = 35.dp)
-                )
-
-                TextField(
-                    value = lastName,
-                    onValueChange = { lastName = it },
-                    label = { Text(text = stringResource(R.string.enter_lastname)) },
-                    singleLine = true
-                )
-            }
-
-            Row(
-                modifier = Modifier.padding(top = 25.dp)
-            ) {
-                TextField(
-                    value = phone,
-                    onValueChange = { phone = it },
-                    label = { Text(text = stringResource(R.string.enter_phone)) },
-                    singleLine = true,
-                    modifier = Modifier.padding(end = 35.dp)
-                )
-
-
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
-                ) {
-                    TextField(
-                        value = gender,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        genders.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    gender = item
-                                    expanded = false
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+//            Row {
+//                TextField(
+//                    value = firstName,
+//                    onValueChange = { firstName = it },
+//                    label = { Text(text = stringResource(R.string.enter_name)) },
+//                    singleLine = true,
+//                    modifier = Modifier.padding(end = 35.dp)
+//                )
+//
+//                TextField(
+//                    value = lastName,
+//                    onValueChange = { lastName = it },
+//                    label = { Text(text = stringResource(R.string.enter_lastname)) },
+//                    singleLine = true
+//                )
+//            }
+//
+//            Row(
+//                modifier = Modifier.padding(top = 25.dp)
+//            ) {
+//                TextField(
+//                    value = phone,
+//                    onValueChange = { phone = it },
+//                    label = { Text(text = stringResource(R.string.enter_phone)) },
+//                    singleLine = true,
+//                    modifier = Modifier.padding(end = 35.dp)
+//                )
+//
+//
+//                ExposedDropdownMenuBox(
+//                    expanded = expanded,
+//                    onExpandedChange = {
+//                        expanded = !expanded
+//                    }
+//                ) {
+//                    TextField(
+//                        value = stringResource(gender),
+//                        onValueChange = {},
+//                        readOnly = true,
+//                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+//                        modifier = Modifier.menuAnchor()
+//                    )
+//
+//                    ExposedDropdownMenu(
+//                        expanded = expanded,
+//                        onDismissRequest = { expanded = false }
+//                    ) {
+//                        genders.forEach { item ->
+//                            DropdownMenuItem(
+//                                text = { Text(text = item) },
+//                                onClick = {
+//                                    gender = item
+//                                    expanded = false
+//                                }
+//                            )
+//                        }
+//                    }
+//                }
+//            }
         } else {
             TextField(
                 value = firstName,
@@ -296,7 +300,7 @@ fun RegisterScreen(
                 onExpandedChange = { expanded = !expanded }
             ) {
                 TextField(
-                    value = gender,
+                    value = stringResource(gender),
                     onValueChange = {},
                     readOnly = true,
                     modifier = Modifier
@@ -314,7 +318,7 @@ fun RegisterScreen(
                 ) {
                     genders.forEach { item ->
                         DropdownMenuItem(
-                            text = { Text(text = item) },
+                            text = { Text(stringResource(item)) },
                             onClick = {
                                 gender = item
                                 expanded = false
@@ -362,7 +366,11 @@ fun RegisterScreen(
 
         ElevatedButton(
             onClick = {
-                viewModel.register(username, mail, password, onRegisterSuccess)
+                viewModel.register(
+                    username, mail, password,
+                    firstName, lastName, phone, resToString(gender), avatar,
+                    onRegisterSuccess
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -380,7 +388,7 @@ fun RegisterScreen(
 
         if (uiState.error != null) {
             appState.showSnackbar(
-                uiState.error.message,
+                stringResource(codeToMessage(uiState.error)),
                 { viewModel.dismissMessage() },
                 { viewModel.dismissMessage() }
             )

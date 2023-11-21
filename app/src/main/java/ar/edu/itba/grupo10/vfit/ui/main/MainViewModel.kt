@@ -58,9 +58,30 @@ class MainViewModel(
         onSuccess
     )
 
-    fun register(username: String, email: String, password: String, onSuccess: () -> Unit) =
+    fun register(
+        username: String,
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String,
+        phone: String,
+        gender: String,
+        avatarUrl: String,
+        onSuccess: () -> Unit
+    ) =
         runOnViewModelScope(
-            { userRepository.register(username, email, password) },
+            {
+                userRepository.register(
+                    username,
+                    email,
+                    password,
+                    firstName,
+                    lastName,
+                    phone,
+                    gender,
+                    avatarUrl
+                )
+            },
             { state, _ -> state },
             onSuccess
         )

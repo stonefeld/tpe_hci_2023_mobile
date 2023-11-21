@@ -10,9 +10,8 @@ data class User(
     var firstName: String,
     var lastName: String,
     var gender: String?,
-    var phone: String?,
-    var birthdate: Date?,
-    var avatarUrl: String = "",
+    var phone: String,
+    var avatarUrl: String,
     var verified: Boolean
 ) {
 
@@ -25,7 +24,6 @@ data class User(
             lastName = lastName,
             gender = gender,
             phone = phone,
-            birthdate = birthdate,
             avatarUrl = avatarUrl,
             verified = verified
         )

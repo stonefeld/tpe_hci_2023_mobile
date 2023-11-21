@@ -262,35 +262,33 @@ fun RoutineCard(
     }
 }
 
-
-@Preview(locale = "es")
-@Composable
-fun RoutinePreview() {
-    VFitTheme {
-        val routine = Routine(
-            1,
-            "LOREM",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non semper ante, in finibus erat.",
-            "advanced",
-            true,
-            User(
-                1,
-                "paki",
-                "gmail",
-                "Paki",
-                "Quian",
-                null,
-                null,
-                null,
-                "",
-                true
-            ),
-            Date(2023, 10, 31),
-            null,
-            null
-        )
-        RoutineCard(Modifier, routine)
-        RoutineCard(Modifier, routine)
-        RoutineCard(Modifier, routine)
-    }
-}
+//@Preview(locale = "es")
+//@Composable
+//fun RoutinePreview() {
+//    VFitTheme {
+//        val routine = Routine(
+//            1,
+//            "LOREM",
+//            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non semper ante, in finibus erat.",
+//            "advanced",
+//            true,
+//            User(
+//                1,
+//                "paki",
+//                "gmail",
+//                "Paki",
+//                "Quian",
+//                null,
+//                "",
+//                "",
+//                true
+//            ),
+//            Date(2023, 10, 31),
+//            null,
+//            null
+//        )
+//        RoutineCard(Modifier, routine)
+//        RoutineCard(Modifier, routine)
+//        RoutineCard(Modifier, routine)
+//    }
+//}
