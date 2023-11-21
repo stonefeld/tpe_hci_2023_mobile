@@ -101,7 +101,6 @@ fun RoutineScreen(
                 viewModel.getCyclesFull(routineID)
             }
         ) {
-            //TODO: no entra siempre en el if por lo qual hay que chequear el estado de currentRoutine en cada llamado
             if (viewModel.uiState.currentRoutine != null) {
                 val currentRoutine = viewModel.uiState.currentRoutine
                 val cyclesList = viewModel.uiState.cycles
@@ -242,7 +241,7 @@ fun RoutineScreen(
                                                         .padding(end = 10.dp)
                                                         .clip(CircleShape)
                                                         .clickable {
-                                                            /*TODO:*/
+                                                            navController.navigate("routine/${viewModel.uiState.currentRoutine!!.id}/execute")
                                                         }
                                                 )
                                                 IconButton(onClick = {

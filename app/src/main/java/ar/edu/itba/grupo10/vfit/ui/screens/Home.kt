@@ -100,8 +100,7 @@ fun HomeScreen(
                         RoutineCard(
                             modifier = Modifier
                                 .clickable {
-                                    uiState.currentRoutine = list[index]
-                                    navController.navigate("routine/${uiState.currentRoutine!!.id}")
+                                    navController.navigate("routine/${list[index].id}")
                                 }
                                 .padding(horizontal = 5.dp),
                             data = list[index]
