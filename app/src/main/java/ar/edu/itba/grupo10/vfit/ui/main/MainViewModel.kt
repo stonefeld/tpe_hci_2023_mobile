@@ -17,6 +17,7 @@ import ar.edu.itba.grupo10.vfit.data.repository.ExerciseRepository
 import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
 import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
+import com.squareup.wire.internal.copyOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -125,6 +126,11 @@ class MainViewModel(
 
     fun getCycles(routineId: Int) = runOnViewModelScope(
         { cycleRepository.getCycles(true, routineId) },
+        { state, response -> state.copy(cycles = response) }
+    )
+
+    fun getCyclesFull(routineId: Int) = runOnViewModelScope(
+        { cycleRepository.getCyclesFull(true, routineId) },
         { state, response -> state.copy(cycles = response) }
     )
 

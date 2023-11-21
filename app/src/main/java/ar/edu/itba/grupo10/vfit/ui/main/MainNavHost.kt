@@ -36,7 +36,7 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int?, val icon
     object Routine : Screen("routine/{routine_id}", R.string.routines, Icons.Default.FitnessCenter)
     object Search : Screen("search", R.string.search, Icons.Default.Search)
 
-    object ExecuteRoutine : Screen("execute_routine", null, null)
+    object ExecuteRoutine : Screen("routine/{routine_id}/execute", R.string.execute, Icons.Default.FitnessCenter)
     object Profile : Screen("profile", R.string.profile, Icons.Default.Person)
     object Settings : Screen("settings", R.string.settings, Icons.Default.Settings)
 
@@ -81,7 +81,19 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAp
             )
         }
         composable(Screen.Search.route) { SearchScreen(navController) }
-        composable(Screen.ExecuteRoutine.route) { ExecuteRoutineScreen(true) }
+        //composable(Screen.ExecuteRoutine.route) { ExecuteRoutineScreen(true) }
+        composable(Screen.ExecuteRoutine.route,
+            arguments = listOf(
+                navArgument(name = "routine_id") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backstackEntry ->
+            ExecuteRoutineScreen(
+                navController,
+                routineID = backstackEntry.arguments?.getInt("routine_id"),
+            )
+        }
         composable(Screen.Profile.route) {
             ProfileScreen {
                 navController.navigate("auth") {

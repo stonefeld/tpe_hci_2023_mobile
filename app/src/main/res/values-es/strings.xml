@@ -5,6 +5,7 @@
     <string name="routines">Rutinas</string>
     <string name="profile">Perfil</string>
     <string name="library">Biblioteca</string>
+    <string name="execute">Ejecutar rutina</string>
     <string name="welcome_back">Bienvenido!</string>
     <string name="login">Ingresar</string>
     <string name="home_title">¿Listo para entrenar?</string>
@@ -45,7 +46,11 @@
     <string name="logout">Cerrar sesión</string>
     <string name="edit_profile">Editar perfil</string>
     <string name="save_changes">Guardar cambios</string>
+<<<<<<< HEAD
     <string name="score">Puntuación</string>
     <string name="creation_date">Fecha de creación</string>
     <string name="category">Categoría</string>
+=======
+    <string name="next">Próximo:</string>
+>>>>>>> e990a31dcb831cf8d1180ddfba6792f00ba464d4
 </resources>

@@ -8,6 +8,7 @@
     <string name="routines">Routines</string>
     <string name="profile">Profile</string>
     <string name="library">Library</string>
+    <string name="execute">Execute routine</string>
     <string name="welcome_back">Welcome back!</string>
     <string name="welcome">Welcome!</string>
     <string name="login">Login</string>
@@ -49,4 +50,5 @@
     <string name="score">Score</string>
     <string name="creation_date">Date of creation</string>
     <string name="category">Category</string>
+    <string name="next">Next:</string>
 </resources>
