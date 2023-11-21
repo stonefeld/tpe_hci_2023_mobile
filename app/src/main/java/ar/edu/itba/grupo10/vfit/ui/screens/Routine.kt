@@ -283,14 +283,18 @@ fun RoutineScreen(
                                         }
                                     }
                                 } else {
-                                    cyclesList?.forEach {
-                                        Row(modifier = Modifier.fillMaxWidth()) {
-                                            //TODO: arreglar dos ciclos por row
-                                            Column(modifier = Modifier.fillMaxWidth(0.5f)) {
-                                                AddCycle(it)
-                                            }
-                                            Column(modifier = Modifier.fillMaxWidth()) {
-                                                AddCycle(it)
+                                    if (cyclesList != null) {
+                                        for(indice in 0 until cyclesList.size step 2)
+                                        {
+                                            Row(modifier = Modifier.fillMaxWidth()) {
+                                                //TODO: arreglar dos ciclos por row
+                                                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
+                                                    AddCycle(cyclesList.get(indice))
+                                                }
+                                                if(indice+1 < cyclesList.size)
+                                                    Column(modifier = Modifier.fillMaxWidth()) {
+                                                        AddCycle(cyclesList.get(indice+1))
+                                                    }
                                             }
                                         }
                                     }
