@@ -1,6 +1,8 @@
 package ar.edu.itba.grupo10.vfit.data.network.api
 
+import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkPagedContent
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkReview
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkRoutine
 import retrofit2.Response
 import retrofit2.http.Body
@@ -39,5 +41,11 @@ interface ApiRoutineService {
 
     @DELETE("favourites/{routineId}")
     suspend fun removeFavorite(@Path("routineId") routineId: Int): Response<Unit>
+
+    @POST("reviews/{routineId}")
+    suspend fun reviewRoutine(
+        @Path("routineId") routineId: Int,
+        @Body review: NetworkReview
+    ): Response<NetworkReview>
 
 }

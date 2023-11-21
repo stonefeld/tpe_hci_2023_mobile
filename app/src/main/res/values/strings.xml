@@ -52,4 +52,5 @@
     <string name="error_4">Invalid username or password</string>
     <string name="error_98">Connection error</string>
     <string name="to_home">To Home</string>
+    <string name="review">Submit review score:</string>
 </resources>

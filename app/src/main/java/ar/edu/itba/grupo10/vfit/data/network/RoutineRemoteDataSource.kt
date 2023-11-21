@@ -2,6 +2,7 @@ package ar.edu.itba.grupo10.vfit.data.network
 
 import ar.edu.itba.grupo10.vfit.data.network.api.ApiRoutineService
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkPagedContent
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkReview
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkRoutine
 
 class RoutineRemoteDataSource(
@@ -38,6 +39,15 @@ class RoutineRemoteDataSource(
 
     suspend fun removeFavorite(routineId: Int) {
         handleApiResponse { apiRoutineService.removeFavorite(routineId) }
+    }
+
+    suspend fun reviewRoutine(routineId: Int, score: Int): NetworkReview {
+        return handleApiResponse {
+            apiRoutineService.reviewRoutine(
+                routineId,
+                NetworkReview(score = score, review = "")
+            )
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.grupo10.vfit.data.repository
 
 import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.network.RoutineRemoteDataSource
+import ar.edu.itba.grupo10.vfit.data.network.models.NetworkReview
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -74,6 +75,10 @@ class RoutineRepository(
         favoritesMutex.withLock {
             this.favorites = emptyList()
         }
+    }
+
+    suspend fun reviewRoutine(routineId: Int, score: Int) {
+        remoteDataSource.reviewRoutine(routineId, score)
     }
 
 }

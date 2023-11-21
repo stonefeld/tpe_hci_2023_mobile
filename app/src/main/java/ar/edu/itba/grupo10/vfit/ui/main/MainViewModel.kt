@@ -172,6 +172,15 @@ class MainViewModel(
         { getFavorites() }
     )
 
+    fun reviewRoutine(routineId: Int, score: Int, onSuccess: () -> Unit) = runOnViewModelScope(
+        { routineRepository.reviewRoutine(routineId, score) },
+        { state, _ -> state.copy(currentRoutine = null, routines = null) },
+        {
+            onSuccess()
+            getRoutine(routineId)
+        }
+    )
+
     fun getCycles(routineId: Int) = runOnViewModelScope(
         { cycleRepository.getCycles(true, routineId) },
         { state, response -> state.copy(cycles = response) }
