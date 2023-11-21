@@ -213,12 +213,28 @@ fun ExecuteRoutineScreen(
                                         viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
                                             currentExerciseIndex
                                         )?.let {
-                                            Text(
-                                                text = "${it.repetitions} reps |  ${it.duration}’’",
-                                                fontSize = 35.sp,
-                                                fontFamily = FontFamily.Default,
-                                                color = MaterialTheme.colorScheme.background
-                                            )
+                                            if(it.repetitions>0 && it.duration >0){
+                                                Text(
+                                                    text = "${it.repetitions} reps |  ${it.duration}’’",
+                                                    fontSize = 35.sp,
+                                                    fontFamily = FontFamily.Default,
+                                                    color = MaterialTheme.colorScheme.background
+                                                )
+                                            }else if(it.repetitions>0){
+                                                Text(
+                                                    text = "${it.repetitions} reps",
+                                                    fontSize = 35.sp,
+                                                    fontFamily = FontFamily.Default,
+                                                    color = MaterialTheme.colorScheme.background
+                                                )
+                                            }else {
+                                                Text(
+                                                    text = " ${it.duration}’’",
+                                                    fontSize = 35.sp,
+                                                    fontFamily = FontFamily.Default,
+                                                    color = MaterialTheme.colorScheme.background
+                                                )
+                                            }
                                         }
                                     }
                                     if (!detailed) {
@@ -455,12 +471,30 @@ fun AddNextExercise(exercise: CycleExercise?) {
         Row(
             modifier = Modifier.padding(5.dp)
         ) {
-            Text(
-                text = "${exercise.repetitions} reps |  ${exercise.duration}’’",
-                fontSize = 25.sp,
-                fontFamily = FontFamily.Default,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            )
+
+            if(exercise.repetitions>0 && exercise.duration >0){
+                Text(
+                    text = "${exercise.repetitions} reps |  ${exercise.duration}’’",
+                    fontSize = 25.sp,
+                    fontFamily = FontFamily.Default,
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                )
+            }else if(exercise.repetitions>0){
+                Text(
+                    text = "${exercise.repetitions} reps",
+                    fontSize = 25.sp,
+                    fontFamily = FontFamily.Default,
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                )
+            }else {
+                Text(
+                    text = " ${exercise.duration}’’",
+                    fontSize = 25.sp,
+                    fontFamily = FontFamily.Default,
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                )
+            }
+
         }
     }
 }
