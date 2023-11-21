@@ -214,6 +214,7 @@ fun RoutineScreen(
                                             modifier = Modifier.padding(vertical = 5.dp)
                                         )
                                         Text(
+//                                            text = currentRoutine.date?.day.toString()+"/"+currentRoutine.date?.month.toString(),
                                             text = currentRoutine.date.toString(),
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.padding(top = 5.dp)
@@ -364,37 +365,57 @@ fun AddExerciseRoutine(cycleExercise: CycleExercise) {
                 Row(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                end = 4.dp
+                    if(cycleExercise.repetitions>0) {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    start = 4.dp,
+                                    end = 4.dp
+                                )
+                        ) {
+                            Text(
+                                text = cycleExercise.repetitions.toString() + " reps",
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontWeight = FontWeight.SemiBold
                             )
-                    ) {
-                        Text(
-                            text = cycleExercise.repetitions.toString() + " reps",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        }
                     }
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                end = 4.dp
+                    if(cycleExercise.duration>0 && cycleExercise.repetitions>0){
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    start = 1.dp,
+                                    end = 1.dp
+                                )
+                        ) {
+                            Text(
+                                text = "/",
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontWeight = FontWeight.SemiBold
                             )
-                    ) {
-                        Text(
-                            text = cycleExercise.duration.toString() + "''",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        }
+                    }
+                    if(cycleExercise.duration>0) {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    start = 4.dp,
+                                    end = 4.dp
+                                )
+                        ) {
+                            Text(
+                                text = cycleExercise.duration.toString() + "''",
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 //@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
 //@Composable
