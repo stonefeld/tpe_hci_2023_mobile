@@ -12,7 +12,7 @@ data class User(
     var gender: String?,
     var phone: String?,
     var birthdate: Date?,
-    var avatarUrl: String? = null,
+    var avatarUrl: String = "",
     var verified: Boolean
 ) {
 

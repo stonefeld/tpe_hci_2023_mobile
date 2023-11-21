@@ -12,9 +12,9 @@ class RoutineRepository(
     private val routinesMutex = Mutex()
     private var routines: List<Routine> = emptyList()
 
-    suspend fun getRoutines(refresh: Boolean = false): List<Routine> {
+    suspend fun getRoutines(refresh: Boolean = false, args: Map<String, String>): List<Routine> {
         if (refresh || routines.isEmpty()) {
-            val result = remoteDataSource.getRoutines()
+            val result = remoteDataSource.getRoutines(args)
             routinesMutex.withLock {
                 this.routines = result.content.map { it.asModel() }
             }

@@ -12,7 +12,7 @@ import retrofit2.http.Path
 
 interface ApiCycleExerciseService {
 
-    @GET("cycles/{cycleId}/exercises")
+    @GET("cycles/{cycleId}/exercises?size=100")
     suspend fun getCycleExercises(@Path("cycleId") cycleId: Int): Response<NetworkPagedContent<NetworkCycleExercise>>
 
     @GET("cycles/{cycleId}/exercises/{exerciseId}")

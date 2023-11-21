@@ -89,8 +89,8 @@ class MainViewModel(
         onModifySuccess
     )
 
-    fun getRoutines() = runOnViewModelScope(
-        { routineRepository.getRoutines(true) },
+    fun getRoutines(args: Map<String, String> = emptyMap()) = runOnViewModelScope(
+        { routineRepository.getRoutines(true, args) },
         { state, response -> state.copy(routines = response) }
     )
 

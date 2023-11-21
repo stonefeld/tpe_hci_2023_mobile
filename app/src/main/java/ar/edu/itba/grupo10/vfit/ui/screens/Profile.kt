@@ -111,8 +111,8 @@ fun ProfileScreen(
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(user.avatarUrl)
-                                 .crossfade(true).build(),
+                                .data(user.avatarUrl.ifEmpty { R.drawable.guest })
+                                .crossfade(true).build(),
                             placeholder = painterResource(R.drawable.guest),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
@@ -234,7 +234,7 @@ fun ProfileScreen(
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(user.avatarUrl)
+                                .data(user.avatarUrl.ifEmpty { R.drawable.guest })
                                 .crossfade(true).build(),
                             placeholder = painterResource(R.drawable.guest),
                             contentDescription = null,
@@ -405,7 +405,7 @@ fun ProfileScreen(
                             lastName = user.lastName
                             phone = user.phone!!
                             gender = stringToRes(user.gender!!)
-                            avatar = user.avatarUrl!!
+                            avatar = user.avatarUrl
                             edit = false
                         },
                         modifier = Modifier

@@ -9,11 +9,12 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 interface ApiRoutineService {
 
-    @GET("routines")
-    suspend fun getRoutines(): Response<NetworkPagedContent<NetworkRoutine>>
+    @GET("routines?size=100&direction=desc")
+    suspend fun getRoutines(@QueryMap args: Map<String, String>): Response<NetworkPagedContent<NetworkRoutine>>
 
     @GET("routines/{routineId}")
     suspend fun getRoutine(@Path("routineId") routineId: Int): Response<NetworkRoutine>
