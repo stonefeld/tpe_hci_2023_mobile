@@ -51,8 +51,13 @@ class MainViewModel(
                 currentUser = null,
                 currentRoutine = null,
                 routines = null,
+                favorites = null,
                 currentCycle = null,
-                cycles = null
+                cycles = null,
+                currentExercise = null,
+                exercises = null,
+                currentCycleExercise = null,
+                cycleExercises = null
             )
         },
         onSuccess
@@ -148,6 +153,23 @@ class MainViewModel(
                 routines = null
             )
         }
+    )
+
+    fun getFavorites() = runOnViewModelScope(
+        { routineRepository.getFavorites(true) },
+        { state, response -> state.copy(favorites = response) }
+    )
+
+    fun addFavorite(routineId: Int) = runOnViewModelScope(
+        { routineRepository.addFavorite(routineId) },
+        { state, _ -> state.copy(favorites = null) },
+        { getFavorites() }
+    )
+
+    fun removeFavorite(routineId: Int) = runOnViewModelScope(
+        { routineRepository.removeFavorite(routineId) },
+        { state, _ -> state.copy(favorites = null) },
+        { getFavorites() }
     )
 
     fun getCycles(routineId: Int) = runOnViewModelScope(

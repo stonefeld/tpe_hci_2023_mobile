@@ -9,33 +9,35 @@ class RoutineRemoteDataSource(
 ) : RemoteDataSource() {
 
     suspend fun getRoutines(args: Map<String, String>): NetworkPagedContent<NetworkRoutine> {
-        return handleApiResponse {
-            apiRoutineService.getRoutines(args)
-        }
+        return handleApiResponse { apiRoutineService.getRoutines(args) }
     }
 
     suspend fun getRoutine(routineId: Int): NetworkRoutine {
-        return handleApiResponse {
-            apiRoutineService.getRoutine(routineId)
-        }
+        return handleApiResponse { apiRoutineService.getRoutine(routineId) }
     }
 
     suspend fun createRoutine(routine: NetworkRoutine): NetworkRoutine {
-        return handleApiResponse {
-            apiRoutineService.createRoutine(routine)
-        }
+        return handleApiResponse { apiRoutineService.createRoutine(routine) }
     }
 
     suspend fun modifyRoutine(routine: NetworkRoutine): NetworkRoutine {
-        return handleApiResponse {
-            apiRoutineService.modifyRoutine(routine.id!!, routine)
-        }
+        return handleApiResponse { apiRoutineService.modifyRoutine(routine.id!!, routine) }
     }
 
     suspend fun deleteRoutine(routineId: Int) {
-        handleApiResponse {
-            apiRoutineService.deleteRoutine(routineId)
-        }
+        handleApiResponse { apiRoutineService.deleteRoutine(routineId) }
+    }
+
+    suspend fun getFavorites(): NetworkPagedContent<NetworkRoutine> {
+        return handleApiResponse { apiRoutineService.getFavorites() }
+    }
+
+    suspend fun addFavorite(routineId: Int) {
+        handleApiResponse { apiRoutineService.addFavorite(routineId) }
+    }
+
+    suspend fun removeFavorite(routineId: Int) {
+        handleApiResponse { apiRoutineService.removeFavorite(routineId) }
     }
 
 }

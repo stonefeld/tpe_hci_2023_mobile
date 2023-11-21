@@ -72,7 +72,6 @@ fun RoutineScreen(
     routineID: Int?
 ) {
     if (routineID != null) {
-        var liked by remember { mutableStateOf(false) }
         val windowSize = rememberWindowInfo()
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -86,6 +85,7 @@ fun RoutineScreen(
         OnLifeCycleEvent { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
+                    viewModel.getFavorites()
                     viewModel.getRoutine(routineID)
                     viewModel.getCyclesFull(routineID)
                 }
@@ -97,6 +97,7 @@ fun RoutineScreen(
         SwipeRefresh(
             state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
             onRefresh = {
+                viewModel.getFavorites()
                 viewModel.getRoutine(routineID)
                 viewModel.getCyclesFull(routineID)
             }
@@ -104,15 +105,19 @@ fun RoutineScreen(
             if (viewModel.uiState.currentRoutine != null) {
                 val currentRoutine = viewModel.uiState.currentRoutine
                 val cyclesList = viewModel.uiState.cycles
+                val favorites = viewModel.uiState.favorites
+                var liked by remember {
+                    mutableStateOf(favorites?.contains(currentRoutine) ?: false)
+                }
 
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxSize(1f)
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(1f),
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -148,34 +153,22 @@ fun RoutineScreen(
                                             contentDescription = null
                                         )
                                     }
-                                    if (liked) {
-                                        FloatingActionButton(
-                                            modifier = Modifier.align(alignment = Alignment.TopEnd),
-                                            onClick = {
-                                                liked = false
-                                            },
-                                            containerColor = MaterialTheme.colorScheme.background,
-                                            contentColor = MaterialTheme.colorScheme.primary
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Favorite,
-                                                contentDescription = null,
-                                            )
-                                        }
-                                    } else {
-                                        FloatingActionButton(
-                                            modifier = Modifier.align(alignment = Alignment.TopEnd),
-                                            onClick = {
-                                                liked = true
-                                            },
-                                            containerColor = MaterialTheme.colorScheme.background,
-                                            contentColor = MaterialTheme.colorScheme.primary
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.FavoriteBorder,
-                                                contentDescription = null,
-                                            )
-                                        }
+                                    FloatingActionButton(
+                                        modifier = Modifier.align(alignment = Alignment.TopEnd),
+                                        onClick = {
+                                            liked = !liked
+                                            if (liked)
+                                                viewModel.addFavorite(currentRoutine?.id!!)
+                                            else
+                                                viewModel.removeFavorite(currentRoutine?.id!!)
+                                        },
+                                        containerColor = MaterialTheme.colorScheme.background,
+                                        contentColor = MaterialTheme.colorScheme.primary
+                                    ) {
+                                        Icon(
+                                            imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                            contentDescription = null,
+                                        )
                                     }
                                 }
                             }
@@ -365,7 +358,7 @@ fun AddExerciseRoutine(cycleExercise: CycleExercise) {
                 Row(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
-                    if(cycleExercise.repetitions>0) {
+                    if (cycleExercise.repetitions > 0) {
                         Column(
                             modifier = Modifier
                                 .padding(
@@ -380,7 +373,7 @@ fun AddExerciseRoutine(cycleExercise: CycleExercise) {
                             )
                         }
                     }
-                    if(cycleExercise.duration>0 && cycleExercise.repetitions>0){
+                    if (cycleExercise.duration > 0 && cycleExercise.repetitions > 0) {
                         Column(
                             modifier = Modifier
                                 .padding(
@@ -395,7 +388,7 @@ fun AddExerciseRoutine(cycleExercise: CycleExercise) {
                             )
                         }
                     }
-                    if(cycleExercise.duration>0) {
+                    if (cycleExercise.duration > 0) {
                         Column(
                             modifier = Modifier
                                 .padding(

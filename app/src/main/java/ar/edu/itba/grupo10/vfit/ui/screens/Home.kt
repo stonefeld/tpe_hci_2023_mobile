@@ -45,6 +45,7 @@ fun HomeScreen(
     OnLifeCycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
+                viewModel.getFavorites()
                 viewModel.getRoutines()
             }
 
@@ -54,7 +55,10 @@ fun HomeScreen(
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(uiState.isLoading),
-        onRefresh = { viewModel.getRoutines() }
+        onRefresh = {
+            viewModel.getFavorites()
+            viewModel.getRoutines()
+        }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

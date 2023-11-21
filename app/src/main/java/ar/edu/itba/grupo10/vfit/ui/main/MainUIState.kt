@@ -14,6 +14,7 @@ data class MainUIState(
     val currentRoutine: Routine? = null,
     val routines: List<Routine>? = null,
     val currentCycle: Cycle? = null,
+    val favorites: List<Routine>? = null,
     val cycles: List<Cycle>? = null,
     val currentExercise: Exercise? = null,
     val exercises: List<Exercise>? = null,
