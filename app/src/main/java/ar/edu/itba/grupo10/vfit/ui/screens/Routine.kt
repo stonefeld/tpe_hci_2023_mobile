@@ -84,11 +84,12 @@ fun RoutineScreen(
         val windowSize = rememberWindowInfo()
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+            //TODO: poner link valido
+            putExtra(Intent.EXTRA_TEXT, "Link:$routineID")
             type = "text/plain"
         }
         val shareIntent = Intent.createChooser(sendIntent, null)
-
+        val context = LocalContext.current
         OnLifeCycleEvent { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
@@ -251,7 +252,7 @@ fun RoutineScreen(
                                                             /*TODO:*/
                                                         }
                                                 )
-                                                IconButton(onClick = { /*startActivity(shareIntent)*/ }) {
+                                                IconButton(onClick = { context.startActivity(shareIntent) }) {
                                                     Icon(
                                                         Icons.Rounded.Share,
                                                         contentDescription = stringResource(R.string.enter_mail),
