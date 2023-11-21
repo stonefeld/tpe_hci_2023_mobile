@@ -10,12 +10,10 @@ data class NetworkUser(
     @SerializedName("firstName") var firstName: String,
     @SerializedName("lastName") var lastName: String,
     @SerializedName("gender") var gender: String? = null,
-    @SerializedName("birthdate") var birthdate: Date? = null,
     @SerializedName("email") var email: String,
-    @SerializedName("phone") var phone: String? = null,
-    @SerializedName("avatarUrl") var avatarUrl: String? = null,
+    @SerializedName("phone") var phone: String = "",
+    @SerializedName("avatarUrl") var avatarUrl: String = "",
     @SerializedName("metadata") var metadata: NetworkMetadata? = null,
-    @SerializedName("lastActivity") var lastActivity: Date? = null,
     @SerializedName("verified") var verified: Boolean
 ) {
 
@@ -28,7 +26,6 @@ data class NetworkUser(
             email = email,
             avatarUrl = avatarUrl,
             phone = phone,
-            birthdate = birthdate,
             gender = gender,
             verified = verified
         )

@@ -95,7 +95,7 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAp
             )
         }
         composable(Screen.Profile.route) {
-            ProfileScreen {
+            ProfileScreen(appState = appState) {
                 navController.navigate("auth") {
                     popUpTo("main") {
                         inclusive = true

@@ -24,13 +24,21 @@ class UserRemoteDataSource(
         sessionManager.removeAuthToken()
     }
 
-    suspend fun register(username: String, email: String, password: String): NetworkUser {
+    suspend fun register(
+        username: String,
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String,
+        phone: String,
+        gender: String,
+        avatarUrl: String
+    ): NetworkUser {
         return handleApiResponse {
             apiUserService.register(
                 NetworkRegisterCredentials(
-                    username,
-                    email,
-                    password
+                    username, email, password,
+                    firstName, lastName, phone, gender, avatarUrl
                 )
             )
         }
@@ -38,6 +46,10 @@ class UserRemoteDataSource(
 
     suspend fun verifyAccount(email: String, code: String) {
         handleApiResponse { apiUserService.verifyAccount(NetworkVerifyCredentials(email, code)) }
+    }
+
+    suspend fun resendVerificationCode(email: String) {
+        handleApiResponse { apiUserService.resendVerificationCode(NetworkVerifyCredentials(email, null)) }
     }
 
     suspend fun getCurrentUser(): NetworkUser {

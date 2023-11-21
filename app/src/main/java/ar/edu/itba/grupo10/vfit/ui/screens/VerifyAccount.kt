@@ -2,6 +2,7 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,6 +33,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
+import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
+import ar.edu.itba.grupo10.vfit.utils.codeToMessage
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @Composable
@@ -40,7 +44,11 @@ fun VerifyAccountScreen(
     appState: MainAppState,
     onVerifySuccess: () -> Unit
 ) {
+    val windowSize = rememberWindowInfo()
     val uiState = viewModel.uiState
+
+    var email by rememberSaveable { mutableStateOf("") }
+    var code by rememberSaveable { mutableStateOf("") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,32 +74,60 @@ fun VerifyAccountScreen(
             modifier = Modifier.padding(20.dp)
         )
 
-        var email by rememberSaveable { mutableStateOf("") }
-        var code by rememberSaveable { mutableStateOf("") }
+        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp)
+            ) {
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text(stringResource(R.string.enter_mail)) },
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .padding(end = 4.dp),
+                    leadingIcon = { Icon(Icons.Default.Mail, contentDescription = null) },
+                    singleLine = true
+                )
 
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(stringResource(R.string.enter_mail)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.Mail, contentDescription = null) },
-            singleLine = true
-        )
+                TextField(
+                    value = code,
+                    onValueChange = { code = it },
+                    label = { Text(stringResource(R.string.enter_code)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp),
+                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                    singleLine = true
+                )
+            }
+        } else {
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text(stringResource(R.string.enter_mail)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = { Icon(Icons.Default.Mail, contentDescription = null) },
+                singleLine = true
+            )
 
-        TextField(
-            value = code,
-            onValueChange = { code = it },
-            label = { Text(stringResource(R.string.enter_code)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 8.dp),
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-            singleLine = true
-        )
+            TextField(
+                value = code,
+                onValueChange = { code = it },
+                label = { Text(stringResource(R.string.enter_code)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp),
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                singleLine = true
+            )
+        }
 
         ElevatedButton(
             onClick = {
@@ -111,13 +147,11 @@ fun VerifyAccountScreen(
                 )
         }
         ElevatedButton(
-            onClick = {
-                /* TODO:
-                viewModel.resendVerificationCode(email) */
-            },
+            onClick = { viewModel.resendVerificationCode(email) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp, bottom = 32.dp)
         ) {
             if (uiState.isLoading)
                 CircularProgressIndicator()
@@ -130,7 +164,7 @@ fun VerifyAccountScreen(
 
         if (uiState.error != null) {
             appState.showSnackbar(
-                uiState.error.message,
+                stringResource(codeToMessage(uiState.error)),
                 { viewModel.dismissMessage() },
                 { viewModel.dismissMessage() }
             )

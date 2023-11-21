@@ -1,19 +1,42 @@
 package ar.edu.itba.grupo10.vfit.ui.screens
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ZoomInMap
 import androidx.compose.material.icons.filled.ZoomOutMap
 import androidx.compose.material3.FloatingActionButton
@@ -28,19 +51,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import ar.edu.itba.grupo10.vfit.R
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -60,6 +77,7 @@ fun ExecuteRoutineScreen(
     if (routineID != null) {
         var detailed by rememberSaveable { mutableStateOf(false) }
         var finished by rememberSaveable { mutableStateOf(false) }
+        var paused by remember { mutableStateOf(false) }
         val windowSize = rememberWindowInfo()
         var image = R.drawable.execute_routine_phone
         if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
@@ -93,6 +111,770 @@ fun ExecuteRoutineScreen(
                         modifier = Modifier.fillMaxSize(1f),
                         color = Color.Transparent,
                     ) {
+                        Column(
+                            Modifier.verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+                                if (!finished) {
+                                    var currentCycleIndex by rememberSaveable { mutableIntStateOf(0) }
+                                    var currentExerciseIndex by rememberSaveable {
+                                        mutableIntStateOf(
+                                            0
+                                        )
+                                    }
+                                    val timerTime by rememberSaveable {
+                                        mutableLongStateOf(
+                                            (viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                currentExerciseIndex
+                                            )?.duration
+                                                ?: 10f).toLong() * 1000L
+                                        )
+                                    }
+                                    val cycleSize = viewModel.uiState.cycles!!.size
+                                    //TODO: Si exerciseSize = 0 explota
+                                    val exerciseSize =
+                                        viewModel.uiState.cycles!![currentCycleIndex].exercises?.size
+
+                                    val action: (inc: Int) -> Unit = { inc ->
+                                        if (currentExerciseIndex + inc == exerciseSize) {
+                                            currentCycleIndex += 1
+                                            currentExerciseIndex = 0
+                                            if (currentCycleIndex == cycleSize) {
+                                                finished = true
+                                            }
+                                        } else if (currentExerciseIndex + inc == -1) {
+                                            currentCycleIndex -= 1
+                                            if (exerciseSize != null) {
+                                                currentExerciseIndex = exerciseSize - 1
+                                            }
+                                            if (currentCycleIndex == -1) {
+                                                currentCycleIndex = 0
+                                                currentExerciseIndex = 0
+                                            }
+                                        } else {
+                                            currentExerciseIndex += inc
+                                        }
+                                    }
+
+                                    val pauseResume: (bool: Boolean?) -> Unit = { bool ->
+                                        paused = bool ?: !paused
+                                    }
+                                    if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
+
+                                        if (detailed) {
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(5.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.exercise),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(230.dp)
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.exercise?.let {
+                                                        Text(
+                                                            text = it.name,
+                                                            fontSize = 40.sp,
+                                                            fontFamily = FontFamily.Default,
+                                                            color = MaterialTheme.colorScheme.background
+                                                        )
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(5.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.let {
+                                                        if (it.repetitions > 0 && it.duration > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps | ${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else if (it.repetitions > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else {
+                                                            Text(
+                                                                text = "${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(top = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Timer(
+                                                        paused,
+                                                        totalTime = timerTime,
+                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                        inactiveBarColor = Color.White,
+                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                        modifier = Modifier.size(200.dp),
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(bottom = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    AddButtons(action, pauseResume, paused)
+                                                }
+
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(5.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    AddNextExercise(
+                                                        nextExercise(
+                                                            cEI = currentExerciseIndex,
+                                                            cCI = currentCycleIndex,
+                                                            exerciseSize = exerciseSize!!,
+                                                            cycleSize = cycleSize,
+                                                            viewModel = viewModel
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        } else {
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.exercise?.let {
+                                                        Text(
+                                                            text = it.name,
+                                                            fontSize = 40.sp,
+                                                            fontFamily = FontFamily.Default,
+                                                            color = MaterialTheme.colorScheme.background
+                                                        )
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(5.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.let {
+                                                        if (it.repetitions > 0 && it.duration > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps | ${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else if (it.repetitions > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else {
+                                                            Text(
+                                                                text = "${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(top = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Timer(
+                                                        paused,
+                                                        totalTime = timerTime,
+                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                        inactiveBarColor = Color.White,
+                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                        modifier = Modifier.size(200.dp),
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(bottom = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    AddButtons(action, pauseResume, paused)
+                                                }
+                                            }
+                                        }
+                                    } else if (windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
+
+                                        if (detailed) {
+
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(1 / 3f),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row {
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.exercise),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(230.dp)
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier.padding(top = 5.dp)
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.exercise?.let {
+                                                        Text(
+                                                            text = it.name,
+                                                            fontSize = 40.sp,
+                                                            fontFamily = FontFamily.Default,
+                                                            color = MaterialTheme.colorScheme.background
+                                                        )
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier.padding(bottom = 5.dp)
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.let {
+                                                        if (it.repetitions > 0 && it.duration > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps | ${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else if (it.repetitions > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else {
+                                                            Text(
+                                                                text = "${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(0.5f),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(top = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Timer(
+                                                        paused,
+                                                        totalTime = timerTime,
+                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                        inactiveBarColor = Color.White,
+                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                        modifier = Modifier.size(200.dp),
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(bottom = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    AddButtons(action, pauseResume, paused)
+                                                }
+                                            }
+                                            Column(
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                AddNextExercise(
+                                                    nextExercise(
+                                                        cEI = currentExerciseIndex,
+                                                        cCI = currentCycleIndex,
+                                                        exerciseSize = exerciseSize!!,
+                                                        cycleSize = cycleSize,
+                                                        viewModel = viewModel
+                                                    )
+                                                )
+                                            }
+                                        } else {
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(0.5f),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.End
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(bottom = 5.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.exercise?.let {
+                                                        Text(
+                                                            text = it.name,
+                                                            fontSize = 40.sp,
+                                                            fontFamily = FontFamily.Default,
+                                                            color = MaterialTheme.colorScheme.background
+                                                        )
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(bottom = 5.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.let {
+                                                        if (it.repetitions > 0 && it.duration > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps | ${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else if (it.repetitions > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else {
+                                                            Text(
+                                                                text = "${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(top = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Timer(
+                                                        paused,
+                                                        totalTime = timerTime,
+                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                        inactiveBarColor = Color.White,
+                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                        modifier = Modifier.size(200.dp),
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(bottom = 10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    AddButtons(action, pauseResume, paused)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        if (detailed) {
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(1 / 3f),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.exercise),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(230.dp)
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.exercise?.let {
+                                                        Text(
+                                                            text = it.name,
+                                                            fontSize = 40.sp,
+                                                            fontFamily = FontFamily.Default,
+                                                            color = MaterialTheme.colorScheme.background
+                                                        )
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.let {
+                                                        if (it.repetitions > 0 && it.duration > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps | ${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else if (it.repetitions > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else {
+                                                            Text(
+                                                                text = "${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Timer(
+                                                        paused,
+                                                        totalTime = timerTime,
+                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                        inactiveBarColor = Color.White,
+                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                        modifier = Modifier.size(200.dp),
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    AddButtons(action, pauseResume, paused)
+                                                }
+                                            }
+                                            Column(
+                                                modifier = Modifier
+                                                    .padding(20.dp)
+                                                    .fillMaxWidth(),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Surface(
+                                                    color = Color(0x55FFFFFF),
+                                                    shape = RoundedCornerShape(15),
+                                                    modifier = Modifier.padding(start = 50.dp)
+                                                ) {
+                                                    Row(
+                                                        horizontalArrangement = Arrangement.Center,
+                                                        modifier = Modifier.padding(
+                                                            start = 10.dp,
+                                                            end = 10.dp
+                                                        )
+                                                    )
+                                                    {
+                                                        Column(
+                                                            modifier = Modifier.padding(20.dp),
+                                                        ) {
+                                                            val cyclesList =
+                                                                viewModel.uiState.cycles
+                                                            cyclesList?.forEach {
+                                                                Row(modifier = Modifier.fillMaxWidth()) {
+                                                                    AddCycle(it)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(1 / 3f),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row {
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.exercise),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(230.dp)
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier.padding(top = 5.dp)
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.exercise?.let {
+                                                        Text(
+                                                            text = it.name,
+                                                            fontSize = 40.sp,
+                                                            fontFamily = FontFamily.Default,
+                                                            color = MaterialTheme.colorScheme.background
+                                                        )
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier.padding(bottom = 5.dp)
+                                                ) {
+                                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
+                                                        currentExerciseIndex
+                                                    )?.let {
+                                                        if (it.repetitions > 0 && it.duration > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps | ${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else if (it.repetitions > 0) {
+                                                            Text(
+                                                                text = "${it.repetitions} reps",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        } else {
+                                                            Text(
+                                                                text = "${it.duration}’’",
+                                                                fontSize = 35.sp,
+                                                                fontFamily = FontFamily.Default,
+                                                                color = MaterialTheme.colorScheme.background
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(0.5f),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    Timer(
+                                                        paused,
+                                                        totalTime = timerTime,
+                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                        inactiveBarColor = Color.White,
+                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                        modifier = Modifier.size(200.dp),
+                                                    )
+                                                }
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(10.dp)
+                                                        .fillMaxWidth(),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center
+                                                ) {
+                                                    AddButtons(action, pauseResume, paused)
+                                                }
+                                            }
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(),
+                                                verticalArrangement = Arrangement.Center,
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
+                                                AddNextExercise(
+                                                    nextExercise(
+                                                        cEI = currentExerciseIndex,
+                                                        cCI = currentCycleIndex,
+                                                        exerciseSize = exerciseSize!!,
+                                                        cycleSize = cycleSize,
+                                                        viewModel = viewModel
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
+                                        Column(
+                                            modifier = Modifier.fillMaxSize(),
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Image(
+                                                painter = painterResource(R.drawable.finished),
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .padding(10.dp)
+                                            )
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    navController.navigate("home")
+                                                },
+                                                containerColor = MaterialTheme.colorScheme.background,
+                                                contentColor = MaterialTheme.colorScheme.onBackground,
+                                            ) {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center,
+                                                    modifier = Modifier.padding(5.dp)
+                                                ) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Home,
+                                                        contentDescription = null,
+                                                        modifier = Modifier.padding(end = 5.dp)
+                                                    )
+                                                    Text(text = stringResource(R.string.to_home))
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        Column(
+                                            modifier = Modifier.fillMaxWidth(0.75f),
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Image(
+                                                painter = painterResource(R.drawable.finished),
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .padding(10.dp)
+                                            )
+                                        }
+                                        Column(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            verticalArrangement = Arrangement.Center,
+                                        ) {
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    navController.navigate("home")
+                                                },
+                                                containerColor = MaterialTheme.colorScheme.background,
+                                                contentColor = MaterialTheme.colorScheme.onBackground,
+                                            ) {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.Center,
+                                                    modifier = Modifier.padding(5.dp)
+                                                ) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.Home,
+                                                        contentDescription = null,
+                                                        modifier = Modifier.padding(end = 5.dp)
+                                                    )
+                                                    Text(text = stringResource(R.string.to_home))
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         Box(
                             modifier = Modifier
                                 .padding(16.dp)
@@ -111,213 +893,19 @@ fun ExecuteRoutineScreen(
                                     contentDescription = null
                                 )
                             }
-                            FloatingActionButton(
-                                modifier = Modifier.align(alignment = Alignment.TopEnd),
-                                onClick = {
-                                    detailed = !detailed
-                                },
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentColor = MaterialTheme.colorScheme.primary
-                            ) {
-                                Icon(
-                                    imageVector = if (detailed) Icons.Default.ZoomInMap else Icons.Default.ZoomOutMap,
-                                    contentDescription = null,
-                                )
-                            }
-                        }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                        ) {
                             if (!finished) {
-                                var currentCycleIndex by rememberSaveable { mutableIntStateOf(0) }
-                                var currentExerciseIndex by rememberSaveable { mutableIntStateOf(0) }
-                                val cycleSize = viewModel.uiState.cycles!!.size
-                                //TODO: Si exerciseSize = 0 explota
-                                val exerciseSize =
-                                    viewModel.uiState.cycles!![currentCycleIndex].exercises?.size
-
-                                val action: (inc: Int) -> Unit = { inc ->
-                                    if (currentExerciseIndex + inc == exerciseSize) {
-                                        currentCycleIndex += 1
-                                        currentExerciseIndex = 0
-                                        if (currentCycleIndex == cycleSize) {
-                                            finished = true;
-                                        }
-                                    } else if (currentExerciseIndex + inc == -1) {
-                                        currentCycleIndex -= 1
-                                        if (exerciseSize != null) {
-                                            currentExerciseIndex = exerciseSize - 1
-                                        }
-                                        if (currentCycleIndex == -1) {
-                                            currentCycleIndex = 0
-                                            currentExerciseIndex = 0
-                                        }
-                                    } else {
-                                        currentExerciseIndex += inc
-                                    }
-                                }
-
-                                Column(
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                FloatingActionButton(
+                                    modifier = Modifier.align(alignment = Alignment.TopEnd),
+                                    onClick = {
+                                        detailed = !detailed
+                                    },
+                                    containerColor = MaterialTheme.colorScheme.background,
+                                    contentColor = MaterialTheme.colorScheme.primary
                                 ) {
-
-
-                                    if (detailed) {
-                                        Row(
-                                            modifier = Modifier.padding(5.dp)
-                                        ) {
-                                            Image(
-                                                painter = painterResource(id = R.drawable.exercise),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(230.dp)
-                                            )
-                                        }
-                                    }
-                                    Row(
-                                        modifier = Modifier.padding(5.dp)
-                                    ) {
-                                        viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
-                                            currentExerciseIndex
-                                        )?.exercise?.let {
-                                            Text(
-                                                text = it.name,
-                                                fontSize = 40.sp,
-                                                fontFamily = FontFamily.Default,
-                                                color = MaterialTheme.colorScheme.background
-                                            )
-                                        }
-                                    }
-                                    Row(
-                                        modifier = Modifier.padding(5.dp)
-                                    ) {
-                                        viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
-                                            currentExerciseIndex
-                                        )?.let {
-                                            Text(
-                                                text = "${it.repetitions} reps |  ${it.duration}’’",
-                                                fontSize = 35.sp,
-                                                fontFamily = FontFamily.Default,
-                                                color = MaterialTheme.colorScheme.background
-                                            )
-                                        }
-                                    }
-                                    if (!detailed) {
-                                        AddButtons(action)
-                                        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
-                                            AddNextExercise(
-                                                nextExercise(
-                                                    cEI = currentExerciseIndex,
-                                                    cCI = currentCycleIndex,
-                                                    exerciseSize = exerciseSize!!,
-                                                    cycleSize = cycleSize,
-                                                    viewModel = viewModel
-                                                )
-                                            )
-                                        }
-                                    } else if (windowSize.screenWidthInfo != WindowInfo.WindowType.Medium) {
-                                        AddButtons(action)
-                                        AddNextExercise(
-                                            nextExercise(
-                                                cEI = currentExerciseIndex,
-                                                cCI = currentCycleIndex,
-                                                exerciseSize = exerciseSize!!,
-                                                cycleSize = cycleSize,
-                                                viewModel = viewModel
-                                            )
-                                        )
-                                    }
-                                }
-                                Column(
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    if (detailed) {
-                                        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
-                                            //TODO: hacer dinámico
-                                            Surface(
-                                                color = Color(0x55FFFFFF),
-                                                shape = RoundedCornerShape(15),
-                                                modifier = Modifier.padding(start = 50.dp)
-                                            ) {
-                                                Row(
-                                                    horizontalArrangement = Arrangement.Center,
-                                                    modifier = Modifier.padding(
-                                                        start = 10.dp,
-                                                        end = 10.dp
-                                                    )
-                                                )
-                                                {
-                                                    Column(
-                                                        modifier = Modifier.padding(20.dp),
-                                                    ) {
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(0.25f)
-                                                        ) {
-                                                            Text(
-                                                                text = "Ciclo 1",
-                                                                fontSize = 30.sp,
-                                                                fontWeight = FontWeight.Bold,
-                                                                fontFamily = FontFamily.Default,
-                                                                color = MaterialTheme.colorScheme.background
-                                                            )
-                                                        }
-                                                        AddExercise("Ejercicio 1", "4x10", "120''")
-                                                        AddExercise("Ejercicio 2", "3x8", "180''")
-                                                        AddExercise("Ejercicio 3", "4x12", "90''")
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(0.25f)
-                                                        ) {
-                                                            Text(
-                                                                text = "Ciclo 2",
-                                                                fontSize = 30.sp,
-                                                                fontWeight = FontWeight.Bold,
-                                                                fontFamily = FontFamily.Default,
-                                                                color = MaterialTheme.colorScheme.background
-                                                            )
-                                                        }
-                                                        AddExercise("Ejercicio 1", "4x10", "120''")
-                                                        AddExercise("Ejercicio 2", "3x8", "180''")
-                                                        AddExercise("Ejercicio 3", "4x12", "90''")
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(0.25f)
-                                                        ) {
-                                                            Text(
-                                                                text = "Ciclo 3",
-                                                                fontSize = 30.sp,
-                                                                fontWeight = FontWeight.Bold,
-                                                                fontFamily = FontFamily.Default,
-                                                                color = MaterialTheme.colorScheme.background
-                                                            )
-                                                        }
-                                                        AddExercise("Ejercicio 1", "4x10", "120''")
-                                                        AddExercise("Ejercicio 2", "3x8", "180''")
-                                                        AddExercise("Ejercicio 3", "4x12", "90''")
-                                                    }
-                                                }
-                                            }
-                                        } else if (windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
-                                            AddButtons(action)
-                                            AddNextExercise(
-                                                nextExercise(
-                                                    cEI = currentExerciseIndex,
-                                                    cCI = currentCycleIndex,
-                                                    exerciseSize = exerciseSize!!,
-                                                    cycleSize = cycleSize,
-                                                    viewModel = viewModel
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            } else {
-                                Column(
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(text = "FINISHED")
+                                    Icon(
+                                        imageVector = if (detailed) Icons.Default.ZoomInMap else Icons.Default.ZoomOutMap,
+                                        contentDescription = null,
+                                    )
                                 }
                             }
                         }
@@ -330,47 +918,64 @@ fun ExecuteRoutineScreen(
 
 @Composable
 fun AddNextExercise(exercise: CycleExercise?) {
-    if (exercise != null){
-        Row(
-            modifier = Modifier.padding(5.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.next),
-                fontSize = 25.sp,
-                fontFamily = FontFamily.Default,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            )
-        }
-        Row(
-            modifier = Modifier.padding(5.dp)
-        ) {
-            exercise.exercise?.let {
-                Text(
-                    text = it.name,
-                    fontSize = 25.sp,
-                    fontFamily = FontFamily.Default,
-                    color = MaterialTheme.colorScheme.surfaceVariant
-                )
+    Row(
+        modifier = Modifier.padding(20.dp)
+    ) {
+        if (exercise != null) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row {
+                    Text(
+                        text = stringResource(R.string.next),
+                        fontSize = 25.sp,
+                        fontFamily = FontFamily.Default,
+                        color = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                }
+                Row {
+                    exercise.exercise?.let {
+                        Text(
+                            text = it.name,
+                            fontSize = 25.sp,
+                            fontFamily = FontFamily.Default,
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    }
+                }
+                Row {
+                    if (exercise.repetitions > 0 && exercise.duration > 0) {
+                        Text(
+                            text = "${exercise.repetitions} reps | ${exercise.duration}’’",
+                            fontSize = 35.sp,
+                            fontFamily = FontFamily.Default,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                    } else if (exercise.repetitions > 0) {
+                        Text(
+                            text = "${exercise.repetitions} reps",
+                            fontSize = 35.sp,
+                            fontFamily = FontFamily.Default,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                    } else {
+                        Text(
+                            text = "${exercise.duration}’’",
+                            fontSize = 35.sp,
+                            fontFamily = FontFamily.Default,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                    }
+                }
             }
-        }
-        Row(
-            modifier = Modifier.padding(5.dp)
-        ) {
-            Text(
-                text = "${exercise.repetitions} reps |  ${exercise.duration}’’",
-                fontSize = 25.sp,
-                fontFamily = FontFamily.Default,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            )
         }
     }
 }
 
 @Composable
-fun AddButtons(action: (inc: Int) -> Unit) {
-    var paused by remember { mutableStateOf(false) }
+fun AddButtons(action: (inc: Int) -> Unit, pauseResume: (bool: Boolean?) -> Unit, paused: Boolean) {
     Row(
-        modifier = Modifier.padding(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -382,12 +987,12 @@ fun AddButtons(action: (inc: Int) -> Unit) {
                 .clickable { action(-1) }
         )
         Image(
-            painter = painterResource(if (paused) R.drawable.play else R.drawable.pause),
+            painter = painterResource(if (!paused) R.drawable.play else R.drawable.pause),
             contentDescription = null,
             modifier = Modifier
                 .size(140.dp)
                 .clip(CircleShape)
-                .clickable { paused = !paused }
+                .clickable { pauseResume(null) }
         )
         Image(
             painter = painterResource(id = R.drawable.skip),
@@ -401,73 +1006,6 @@ fun AddButtons(action: (inc: Int) -> Unit) {
 }
 
 @Composable
-fun AddExercise(
-    exName: String,
-    exReps: String,
-    exTime: String,
-) {
-    Surface(
-        color = Color(0xCCFFFFFF),
-        shape = RoundedCornerShape(50),
-        modifier = Modifier.padding(5.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(0.4f)
-                .padding(
-                    top = 10.dp,
-                    bottom = 10.dp,
-                    start = 10.dp,
-                    end = 10.dp
-                ),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = exName,
-                    modifier = Modifier.align(Alignment.CenterStart),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Row(
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                end = 4.dp
-                            )
-                    ) {
-                        Text(
-                            text = exReps,
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                end = 4.dp
-                            )
-                    ) {
-                        Text(
-                            text = exTime,
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-            }
-        }
-
-    }
-}
-
-@Composable
 fun nextExercise(
     cEI: Int,
     cCI: Int,
@@ -475,10 +1013,10 @@ fun nextExercise(
     cycleSize: Int,
     viewModel: MainViewModel
 ): CycleExercise? {
-    var cEIAux = cEI
+    var cEIAux = cEI + 1
     var cCIAux = cCI
 
-    if (cEIAux + 1 == exerciseSize) {
+    if (cEIAux == exerciseSize) {
         cCIAux += 1
         cEIAux = 0
         if (cCIAux == cycleSize) {
@@ -488,56 +1026,75 @@ fun nextExercise(
     return viewModel.uiState.cycles?.get(cCIAux)?.exercises?.get(cEIAux)
 }
 
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
-//@Composable
-//fun PreviewExecuteRoutine1() {
-//    val nav = rememberNavController()
-//    VFitTheme {
-//        ExecuteRoutineScreen(nav,true, 1)
-//    }
-//}
-//
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
-//@Composable
-//fun PreviewExecuteRoutine2() {
-//    val nav = rememberNavController()
-//    VFitTheme {
-//        ExecuteRoutineScreen(nav,true, 1)
-//    }
-//}
-//
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
-//@Composable
-//fun PreviewExecuteRoutine3() {
-//    val nav = rememberNavController()
-//    VFitTheme {
-//        ExecuteRoutineScreen(nav,true, 1)
-//    }
-//}
-//
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
-//@Composable
-//fun PreviewExecuteRoutine4() {
-//    val nav = rememberNavController()
-//    VFitTheme {
-//        ExecuteRoutineScreen(nav,true, 1)
-//    }
-//}
-//
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
-//@Composable
-//fun PreviewExecuteRoutine5() {
-//    val nav = rememberNavController()
-//    VFitTheme {
-//        ExecuteRoutineScreen(nav,true, 1)
-//    }
-//}
-//
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
-//@Composable
-//fun PreviewExecuteRoutine6() {
-//    val nav = rememberNavController()
-//    VFitTheme {
-//        ExecuteRoutineScreen(nav,true, 1)
-//    }
-//}
+@Composable
+fun Timer(
+    paused: Boolean,
+    totalTime: Long,
+    handleColor: Color,
+    inactiveBarColor: Color,
+    activeBarColor: Color,
+    modifier: Modifier = Modifier,
+    initialValue: Float = 1f,
+    strokeWidth: Dp = 5.dp,
+) {
+    var size by remember {
+        mutableStateOf(IntSize.Zero)
+    }
+    var value by remember {
+        mutableFloatStateOf(initialValue)
+    }
+    var currentTime by remember {
+        mutableLongStateOf(totalTime)
+    }
+    LaunchedEffect(key1 = currentTime, key2 = paused) {
+        if (currentTime > 0 && paused) {
+            delay(100L)
+            currentTime -= 100L
+            value = currentTime / totalTime.toFloat()
+        }
+    }
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .onSizeChanged {
+                size = it
+            }
+    ) {
+        Canvas(modifier = modifier) {
+            drawArc(
+                color = inactiveBarColor,
+                startAngle = -215f,
+                sweepAngle = 250f,
+                useCenter = false,
+                size = Size(size.width.toFloat(), size.height.toFloat()),
+                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+            )
+            drawArc(
+                color = activeBarColor,
+                startAngle = -215f,
+                sweepAngle = 250f * value,
+                useCenter = false,
+                size = Size(size.width.toFloat(), size.height.toFloat()),
+                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+            )
+            val center = Offset(size.width / 2f, size.height / 2f)
+            val beta = (250f * value + 145f) * (PI / 180f).toFloat()
+            val r = size.width / 2f
+            val a = cos(beta) * r
+            val b = sin(beta) * r
+            drawPoints(
+                listOf(Offset(center.x + a, center.y + b)),
+                pointMode = PointMode.Points,
+                color = handleColor,
+                strokeWidth = (strokeWidth * 3f).toPx(),
+                cap = StrokeCap.Round
+            )
+        }
+        Text(
+            text = (currentTime / 1000L).toString(),
+            fontSize = 44.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+    }
+}

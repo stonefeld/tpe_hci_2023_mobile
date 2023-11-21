@@ -46,10 +46,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.utils.OnLifeCycleEvent
+import ar.edu.itba.grupo10.vfit.utils.codeToMessage
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import ar.edu.itba.grupo10.vfit.utils.resToString
 import ar.edu.itba.grupo10.vfit.utils.stringToRes
@@ -63,6 +65,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun ProfileScreen(
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
+    appState: MainAppState,
     onLogoutSuccess: () -> Unit
 ) {
     val windowSize = rememberWindowInfo()
@@ -95,12 +98,13 @@ fun ProfileScreen(
             if (user != null) {
                 var firstName by rememberSaveable { mutableStateOf(user.firstName) }
                 var lastName by rememberSaveable { mutableStateOf(user.lastName) }
-                var phone by rememberSaveable { mutableStateOf(user.phone!!) }
-                var avatar by rememberSaveable { mutableStateOf(user.avatarUrl!!) }
+                var phone by rememberSaveable { mutableStateOf(user.phone) }
+                var avatar by rememberSaveable { mutableStateOf(user.avatarUrl) }
 
                 var expanded by rememberSaveable { mutableStateOf(false) }
                 val genders = arrayOf(R.string.male, R.string.female)
                 var gender by rememberSaveable { mutableIntStateOf(stringToRes(user.gender!!)) }
+
                 if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
                     Row(
                         modifier = Modifier
@@ -111,8 +115,8 @@ fun ProfileScreen(
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(user.avatarUrl)
-                                 .crossfade(true).build(),
+                                .data(user.avatarUrl.ifEmpty { R.drawable.guest })
+                                .crossfade(true).build(),
                             placeholder = painterResource(R.drawable.guest),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
@@ -234,7 +238,7 @@ fun ProfileScreen(
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(user.avatarUrl)
+                                .data(user.avatarUrl?.ifEmpty { R.drawable.guest })
                                 .crossfade(true).build(),
                             placeholder = painterResource(R.drawable.guest),
                             contentDescription = null,
@@ -403,9 +407,9 @@ fun ProfileScreen(
                         onClick = {
                             firstName = user.firstName
                             lastName = user.lastName
-                            phone = user.phone!!
+                            phone = user.phone
                             gender = stringToRes(user.gender!!)
-                            avatar = user.avatarUrl!!
+                            avatar = user.avatarUrl
                             edit = false
                         },
                         modifier = Modifier
@@ -420,10 +424,17 @@ fun ProfileScreen(
                     }
                 }
             }
+
+            if (uiState.error != null) {
+                appState.showSnackbar(
+                    stringResource(codeToMessage(uiState.error)),
+                    { viewModel.dismissMessage() },
+                    { viewModel.dismissMessage() }
+                )
+            }
         }
     }
 }
-
 
 //@Preview(showSystemUi = true, locale = "es")
 //@Composable

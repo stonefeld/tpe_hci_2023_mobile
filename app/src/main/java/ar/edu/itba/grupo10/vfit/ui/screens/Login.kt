@@ -3,6 +3,7 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,7 +47,10 @@ import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.Screen
+import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberMainAppState
+import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
+import ar.edu.itba.grupo10.vfit.utils.codeToMessage
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 
 @Composable
@@ -56,7 +60,12 @@ fun LoginScreen(
     appState: MainAppState,
     onLoginSuccess: () -> Unit
 ) {
+    val windowSize = rememberWindowInfo()
     val uiState = viewModel.uiState
+
+    var username by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,42 +89,80 @@ fun LoginScreen(
             contentScale = ContentScale.Crop,
         )
 
-        var username by rememberSaveable { mutableStateOf("") }
-        var password by rememberSaveable { mutableStateOf("") }
-        var passwordHidden by rememberSaveable { mutableStateOf(true) }
+        if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp)
+            ) {
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text(stringResource(R.string.enter_username)) },
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .padding(end = 4.dp),
+                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                    singleLine = true
+                )
 
-        TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text(stringResource(R.string.enter_username)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-            singleLine = true
-        )
-
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            singleLine = true,
-            label = { Text(stringResource(R.string.enter_password)) },
-            visualTransformation =
-            if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-            trailingIcon = {
-                IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                    Icon(
-                        imageVector = if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff,
-                        contentDescription = null
-                    )
-                }
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    singleLine = true,
+                    label = { Text(stringResource(R.string.enter_password)) },
+                    visualTransformation =
+                    if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp),
+                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                    trailingIcon = {
+                        IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                            Icon(
+                                imageVector = if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                )
             }
-        )
+        } else {
+            TextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text(stringResource(R.string.enter_username)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                singleLine = true
+            )
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                singleLine = true,
+                label = { Text(stringResource(R.string.enter_password)) },
+                visualTransformation =
+                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                trailingIcon = {
+                    IconButton(onClick = { passwordHidden = !passwordHidden }) {
+                        Icon(
+                            imageVector = if (passwordHidden) Icons.Default.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = null
+                        )
+                    }
+                }
+            )
+        }
 
         ElevatedButton(
             onClick = { viewModel.login(username, password, onLoginSuccess) },
@@ -138,7 +185,8 @@ fun LoginScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp, bottom = 32.dp)
         ) {
             Text(
                 text = stringResource(R.string.create_account),
@@ -148,7 +196,7 @@ fun LoginScreen(
 
         if (uiState.error != null) {
             appState.showSnackbar(
-                uiState.error.message,
+                stringResource(codeToMessage(uiState.error)),
                 { viewModel.dismissMessage() },
                 { viewModel.dismissMessage() }
             )

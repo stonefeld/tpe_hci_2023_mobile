@@ -21,7 +21,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -29,10 +31,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,7 +77,6 @@ fun RoutineScreen(
     routineID: Int?
 ) {
     if (routineID != null) {
-        var liked by remember { mutableStateOf(false) }
         val windowSize = rememberWindowInfo()
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -86,6 +90,7 @@ fun RoutineScreen(
         OnLifeCycleEvent { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
+                    viewModel.getFavorites()
                     viewModel.getRoutine(routineID)
                     viewModel.getCyclesFull(routineID)
                 }
@@ -97,22 +102,28 @@ fun RoutineScreen(
         SwipeRefresh(
             state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
             onRefresh = {
+                viewModel.getFavorites()
                 viewModel.getRoutine(routineID)
                 viewModel.getCyclesFull(routineID)
             }
         ) {
-            if (viewModel.uiState.currentRoutine != null) {
-                val currentRoutine = viewModel.uiState.currentRoutine
-                val cyclesList = viewModel.uiState.cycles
-
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(1f)
-                    ) {
+                    if (viewModel.uiState.currentRoutine != null) {
+                        val currentRoutine = viewModel.uiState.currentRoutine
+                        val cyclesList = viewModel.uiState.cycles
+                        val favorites = viewModel.uiState.favorites
+                        var liked by remember {
+                            mutableStateOf(favorites?.contains(currentRoutine) ?: false)
+                        }
+                        var showReview by remember { mutableStateOf(false) }
+                        var review by remember { mutableIntStateOf(0) }
                         Row(
-                            modifier = Modifier.fillMaxWidth(1f),
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -148,31 +159,31 @@ fun RoutineScreen(
                                             contentDescription = null
                                         )
                                     }
-                                    if (liked) {
+                                    Column(modifier = Modifier.align(alignment = Alignment.TopEnd)) {
                                         FloatingActionButton(
-                                            modifier = Modifier.align(alignment = Alignment.TopEnd),
                                             onClick = {
-                                                liked = false
+                                                liked = !liked
+                                                if (liked)
+                                                    viewModel.addFavorite(currentRoutine?.id!!)
+                                                else
+                                                    viewModel.removeFavorite(currentRoutine?.id!!)
                                             },
                                             containerColor = MaterialTheme.colorScheme.background,
                                             contentColor = MaterialTheme.colorScheme.primary
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Favorite,
+                                                imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                                                 contentDescription = null,
                                             )
                                         }
-                                    } else {
                                         FloatingActionButton(
-                                            modifier = Modifier.align(alignment = Alignment.TopEnd),
-                                            onClick = {
-                                                liked = true
-                                            },
+                                            modifier = Modifier.padding(top = 8.dp),
+                                            onClick = { showReview = !showReview },
                                             containerColor = MaterialTheme.colorScheme.background,
                                             contentColor = MaterialTheme.colorScheme.primary
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.FavoriteBorder,
+                                                imageVector = Icons.Default.Star,
                                                 contentDescription = null,
                                             )
                                         }
@@ -184,6 +195,33 @@ fun RoutineScreen(
                             thickness = 5.dp,
                             color = MaterialTheme.colorScheme.primary
                         )
+
+                        if (showReview) {
+                            Column(
+                                modifier = Modifier.padding(
+                                    horizontal = 32.dp,
+                                    vertical = 12.dp
+                                ),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Slider(
+                                    value = review.toFloat(),
+                                    onValueChange = { review = it.toInt() },
+                                    colors = SliderDefaults.colors(inactiveTrackColor = MaterialTheme.colorScheme.background),
+                                    steps = 10,
+                                    valueRange = 0f..10f
+                                )
+                                Button(onClick = {
+                                    viewModel.reviewRoutine(currentRoutine?.id!!, review) {
+                                        showReview = false
+                                        review = 0
+                                    }
+                                }) {
+                                    Text(stringResource(R.string.review) + review)
+                                }
+                            }
+                        }
+
                         Row {
                             Column(
                                 modifier = Modifier
@@ -214,6 +252,7 @@ fun RoutineScreen(
                                             modifier = Modifier.padding(vertical = 5.dp)
                                         )
                                         Text(
+//                                            text = currentRoutine.date?.day.toString()+"/"+currentRoutine.date?.month.toString(),
                                             text = currentRoutine.date.toString(),
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.padding(top = 5.dp)
@@ -364,37 +403,57 @@ fun AddExerciseRoutine(cycleExercise: CycleExercise) {
                 Row(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                end = 4.dp
+                    if (cycleExercise.repetitions > 0) {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    start = 4.dp,
+                                    end = 4.dp
+                                )
+                        ) {
+                            Text(
+                                text = cycleExercise.repetitions.toString() + " reps",
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontWeight = FontWeight.SemiBold
                             )
-                    ) {
-                        Text(
-                            text = cycleExercise.repetitions.toString() + " reps",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        }
                     }
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                end = 4.dp
+                    if (cycleExercise.duration > 0 && cycleExercise.repetitions > 0) {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    start = 1.dp,
+                                    end = 1.dp
+                                )
+                        ) {
+                            Text(
+                                text = "/",
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontWeight = FontWeight.SemiBold
                             )
-                    ) {
-                        Text(
-                            text = cycleExercise.duration.toString() + "''",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        }
+                    }
+                    if (cycleExercise.duration > 0) {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    start = 4.dp,
+                                    end = 4.dp
+                                )
+                        ) {
+                            Text(
+                                text = cycleExercise.duration.toString() + "''",
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 //@Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
 //@Composable

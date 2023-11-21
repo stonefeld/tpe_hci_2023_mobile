@@ -41,7 +41,7 @@
     <string name="intermediate">Intermedia</string>
     <string name="advanced">Avanzada</string>
     <string name="expert">Experta</string>
-    <string name="not_found">Error:No encontrada</string>
+    <string name="not_found">Error: No encontrada</string>
     <string name="dismiss">Cerrar</string>
     <string name="logout">Cerrar sesión</string>
     <string name="edit_profile">Editar perfil</string>
@@ -50,4 +50,9 @@
     <string name="creation_date">Fecha de creación</string>
     <string name="category">Categoría</string>
     <string name="next">Próximo:</string>
+    <string name="error_1">Datos incorrectos</string>
+    <string name="error_4">Usuario o contraseña incorrectos</string>
+    <string name="error_98">Error de conexión</string>
+    <string name="to_home">A Inicio</string>
+    <string name="review">"Enviar puntuación: "</string>
 </resources>

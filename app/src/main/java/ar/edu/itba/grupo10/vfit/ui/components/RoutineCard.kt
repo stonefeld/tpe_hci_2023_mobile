@@ -48,10 +48,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.models.User
+import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
+import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import ar.edu.itba.grupo10.vfit.utils.stringToRes
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -60,9 +63,11 @@ import java.util.Date
 @Composable
 fun RoutineCard(
     modifier: Modifier = Modifier,
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
     data: Routine
 ) {
-    var liked by remember { mutableStateOf(false) }
+    val favorites = viewModel.uiState.favorites
+    var liked by remember { mutableStateOf(favorites?.contains(data) ?: false) }
 
     Card(
         border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 3.dp),
@@ -79,7 +84,13 @@ fun RoutineCard(
         ) {
             FloatingActionButton(
                 modifier = Modifier.align(alignment = Alignment.TopEnd),
-                onClick = { liked = !liked },
+                onClick = {
+                    liked = !liked
+                    if (liked)
+                        viewModel.addFavorite(data.id!!)
+                    else
+                        viewModel.removeFavorite(data.id!!)
+                },
                 containerColor = MaterialTheme.colorScheme.background,
                 contentColor = MaterialTheme.colorScheme.primary
             ) {
@@ -262,35 +273,33 @@ fun RoutineCard(
     }
 }
 
-
-@Preview(locale = "es")
-@Composable
-fun RoutinePreview() {
-    VFitTheme {
-        val routine = Routine(
-            1,
-            "LOREM",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non semper ante, in finibus erat.",
-            "advanced",
-            true,
-            User(
-                1,
-                "paki",
-                "gmail",
-                "Paki",
-                "Quian",
-                null,
-                null,
-                null,
-                null,
-                true
-            ),
-            Date(2023, 10, 31),
-            null,
-            null
-        )
-        RoutineCard(Modifier, routine)
-        RoutineCard(Modifier, routine)
-        RoutineCard(Modifier, routine)
-    }
-}
+//@Preview(locale = "es")
+//@Composable
+//fun RoutinePreview() {
+//    VFitTheme {
+//        val routine = Routine(
+//            1,
+//            "LOREM",
+//            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non semper ante, in finibus erat.",
+//            "advanced",
+//            true,
+//            User(
+//                1,
+//                "paki",
+//                "gmail",
+//                "Paki",
+//                "Quian",
+//                null,
+//                "",
+//                "",
+//                true
+//            ),
+//            Date(2023, 10, 31),
+//            null,
+//            null
+//        )
+//        RoutineCard(Modifier, routine)
+//        RoutineCard(Modifier, routine)
+//        RoutineCard(Modifier, routine)
+//    }
+//}

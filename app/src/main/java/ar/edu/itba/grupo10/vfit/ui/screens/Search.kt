@@ -2,6 +2,7 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -107,7 +108,7 @@ fun SearchScreen(
                 Spacer(modifier = Modifier.size(10.dp))
 
 
-                Pagination(uiState.routines ?: emptyList(), uiState.currentUser?.username
+                Pagination(uiState.routines ?: emptyList(), uiState.currentUser?.username, navController
                 )
             }
 
@@ -203,7 +204,7 @@ fun SearchBar(search:String, onSearchChange: (String) -> Unit){
 }
 
 @Composable
-fun Pagination(list: List<Routine>, username:String?) {
+fun Pagination(list: List<Routine>, username:String?, navController: NavHostController) {
 
     Column {
         val pages = listOf("Your Routines", "Liked", "All")
@@ -274,7 +275,7 @@ fun Pagination(list: List<Routine>, username:String?) {
             else -> filterList(list,selected.intValue)
         }
 
-        ListRoutineView(sublist)
+        ListRoutineView(sublist, navController )
     }
 }
 
@@ -348,7 +349,7 @@ fun SortDialog(onDismissRequest: () -> Unit, selectedSort: MutableIntState){
 }
 
 @Composable
-fun ListRoutineView(list:List<Routine>) {
+fun ListRoutineView(list:List<Routine>, navController: NavHostController) {
     // need to make a list of routines
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
@@ -359,7 +360,8 @@ fun ListRoutineView(list:List<Routine>) {
 
         for (routine in list) {
             RoutineItem(
-               routine
+               routine,
+                navController
             )
             Divider()
         }
@@ -369,11 +371,12 @@ fun ListRoutineView(list:List<Routine>) {
 }
 
 @Composable
-fun RoutineItem(routine:Routine) {
+fun RoutineItem(routine:Routine, navController: NavHostController) {
     Row(
         horizontalArrangement = Arrangement.Start, modifier = Modifier
             .fillMaxWidth(1f)
             .padding(vertical = 1.dp)
+            .clickable { navController.navigate("routine/${routine.id}") }
     ) {
 
         ListItem(

@@ -1,51 +1,33 @@
 package ar.edu.itba.grupo10.vfit.utils
 
 import ar.edu.itba.grupo10.vfit.R
+import ar.edu.itba.grupo10.vfit.data.models.Error
 
-fun stringToRes(string: String): Int {
-    val rookie = "rookie"
-    val beginner = "beginner"
-    val intermediate = "intermediate"
-    val advanced = "advanced"
-    val expert = "expert"
-    val male = "male"
-    val female = "female"
-
-    val aux: Int = when (string) {
-        rookie -> R.string.rookie
-        beginner -> R.string.beginner
-        intermediate -> R.string.intermediate
-        advanced -> R.string.advanced
-        expert -> R.string.expert
-        male -> R.string.male
-        female -> R.string.female
-        else -> {
-            R.string.not_found
-        }
-    }
-    return aux
+fun stringToRes(string: String): Int = when (string) {
+    "rookie" -> R.string.rookie
+    "beginner" -> R.string.beginner
+    "intermediate" -> R.string.intermediate
+    "advanced" -> R.string.advanced
+    "expert" -> R.string.expert
+    "male" -> R.string.male
+    "female" -> R.string.female
+    else -> R.string.not_found
 }
 
-fun resToString(resource: Int): String {
-    val rookie = R.string.rookie
-    val beginner = R.string.beginner
-    val intermediate = R.string.intermediate
-    val advanced = R.string.advanced
-    val expert = R.string.expert
-    val male = R.string.male
-    val female = R.string.female
+fun resToString(resource: Int): String = when (resource) {
+    R.string.rookie -> "rookie"
+    R.string.beginner -> "beginner"
+    R.string.intermediate -> "intermediate"
+    R.string.advanced -> "advanced"
+    R.string.expert -> "expert"
+    R.string.male -> "male"
+    R.string.female -> "female"
+    else -> "not_found"
+}
 
-    val aux: String = when (resource) {
-        rookie -> "rookie"
-        beginner -> "beginner"
-        intermediate -> "intermediate"
-        advanced -> "advanced"
-        expert -> "expert"
-        male -> "male"
-        female -> "female"
-        else -> {
-            "not_found"
-        }
-    }
-    return aux
+fun codeToMessage(error: Error): Int = when (error.code) {
+    1 -> R.string.error_1
+    4 -> R.string.error_4
+    98 -> R.string.error_98
+    else -> R.string.not_found
 }

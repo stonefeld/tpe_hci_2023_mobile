@@ -25,6 +25,9 @@ interface ApiUserService {
     @POST("users/verify_email")
     suspend fun verifyAccount(@Body credentials: NetworkVerifyCredentials): Response<Unit>
 
+    @POST("users/resend_verification")
+    suspend fun resendVerificationCode(@Body credentials: NetworkVerifyCredentials): Response<Unit>
+
     @GET("users/current")
     suspend fun getCurrentUser(): Response<NetworkUser>
 

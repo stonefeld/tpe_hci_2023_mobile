@@ -51,16 +51,42 @@ class MainViewModel(
                 currentUser = null,
                 currentRoutine = null,
                 routines = null,
+                favorites = null,
                 currentCycle = null,
-                cycles = null
+                cycles = null,
+                currentExercise = null,
+                exercises = null,
+                currentCycleExercise = null,
+                cycleExercises = null
             )
         },
         onSuccess
     )
 
-    fun register(username: String, email: String, password: String, onSuccess: () -> Unit) =
+    fun register(
+        username: String,
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String,
+        phone: String,
+        gender: String,
+        avatarUrl: String,
+        onSuccess: () -> Unit
+    ) =
         runOnViewModelScope(
-            { userRepository.register(username, email, password) },
+            {
+                userRepository.register(
+                    username,
+                    email,
+                    password,
+                    firstName,
+                    lastName,
+                    phone,
+                    gender,
+                    avatarUrl
+                )
+            },
             { state, _ -> state },
             onSuccess
         )
@@ -69,6 +95,11 @@ class MainViewModel(
         { userRepository.verifyAccount(email, code) },
         { state, _ -> state },
         onSuccess
+    )
+
+    fun resendVerificationCode(email: String) = runOnViewModelScope(
+        { userRepository.resendVerificationCode(email) },
+        { state, _ -> state }
     )
 
     fun getCurrentUser(refresh: Boolean = false) = runOnViewModelScope(
@@ -89,8 +120,8 @@ class MainViewModel(
         onModifySuccess
     )
 
-    fun getRoutines() = runOnViewModelScope(
-        { routineRepository.getRoutines(true) },
+    fun getRoutines(args: Map<String, String> = emptyMap()) = runOnViewModelScope(
+        { routineRepository.getRoutines(true, args) },
         { state, response -> state.copy(routines = response) }
     )
 
@@ -121,6 +152,32 @@ class MainViewModel(
                 currentRoutine = null,
                 routines = null
             )
+        }
+    )
+
+    fun getFavorites() = runOnViewModelScope(
+        { routineRepository.getFavorites(true) },
+        { state, response -> state.copy(favorites = response) }
+    )
+
+    fun addFavorite(routineId: Int) = runOnViewModelScope(
+        { routineRepository.addFavorite(routineId) },
+        { state, _ -> state.copy(favorites = null) },
+        { getFavorites() }
+    )
+
+    fun removeFavorite(routineId: Int) = runOnViewModelScope(
+        { routineRepository.removeFavorite(routineId) },
+        { state, _ -> state.copy(favorites = null) },
+        { getFavorites() }
+    )
+
+    fun reviewRoutine(routineId: Int, score: Int, onSuccess: () -> Unit) = runOnViewModelScope(
+        { routineRepository.reviewRoutine(routineId, score) },
+        { state, _ -> state.copy(currentRoutine = null, routines = null) },
+        {
+            onSuccess()
+            getRoutine(routineId)
         }
     )
 
