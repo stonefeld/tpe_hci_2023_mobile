@@ -48,6 +48,10 @@ class UserRemoteDataSource(
         handleApiResponse { apiUserService.verifyAccount(NetworkVerifyCredentials(email, code)) }
     }
 
+    suspend fun resendVerificationCode(email: String) {
+        handleApiResponse { apiUserService.resendVerificationCode(NetworkVerifyCredentials(email, null)) }
+    }
+
     suspend fun getCurrentUser(): NetworkUser {
         return handleApiResponse { apiUserService.getCurrentUser() }
     }

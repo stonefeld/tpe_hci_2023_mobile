@@ -92,6 +92,11 @@ class MainViewModel(
         onSuccess
     )
 
+    fun resendVerificationCode(email: String) = runOnViewModelScope(
+        { userRepository.resendVerificationCode(email) },
+        { state, _ -> state }
+    )
+
     fun getCurrentUser(refresh: Boolean = false) = runOnViewModelScope(
         { userRepository.getCurrentUser(refresh || uiState.currentUser == null) },
         { state, response -> state.copy(currentUser = response) }
