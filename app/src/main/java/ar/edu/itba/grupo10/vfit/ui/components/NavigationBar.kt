@@ -27,7 +27,7 @@ fun NavigationBar(
 ) {
     val items = listOf(
         Screen.Home,
-        Screen.Library,
+        Screen.Search,
         Screen.Profile
     )
 

@@ -46,11 +46,8 @@
     <string name="logout">Cerrar sesión</string>
     <string name="edit_profile">Editar perfil</string>
     <string name="save_changes">Guardar cambios</string>
-<<<<<<< HEAD
     <string name="score">Puntuación</string>
     <string name="creation_date">Fecha de creación</string>
     <string name="category">Categoría</string>
-=======
     <string name="next">Próximo:</string>
->>>>>>> e990a31dcb831cf8d1180ddfba6792f00ba464d4
 </resources>

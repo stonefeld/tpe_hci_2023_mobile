@@ -51,30 +51,43 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
-import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
+import ar.edu.itba.grupo10.vfit.utils.OnLifeCycleEvent
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import coil.compose.AsyncImage
 
 @Composable
 fun SearchScreen(
-    navController: NavHostController?,
-    modifier: Modifier? = Modifier,
-    viewModel: MainViewModel? = viewModel(factory = getViewModelFactory())
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel = viewModel(factory = getViewModelFactory())
 ) {
 
+    val uiState = viewModel.uiState
     val windowSize = rememberWindowInfo()
+
+    OnLifeCycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.getRoutines()
+                viewModel.getCurrentUser()
+            }
+
+            else -> {}
+        }
+    }
     Surface {
         Column(
             modifier = Modifier
@@ -85,18 +98,22 @@ fun SearchScreen(
             var search by rememberSaveable { mutableStateOf("") }
 
             SearchBar(search) { search = it }
-            if(search.isNotEmpty()) {
+            if(search.isNotEmpty() ) {
 
                 SearchContent(search, windowSize)
-            }
-            else {
+
+
+            } else {
                 Spacer(modifier = Modifier.size(10.dp))
-                Pagination()
+
+
+                Pagination(uiState.routines ?: emptyList(), uiState.currentUser?.username
+                )
+            }
 
             }
 
         }
-    }
 }
 
 @Composable
@@ -150,7 +167,7 @@ fun SearchBar(search:String, onSearchChange: (String) -> Unit){
         TextField(
             value = search,
             onValueChange = { onSearchChange(it) },
-            label = { Text(stringResource(R.string.search)) },
+            placeholder = { Text(stringResource(R.string.search)) },
             singleLine = true,
             shape = RoundedCornerShape(size = 10.dp),
             modifier = Modifier.height(50.dp),
@@ -159,7 +176,9 @@ fun SearchBar(search:String, onSearchChange: (String) -> Unit){
                 IconButton(onClick = { /*TODO: search*/ }) {
                     Icon(
                         imageVector = Icons.Filled.Search,
-                        contentDescription = "Search"
+                        contentDescription = "Search",
+                        modifier = Modifier
+                            .size(20.dp)
                     )
                 }
             }
@@ -182,12 +201,15 @@ fun SearchBar(search:String, onSearchChange: (String) -> Unit){
     }
 
 }
+
 @Composable
-fun Pagination() {
+fun Pagination(list: List<Routine>, username:String?) {
 
     Column {
         val pages = listOf("Your Routines", "Liked", "All")
         var selected = remember { mutableIntStateOf(0) }
+        var selectedSort = remember { mutableIntStateOf(-1) }
+
         val openDialog = remember { mutableStateOf(false) }
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -200,7 +222,9 @@ fun Pagination() {
                     if (isSelected) colorScheme.primary else MaterialTheme.colorScheme.surface
                 val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
                 ElevatedButton(
-                    onClick = { selected.intValue = i },
+                    onClick = { selected.intValue = i
+
+                              },
                     contentPadding = PaddingValues(0.dp),
                     colors = ButtonDefaults.elevatedButtonColors(
                         containerColor = backgroundColor,
@@ -231,19 +255,42 @@ fun Pagination() {
 
         }
         Spacer(modifier = Modifier.size(10.dp))
+
+
         when    {
 
             openDialog.value ->{
-                SortDialog(onDismissRequest = { openDialog.value = false })
+                SortDialog(onDismissRequest = { openDialog.value = false }, selectedSort)
             }
         }
-        PaginationContent(pages[selected.intValue])
+
+       var sublist = filterList(list,selected.intValue)
+
+        sublist = when (selectedSort.intValue) {
+            0 -> sublist.sortedByDescending { it.date }
+            1 -> sublist.sortedByDescending { it.score }
+            2 -> sublist.sortedByDescending { it.difficulty }
+            else -> filterList(list,selected.intValue)
+        }
+
+        ListRoutineView(sublist)
     }
+}
+
+fun filterList(list:List<Routine>,selected:Int): List<Routine> {
+    val sublist = when (selected) {
+        1 -> list
+        0 -> list.filter { it.user.username == "username" }
+        2 -> list
+        else -> list
+    }
+    return sublist
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SortDialog(onDismissRequest: () -> Unit) {
-    AlertDialog(onDismissRequest = { onDismissRequest() }) {
+fun SortDialog(onDismissRequest: () -> Unit, selectedSort: MutableIntState){
+    AlertDialog(onDismissRequest = { onDismissRequest()
+        }) {
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
@@ -262,54 +309,45 @@ fun SortDialog(onDismissRequest: () -> Unit) {
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
-                SortMenu()
+                val sortOptions = listOf(stringResource(R.string.creation_date),stringResource(R.string.score),stringResource(R.string.difficulty),stringResource(R.string.category))
+                for (i in sortOptions.indices) {
+                    val isSelected = selectedSort.intValue == i
+                    val backgroundColor =
+                        if (isSelected) colorScheme.secondary else MaterialTheme.colorScheme.surface
+                    val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                    ElevatedButton(
+                        onClick = {
+                            selectedSort.intValue = if(isSelected)
+                                -1
+                            else
+                                i
+                        },
+                        contentPadding = PaddingValues(0.dp),
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = backgroundColor,
+                            contentColor = textColor
+                        ),
+                        modifier = Modifier
+                            .height(40.dp)
+                            .padding(4.dp)
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(
+                            text = sortOptions[i],
+                            fontSize = 13.sp
+                        )
+                    }
+                }
 
             }
             Spacer(modifier = Modifier.size(30.dp))
-
-
-
         }
     }
 }
-@Composable
-fun SortMenu(){
-    var selectedSort = remember { mutableIntStateOf(0) }
-    val sortOptions = listOf(stringResource(R.string.creation_date),stringResource(R.string.score),stringResource(R.string.difficulty),stringResource(R.string.category))
-    for (i in sortOptions.indices) {
-        val isSelected = selectedSort.intValue == i
-        val backgroundColor =
-            if (isSelected) colorScheme.secondary else MaterialTheme.colorScheme.surface
-        val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-        ElevatedButton(
-            onClick = { selectedSort.intValue = i },
-            contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.elevatedButtonColors(
-                containerColor = backgroundColor,
-                contentColor = textColor
-            ),
-            modifier = Modifier
-                .height(40.dp)
-                .padding(4.dp)
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Text(
-                text = sortOptions[i],
-                fontSize = 13.sp
-            )
-        }
-    }
-
-
-}
-@Composable
-fun PaginationContent(str: String) {
-    ListRoutineView()
-}
 
 @Composable
-fun ListRoutineView() {
+fun ListRoutineView(list:List<Routine>) {
     // need to make a list of routines
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
@@ -318,22 +356,19 @@ fun ListRoutineView() {
             .verticalScroll(state = rememberScrollState())
     ) {
 
-            for (i in 0..6) {
-                RoutineItem(
-                    "Routine",
-                    "Description Lorem impsum Lorem impsum Lorem impsum Lorem impsum Lorem impsum",
-                    30,
-                    4
-                )
-                Divider()
-            }
-            Spacer(modifier = Modifier.size(60.dp))
+        for (routine in list) {
+            RoutineItem(
+               routine
+            )
+            Divider()
+        }
+        Spacer(modifier = Modifier.size(60.dp))
 
     }
 }
 
 @Composable
-fun RoutineItem(title:String,description:String, time:Int, score:Int) {
+fun RoutineItem(routine:Routine) {
     Row(
         horizontalArrangement = Arrangement.Start, modifier = Modifier
             .fillMaxWidth(1f)
@@ -347,14 +382,14 @@ fun RoutineItem(title:String,description:String, time:Int, score:Int) {
                 .fillMaxWidth(0.75f)
                 .padding(0.dp),
             headlineContent = {
-                Text(fontWeight = FontWeight(700), text = title)
+                Text(fontWeight = FontWeight(700), text = routine.name)
             },
 
 
             supportingContent = {
                 Text(
                     modifier = Modifier.fillMaxWidth(0.85f),
-                    text = description
+                    text = routine.detail
                 )
             },
 
@@ -373,7 +408,7 @@ fun RoutineItem(title:String,description:String, time:Int, score:Int) {
 
         Row(modifier = Modifier.padding(vertical = 8.dp)) {
 
-            Chip(name = "$time\"") {
+            Chip(name = "$30\'") {
 
                 Icon(
                     imageVector = Icons.Outlined.Schedule,
@@ -391,8 +426,6 @@ fun RoutineItem(title:String,description:String, time:Int, score:Int) {
                         .size(20.dp)
                 )
             }
-
-
         }
     }
 }
@@ -413,6 +446,7 @@ fun Chip(name: String, icon: @Composable () -> Unit) {
         }
     }
 }
+/*
 @Preview(showSystemUi = true, locale = "es", device = "spec:width=411dp,height=891dp")
 @Composable
 fun SearchScreenPreview() {
@@ -436,3 +470,6 @@ fun SearchScreenPreview2() {
         SearchScreen(null,null,null)
     }
 }
+
+
+ */
