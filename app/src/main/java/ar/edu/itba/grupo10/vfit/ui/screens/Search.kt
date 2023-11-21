@@ -265,11 +265,12 @@ fun Pagination(list: List<Routine>, username:String?) {
         }
 
        var sublist = filterList(list,selected.intValue)
+        val difficultyMap = mapOf("rookie" to 1, "beginner" to 2,"intermediate" to 3, "advanced" to 4, "expert" to 5)
 
         sublist = when (selectedSort.intValue) {
             0 -> sublist.sortedByDescending { it.date }
             1 -> sublist.sortedByDescending { it.score }
-            2 -> sublist.sortedByDescending { it.difficulty }
+            2 -> sublist.sortedByDescending { difficultyMap[it.difficulty] ?: 0 }
             else -> filterList(list,selected.intValue)
         }
 
