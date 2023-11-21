@@ -3,7 +3,6 @@ package ar.edu.itba.grupo10.vfit.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,36 +14,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.withConsumedWindowInsets
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxColors
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -68,22 +53,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
+import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import coil.compose.AsyncImage
 
-//@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
+    navController: NavHostController?,
+    modifier: Modifier? = Modifier,
+    viewModel: MainViewModel? = viewModel(factory = getViewModelFactory())
 ) {
 
     val windowSize = rememberWindowInfo()
@@ -246,7 +234,7 @@ fun Pagination() {
         when    {
 
             openDialog.value ->{
-                FilterDialog(onDismissRequest = { openDialog.value = false })
+                SortDialog(onDismissRequest = { openDialog.value = false })
             }
         }
         PaginationContent(pages[selected.intValue])
@@ -254,7 +242,7 @@ fun Pagination() {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterDialog(onDismissRequest: () -> Unit) {
+fun SortDialog(onDismissRequest: () -> Unit) {
     AlertDialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -262,22 +250,59 @@ fun FilterDialog(onDismissRequest: () -> Unit) {
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Sort by",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight(700),
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
 
+                SortMenu()
+
+            }
             Spacer(modifier = Modifier.size(30.dp))
+
 
 
         }
     }
 }
-
-@Composable 
-fun DropD(){
+@Composable
+fun SortMenu(){
+    var selectedSort = remember { mutableIntStateOf(0) }
+    val sortOptions = listOf(stringResource(R.string.creation_date),stringResource(R.string.score),stringResource(R.string.difficulty),stringResource(R.string.category))
+    for (i in sortOptions.indices) {
+        val isSelected = selectedSort.intValue == i
+        val backgroundColor =
+            if (isSelected) colorScheme.secondary else MaterialTheme.colorScheme.surface
+        val textColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+        ElevatedButton(
+            onClick = { selectedSort.intValue = i },
+            contentPadding = PaddingValues(0.dp),
+            colors = ButtonDefaults.elevatedButtonColors(
+                containerColor = backgroundColor,
+                contentColor = textColor
+            ),
+            modifier = Modifier
+                .height(40.dp)
+                .padding(4.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Text(
+                text = sortOptions[i],
+                fontSize = 13.sp
+            )
+        }
+    }
 
 
 }
-
-
-
 @Composable
 fun PaginationContent(str: String) {
     ListRoutineView()
@@ -392,7 +417,7 @@ fun Chip(name: String, icon: @Composable () -> Unit) {
 @Composable
 fun SearchScreenPreview() {
     VFitTheme {
-        SearchScreen()
+        SearchScreen(null,null,null)
     }
 }
 
@@ -401,13 +426,13 @@ fun SearchScreenPreview() {
 @Composable
 fun SearchScreenPreview1() {
     VFitTheme {
-        SearchScreen()
+        SearchScreen(null,null,null)
     }
 }
 @Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
 @Composable
 fun SearchScreenPreview2() {
     VFitTheme {
-        SearchScreen()
+        SearchScreen(null,null,null)
     }
 }

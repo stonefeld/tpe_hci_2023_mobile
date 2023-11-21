@@ -59,7 +59,7 @@ fun navBarVisibility(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     when (navBackStackEntry?.destination?.route) {
-        Screen.Home.route, Screen.Library.route, Screen.Profile.route -> state.value = true
+        Screen.Home.route, Screen.Search.route, Screen.Profile.route -> state.value = true
         else -> state.value = false
     }
 

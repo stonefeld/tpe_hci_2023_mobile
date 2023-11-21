@@ -35,7 +35,7 @@
     <string name="look_for_results">Look for results!</string>
     <string name="send_code">Verify</string>
     <string name="create_account">Create your account!</string>
-    <string name="difficulty">Difficulty:</string>
+    <string name="difficulty">"Difficulty "</string>
     <string name="rookie">Rookie</string>
     <string name="beginner">Beginner</string>
     <string name="intermediate">Intermediate</string>
@@ -46,4 +46,7 @@
     <string name="logout">Logout</string>
     <string name="edit_profile">Edit profile</string>
     <string name="save_changes">Save changes</string>
+    <string name="score">Score</string>
+    <string name="creation_date">Date of creation</string>
+    <string name="category">Category</string>
 </resources>
