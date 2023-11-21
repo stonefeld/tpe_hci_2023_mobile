@@ -46,22 +46,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.data.models.Cycle
 import ar.edu.itba.grupo10.vfit.data.models.CycleExercise
-import ar.edu.itba.grupo10.vfit.data.models.Routine
-import ar.edu.itba.grupo10.vfit.data.models.User
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.ui.main.WindowInfo
 import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
-import ar.edu.itba.grupo10.vfit.ui.theme.VFitTheme
 import ar.edu.itba.grupo10.vfit.utils.OnLifeCycleEvent
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import ar.edu.itba.grupo10.vfit.utils.stringToRes
@@ -69,9 +64,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.squareup.wire.internal.copyOf
-import java.util.Arrays.copyOf
-import java.util.Date
 
 @Composable
 fun RoutineScreen(
@@ -90,11 +82,12 @@ fun RoutineScreen(
         }
         val shareIntent = Intent.createChooser(sendIntent, null)
         val context = LocalContext.current
+
         OnLifeCycleEvent { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
                     viewModel.getRoutine(routineID)
-                    viewModel.getCycles(routineID)
+                    viewModel.getCyclesFull(routineID)
                 }
 
                 else -> {}
@@ -105,7 +98,7 @@ fun RoutineScreen(
             state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
             onRefresh = {
                 viewModel.getRoutine(routineID)
-                viewModel.getCycles(routineID)
+                viewModel.getCyclesFull(routineID)
             }
         ) {
             //TODO: no entra siempre en el if por lo qual hay que chequear el estado de currentRoutine en cada llamado
@@ -252,7 +245,11 @@ fun RoutineScreen(
                                                             /*TODO:*/
                                                         }
                                                 )
-                                                IconButton(onClick = { context.startActivity(shareIntent) }) {
+                                                IconButton(onClick = {
+                                                    context.startActivity(
+                                                        shareIntent
+                                                    )
+                                                }) {
                                                     Icon(
                                                         Icons.Rounded.Share,
                                                         contentDescription = stringResource(R.string.enter_mail),
@@ -260,8 +257,6 @@ fun RoutineScreen(
                                                             .padding(vertical = 5.dp)
                                                     )
                                                 }
-
-
                                             }
                                         }
                                     }
@@ -284,17 +279,17 @@ fun RoutineScreen(
                                     }
                                 } else {
                                     if (cyclesList != null) {
-                                        for(indice in 0 until cyclesList.size step 2)
-                                        {
+                                        for (idx in cyclesList.indices step 2) {
                                             Row(modifier = Modifier.fillMaxWidth()) {
                                                 //TODO: arreglar dos ciclos por row
                                                 Column(modifier = Modifier.fillMaxWidth(0.5f)) {
-                                                    AddCycle(cyclesList.get(indice))
+                                                    AddCycle(cyclesList[idx])
                                                 }
-                                                if(indice+1 < cyclesList.size)
+                                                if (idx + 1 < cyclesList.size) {
                                                     Column(modifier = Modifier.fillMaxWidth()) {
-                                                        AddCycle(cyclesList.get(indice+1))
+                                                        AddCycle(cyclesList[idx + 1])
                                                     }
+                                                }
                                             }
                                         }
                                     }
@@ -309,22 +304,9 @@ fun RoutineScreen(
 }
 
 @Composable
-fun AddCycle(
-    cycle: Cycle,
-    viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-) {
-    OnLifeCycleEvent { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                cycle.id?.let { viewModel.getCycleExercises(it) }
-            }
-
-            else -> {}
-        }
-    }
-
-    if (viewModel.uiState.cycleExercises != null) {
-        val exercisesList = viewModel.uiState.cycleExercises
+fun AddCycle(cycle: Cycle) {
+    if (cycle.exercises != null) {
+        val exercisesList = cycle.exercises
 
         Card(
             border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 1.5.dp),
@@ -344,7 +326,7 @@ fun AddCycle(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Default,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
             exercisesList?.forEach {
@@ -355,9 +337,7 @@ fun AddCycle(
 }
 
 @Composable
-fun AddExerciseRoutine(
-    cycleExercise: CycleExercise
-) {
+fun AddExerciseRoutine(cycleExercise: CycleExercise) {
     Surface(
         color = Color(0xCCFFFFFF),
         shape = RoundedCornerShape(50),

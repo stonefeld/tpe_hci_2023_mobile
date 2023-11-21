@@ -9,6 +9,7 @@ data class Cycle(
     var type: String,
     var order: Int,
     var repetitions: Int,
+    var exercises: List<CycleExercise>? = null
 ) {
 
     fun asNetworkModel(): NetworkCycle {
