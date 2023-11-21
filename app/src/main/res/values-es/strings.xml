@@ -47,4 +47,5 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="save_changes">Guardar cambios</string>
     <string name="next">Próximo:</string>
+    <string name="to_home">A Inicio</string>
 </resources>

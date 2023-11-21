@@ -90,7 +90,7 @@ fun HomeScreen(
                     state = rememberLazyGridState(),
                     rows = GridCells.Fixed(1),
                     modifier = Modifier
-                        .padding(horizontal = 5.dp)
+                        .padding(5.dp)
                         .heightIn(max = 260.dp)
                 ) {
                     items(

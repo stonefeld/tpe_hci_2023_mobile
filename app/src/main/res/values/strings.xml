@@ -48,4 +48,5 @@
     <string name="edit_profile">Edit profile</string>
     <string name="save_changes">Save changes</string>
     <string name="next">Next:</string>
+    <string name="to_home">To Home</string>
 </resources>
