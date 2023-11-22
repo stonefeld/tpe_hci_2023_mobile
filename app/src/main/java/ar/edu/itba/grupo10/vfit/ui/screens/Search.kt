@@ -345,9 +345,9 @@ fun RoutineItem(routine: Routine, navController: NavHostController) {
             leadingContent = {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(if (routine.metadata != null) routine.metadata?.image else R.drawable.execute_routine_tablet)
+                        .data(routine.metadata?.image?.ifEmpty { R.drawable.routine })
                         .crossfade(true).build(),
-                    placeholder = painterResource(R.drawable.execute_routine_tablet),
+                    placeholder = painterResource(R.drawable.routine),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

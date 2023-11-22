@@ -145,14 +145,16 @@ fun RoutineScreen(
                                     .heightIn(0.dp, 150.dp),
                                 color = MaterialTheme.colorScheme.background,
                             ) {
-                                AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(if (currentRoutine?.metadata != null) currentRoutine.metadata?.image else R.drawable.execute_routine_tablet)
-                                        .crossfade(true).build(),
-                                    placeholder = painterResource(R.drawable.execute_routine_tablet),
-                                    contentDescription = null,
-                                    modifier = Modifier.padding(bottom = 5.dp)
-                                )
+                                currentRoutine?.let {
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(it.metadata?.image?.ifEmpty { R.drawable.routine })
+                                            .crossfade(true).build(),
+                                        placeholder = painterResource(R.drawable.routine),
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(bottom = 5.dp)
+                                    )
+                                }
                                 Box(
                                     modifier = Modifier
                                         .padding(16.dp)
@@ -229,7 +231,10 @@ fun RoutineScreen(
                                         review = 0
                                     }
                                 }) {
-                                    Text(stringResource(R.string.review) + review)
+                                    Text(
+                                        stringResource(R.string.review) + review,
+                                        color = MaterialTheme.colorScheme.surfaceTint
+                                    )
                                 }
                             }
                         }
@@ -327,7 +332,6 @@ fun RoutineScreen(
                                     if (cyclesList != null) {
                                         for (idx in cyclesList.indices step 2) {
                                             Row(modifier = Modifier.fillMaxWidth()) {
-                                                //TODO: arreglar dos ciclos por row
                                                 Column(modifier = Modifier.fillMaxWidth(0.5f)) {
                                                     AddCycle(cyclesList[idx])
                                                 }
