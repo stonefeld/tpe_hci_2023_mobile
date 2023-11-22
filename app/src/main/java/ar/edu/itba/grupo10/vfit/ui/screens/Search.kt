@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -101,7 +102,7 @@ fun SearchScreen(
             SearchBar(search) { search = it }
             if(search.isNotEmpty() ) {
 
-                SearchContent(search, windowSize)
+                SearchContent(search, windowSize, uiState.routines ?: emptyList(), navController)
 
 
             } else {
@@ -116,7 +117,75 @@ fun SearchScreen(
 
         }
 }
+@Composable
+fun SearchContent(search:String, windowSize: WindowInfo, routines: List<Routine>, navController: NavHostController){
 
+    val filteredRoutines = routines.filter { it.name.contains(search, ignoreCase = true) }
+
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+    )   {
+            Text(
+                text = stringResource(R.string.look_for_results),
+                fontSize = 30.sp,
+                modifier = Modifier.padding(top = 40.dp)
+            )
+
+
+            if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded) {
+
+                if (filteredRoutines.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .width(700.dp)
+                            .padding(top = 25.dp)
+                            .clip(shape = RoundedCornerShape(size = 12.dp)),
+                        painter = painterResource(id = R.drawable.background_search),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                    )
+                } else {
+                    Column {
+                        for (routine in filteredRoutines) {
+                            RoutineItem(
+                                routine,
+                                navController
+                            )
+                            Divider()
+                        }
+                    }
+                }
+            }
+            else{
+
+                if (filteredRoutines.isEmpty()) {
+                    Image(
+                        modifier = Modifier
+                            .width(400.dp)
+                            .padding(top = 25.dp)
+                            .clip(shape = RoundedCornerShape(size = 12.dp)),
+                        painter = painterResource(id = R.drawable.background_search),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                    )
+                } else {
+
+                    Column {
+                        for (routine in filteredRoutines) {
+                            RoutineItem(
+                                routine,
+                                navController
+                            )
+                            Divider()
+                        }
+                    }
+                }
+            }
+
+    }
+
+}
+/*
 @Composable
 fun SearchContent(search:String, windowSize: WindowInfo){
 
@@ -152,6 +221,8 @@ fun SearchContent(search:String, windowSize: WindowInfo){
         }
     }
 }
+*/
+
 @Composable
 fun SearchBar(search:String, onSearchChange: (String) -> Unit){
     val windowSize = rememberWindowInfo()
@@ -421,7 +492,7 @@ fun RoutineItem(routine:Routine, navController: NavHostController) {
                         .size(20.dp)
                 )
             }
-            Chip(name = "4") {
+            Chip(name = routine.score.toString()) {
 
                 Icon(
                     imageVector = Icons.Outlined.Star,
