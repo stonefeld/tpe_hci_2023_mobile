@@ -55,7 +55,7 @@
     <string name="error_4">Invalid username or password</string>
     <string name="error_98">Connection error</string>
     <string name="to_home">To Home</string>
-    <string name="review">Submit review score:</string>
+    <string name="review">"Submit review score: "</string>
     <string name="no_exercises">Error: No exercises in cycle</string>
     <string name="no_cycles">Error: No cycles in routine</string>
     <string name="my_routines">My routines</string>

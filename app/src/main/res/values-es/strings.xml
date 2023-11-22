@@ -53,7 +53,7 @@
     <string name="error_4">Usuario o contraseña incorrectos</string>
     <string name="error_98">Error de conexión</string>
     <string name="to_home">A Inicio</string>
-    <string name="review">"Enviar puntuación: "</string>
+    <string name="review">"Enviar puntuación:  "</string>
     <string name="my_routines">Mis rutinas</string>
     <string name="liked_routines">Favoritas</string>
     <string name="all_routines">Todas</string>

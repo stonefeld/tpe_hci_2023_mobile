@@ -76,7 +76,7 @@ fun RoutineCard(
                 .fillMaxSize()
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight().padding(top = 4.dp),
+                modifier = Modifier.fillMaxHeight().padding(top = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -107,7 +107,7 @@ fun RoutineCard(
                 }
 
                 Column(
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(end = 10.dp, start = 10.dp, bottom = 10.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),

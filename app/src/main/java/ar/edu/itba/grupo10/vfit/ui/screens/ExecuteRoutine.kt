@@ -135,13 +135,6 @@ fun ExecuteRoutineScreen(
                                         viewModel.uiState.cycles!![currentCycleIndex].exercises?.size
                                     if (exerciseSize != 0) {
                                         if (!finished) {
-                                            val timerTime by rememberSaveable {
-                                                mutableLongStateOf(
-                                                    (viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
-                                                        currentExerciseIndex
-                                                    )?.duration ?: 10f).toLong() * 1000L
-                                                )
-                                            }
 
                                             val action: (inc: Int) -> Unit = { inc ->
                                                 if (currentExerciseIndex + inc == exerciseSize) {
@@ -732,7 +725,7 @@ fun ExecuteRoutineScreen(
                                                         }
                                                         Row(
                                                             modifier = Modifier
-                                                                .padding(10.dp)
+                                                                .padding(top = 10.dp)
                                                                 .fillMaxWidth(),
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
@@ -756,7 +749,7 @@ fun ExecuteRoutineScreen(
                                                         }
                                                         Row(
                                                             modifier = Modifier
-                                                                .padding(10.dp)
+                                                                .padding(bottom = 10.dp)
                                                                 .fillMaxWidth(),
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
@@ -875,7 +868,7 @@ fun ExecuteRoutineScreen(
                                                     ) {
                                                         Row(
                                                             modifier = Modifier
-                                                                .padding(10.dp)
+                                                                .padding(top = 10.dp)
                                                                 .fillMaxWidth(),
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
@@ -899,7 +892,7 @@ fun ExecuteRoutineScreen(
                                                         }
                                                         Row(
                                                             modifier = Modifier
-                                                                .padding(10.dp)
+                                                                .padding(bottom = 10.dp)
                                                                 .fillMaxWidth(),
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center

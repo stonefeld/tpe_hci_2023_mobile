@@ -242,12 +242,11 @@ fun RoutineScreen(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(10.dp)
+                                        .padding(top = 10.dp, start = 15.dp, end = 10.dp)
                                 ) {
                                     Column(
                                         modifier = Modifier
                                             .fillMaxWidth(0.65f)
-                                            .padding(5.dp)
                                     ) {
                                         Text(
                                             text = currentRoutine!!.name,
@@ -260,50 +259,52 @@ fun RoutineScreen(
                                                 stringToRes(currentRoutine.difficulty)
                                             ),
                                             fontWeight = FontWeight.SemiBold,
-                                            modifier = Modifier.padding(vertical = 5.dp)
                                         )
+                                    }
+                                    Column(
+                                        modifier = Modifier.fillMaxSize(1f),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Image(
+                                                painter = painterResource(R.drawable.play),
+                                                contentDescription = null,
+                                                contentScale = ContentScale.Crop,
+                                                modifier = Modifier
+                                                    .padding(horizontal = 5.dp)
+                                                    .clip(CircleShape)
+                                                    .clickable {
+                                                        navController.navigate("routine/${viewModel.uiState.currentRoutine!!.id}/execute")
+                                                    }
+                                            )
+                                            IconButton(onClick = {
+                                                context.startActivity(shareIntent)
+                                            }) {
+                                                Icon(
+                                                    Icons.Rounded.Share,
+                                                    contentDescription = stringResource(R.string.enter_mail),
+                                                    modifier = Modifier.padding(horizontal = 5.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .padding(start = 15.dp, end = 15.dp, bottom = 5.dp)
+                                        .fillMaxWidth(1f)
+                                ) {
+                                    if (currentRoutine != null) {
                                         Text(
                                             text = currentRoutine.date.toString(),
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.padding(top = 5.dp)
                                         )
-                                    }
-                                    Row(
-                                        modifier = Modifier.fillMaxHeight(1f)
-                                    ) {
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxHeight(1f)
-                                                .fillMaxSize(1f),
-                                            verticalArrangement = Arrangement.Center,
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.Center
-                                            ) {
-                                                Image(
-                                                    painter = painterResource(R.drawable.play),
-                                                    contentDescription = null,
-                                                    contentScale = ContentScale.Crop,
-                                                    modifier = Modifier
-                                                        .padding(end = 10.dp)
-                                                        .clip(CircleShape)
-                                                        .clickable {
-                                                            navController.navigate("routine/${viewModel.uiState.currentRoutine!!.id}/execute")
-                                                        }
-                                                )
-                                                IconButton(onClick = {
-                                                    context.startActivity(shareIntent)
-                                                }) {
-                                                    Icon(
-                                                        Icons.Rounded.Share,
-                                                        contentDescription = stringResource(R.string.enter_mail),
-                                                        modifier = Modifier.padding(vertical = 5.dp)
-                                                    )
-                                                }
-                                            }
-                                        }
                                     }
                                 }
                                 Row(
@@ -311,10 +312,12 @@ fun RoutineScreen(
                                         .padding(horizontal = 15.dp)
                                         .fillMaxWidth(1f)
                                 ) {
-                                    Text(
-                                        text = currentRoutine!!.detail,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
+                                    if (currentRoutine != null) {
+                                        Text(
+                                            text = currentRoutine.detail,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
                                 }
                                 if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
                                     cyclesList?.forEach {
