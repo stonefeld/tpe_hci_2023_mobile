@@ -55,4 +55,6 @@
     <string name="error_98">Error de conexión</string>
     <string name="to_home">A Inicio</string>
     <string name="review">"Enviar puntuación: "</string>
+    <string name="no_exercises">Error: No hay ejercicios en el ciclo</string>
+    <string name="no_cycles">Error: No hay ciclos en la rutina</string>
 </resources>
