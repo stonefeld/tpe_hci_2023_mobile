@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -81,9 +83,9 @@ fun LoginScreen(
         )
         Image(
             modifier = Modifier
-                .width(width = 250.dp)
-                .clip(RectangleShape),
-            painter = painterResource(id = R.drawable.logo_vfit),
+                .size(200.dp)
+                .clip(CircleShape),
+            painter = painterResource(id = R.drawable.logo_vfit_bg2),
             contentDescription = null,
             contentScale = ContentScale.Crop,
         )
@@ -93,7 +95,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp, top = 16.dp)
             ) {
                 TextField(
                     value = username,
@@ -135,7 +137,8 @@ fun LoginScreen(
                 label = { Text(stringResource(R.string.enter_username)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp),
                 leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                 singleLine = true
             )
