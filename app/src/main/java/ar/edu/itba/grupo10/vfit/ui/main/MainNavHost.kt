@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -22,7 +21,6 @@ import androidx.navigation.navigation
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.screens.ExecuteRoutineScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.RoutineScreen
-import ar.edu.itba.grupo10.vfit.ui.screens.LibraryScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.HomeScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.LoginScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.ProfileScreen
@@ -80,8 +78,7 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAp
                 routineID = backstackEntry.arguments?.getInt("routine_id"),
             )
         }
-        composable(Screen.Search.route) { SearchScreen(navController) }
-        //composable(Screen.ExecuteRoutine.route) { ExecuteRoutineScreen(true) }
+        composable(Screen.Search.route) { SearchScreen(navController, appState = appState) }
         composable(Screen.ExecuteRoutine.route,
             arguments = listOf(
                 navArgument(name = "routine_id") {

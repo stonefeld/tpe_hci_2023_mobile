@@ -15,7 +15,7 @@ import retrofit2.http.QueryMap
 
 interface ApiRoutineService {
 
-    @GET("routines?size=100&direction=desc")
+    @GET("routines?size=100")
     suspend fun getRoutines(@QueryMap args: Map<String, String>): Response<NetworkPagedContent<NetworkRoutine>>
 
     @GET("routines/{routineId}")

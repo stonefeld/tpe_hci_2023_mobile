@@ -107,6 +107,16 @@ class MainViewModel(
         { state, response -> state.copy(currentUser = response) }
     )
 
+    fun getCurrentUserFull(refresh: Boolean = false, extraArgs: Map<String, String> = emptyMap()) = runOnViewModelScope(
+        { userRepository.getCurrentUser(refresh || uiState.currentUser == null) },
+        { state, response -> state.copy(currentUser = response) },
+        {
+            val args = mapOf("userId" to uiState.currentUser?.id.toString()).toMutableMap()
+            args.putAll(extraArgs)
+            getRoutines(args)
+        }
+    )
+
     fun modifyCurrentUser(
         firstName: String,
         lastName: String,
@@ -120,7 +130,7 @@ class MainViewModel(
         onModifySuccess
     )
 
-    fun getRoutines(args: Map<String, String> = emptyMap()) = runOnViewModelScope(
+    fun getRoutines(args: Map<String, String> = mapOf("direction" to "desc")) = runOnViewModelScope(
         { routineRepository.getRoutines(true, args) },
         { state, response -> state.copy(routines = response) }
     )

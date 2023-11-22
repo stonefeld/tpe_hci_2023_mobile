@@ -58,6 +58,14 @@
     <string name="review">Submit review score:</string>
     <string name="no_exercises">Error: No exercises in cycle</string>
     <string name="no_cycles">Error: No cycles in routine</string>
+    <string name="my_routines">My routines</string>
+    <string name="liked_routines">Liked</string>
+    <string name="all_routines">All</string>
+    <string name="sort">Sort</string>
+    <string name="order_by">Order by</string>
+    <string name="routine_name">Routine name</string>
+    <string name="user">User</string>
+    <string name="close">Close</string>
     <string name="latest_routines">Latest Routines</string>
     <string name="execute_routines_title">Two unique ways to work out!</string>
     <string name="execute_routines_desc">In detailed mode, you can see the upcoming exercise and various other details, whereas in non-detailed mode you can just be able to see the timer.</string>

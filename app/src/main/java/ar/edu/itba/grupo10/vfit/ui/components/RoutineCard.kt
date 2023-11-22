@@ -126,7 +126,7 @@ fun RoutineCard(
                             Surface(
                                 color = MaterialTheme.colorScheme.tertiary,
                                 shadowElevation = 10.dp,
-                                modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
+                                modifier = Modifier.clip(RoundedCornerShape(12.dp))
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -142,7 +142,7 @@ fun RoutineCard(
                                             .size(12.dp)
                                     )
                                     Text(
-                                        text = "30'",
+                                        text = "30'", // TODO: time
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                     )
@@ -241,14 +241,6 @@ fun RoutineCard(
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                     )
-                                    if (data.user.verified) {
-                                        Icon(
-                                            imageVector = Icons.Default.Verified,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.background,
-                                            modifier = Modifier.size(10.dp)
-                                        )
-                                    }
                                 }
                             }
                         }

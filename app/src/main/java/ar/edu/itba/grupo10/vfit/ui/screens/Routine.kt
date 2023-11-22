@@ -122,6 +122,7 @@ fun RoutineScreen(
                         }
                         var showReview by remember { mutableStateOf(false) }
                         var review by remember { mutableIntStateOf(0) }
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center,
@@ -135,7 +136,7 @@ fun RoutineScreen(
                             ) {
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current)
-                                        .data(if (currentRoutine?.metadata != null) currentRoutine.metadata!!.image else R.drawable.execute_routine_tablet)
+                                        .data(if (currentRoutine?.metadata != null) currentRoutine.metadata?.image else R.drawable.execute_routine_tablet)
                                         .crossfade(true).build(),
                                     placeholder = painterResource(R.drawable.execute_routine_tablet),
                                     contentDescription = null,
@@ -225,12 +226,12 @@ fun RoutineScreen(
                         Row {
                             Column(
                                 modifier = Modifier
-                                    .verticalScroll(state = rememberScrollState())
-                                    .fillMaxHeight(1f)
+                                    .verticalScroll(rememberScrollState())
+                                    .fillMaxHeight()
                             ) {
                                 Row(
                                     modifier = Modifier
-                                        .fillMaxWidth(1f)
+                                        .fillMaxWidth()
                                         .padding(10.dp)
                                 ) {
                                     Column(

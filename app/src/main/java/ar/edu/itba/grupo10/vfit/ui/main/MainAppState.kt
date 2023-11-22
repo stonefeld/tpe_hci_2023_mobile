@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MainAppState(
-    private val scope: CoroutineScope,
+    val scope: CoroutineScope,
     val snackbarHostState: SnackbarHostState
 ) {
 
