@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.screens.ExecuteRoutineScreen
@@ -64,6 +65,9 @@ fun MainNavHost(
 }
 
 fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAppState) {
+    val uri = "http://www.vfit.com"
+    val secureUri = "https://www.vfit.com"
+
     navigation(startDestination = Screen.Home.route, route = "main") {
         composable(Screen.Home.route) { HomeScreen(navController) }
         composable(Screen.Routine.route,
@@ -71,11 +75,15 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAp
                 navArgument(name = "routine_id") {
                     type = NavType.IntType
                 }
+            ),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "$uri/routine/{routine_id}" },
+                navDeepLink { uriPattern = "$secureUri/routine/{routine_id}" }
             )
         ) { backstackEntry ->
             RoutineScreen(
                 navController,
-                routineID = backstackEntry.arguments?.getInt("routine_id"),
+                routineId = backstackEntry.arguments?.getInt("routine_id"),
             )
         }
         composable(Screen.Search.route) { SearchScreen(navController, appState = appState) }

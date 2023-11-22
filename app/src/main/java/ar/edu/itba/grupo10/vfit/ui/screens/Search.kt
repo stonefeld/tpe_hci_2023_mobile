@@ -63,7 +63,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.data.models.Routine
-import ar.edu.itba.grupo10.vfit.ui.components.Chip2
+import ar.edu.itba.grupo10.vfit.ui.components.Chip
 import ar.edu.itba.grupo10.vfit.ui.main.MainAppState
 import ar.edu.itba.grupo10.vfit.ui.main.MainViewModel
 import ar.edu.itba.grupo10.vfit.utils.OnLifeCycleEvent
@@ -73,6 +73,7 @@ import ar.edu.itba.grupo10.vfit.utils.stringToRes
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -185,7 +186,7 @@ fun SearchScreen(
                     },
                     colors = ButtonDefaults.elevatedButtonColors(
                         containerColor = if (filterBy == desc) colorScheme.primary else colorScheme.surface,
-                        contentColor = if (filterBy == desc) colorScheme.onPrimary else colorScheme.onSurface
+                        contentColor = if (filterBy == desc) colorScheme.surfaceTint else colorScheme.onSurface
                     )
                 ) {
                     Text(
@@ -206,6 +207,15 @@ fun SearchScreen(
             onRefresh = {
                 viewModel.getFavorites()
                 viewModel.getRoutines(args)
+            },
+            indicator = { state, trigger ->
+                SwipeRefreshIndicator(
+                    state = state,
+                    refreshTriggerDistance = trigger,
+                    scale = true,
+                    backgroundColor = colorScheme.onBackground,
+                    contentColor = colorScheme.background
+                )
             }
         ) {
             Surface(color = colorScheme.surfaceVariant) {
@@ -240,8 +250,8 @@ fun SearchScreen(
                                 .align(alignment = Alignment.BottomEnd)
                                 .padding(16.dp),
                             onClick = { openDialog = true },
-                            containerColor = colorScheme.background,
-                            contentColor = colorScheme.onBackground
+                            containerColor = colorScheme.secondary,
+                            contentColor = colorScheme.surfaceTint
                         ) {
                             Icon(
                                 imageVector = Icons.Default.FilterAlt,
@@ -289,7 +299,7 @@ fun SearchScreen(
                                                 },
                                                 colors = ButtonDefaults.elevatedButtonColors(
                                                     containerColor = if (orderBy == pair) colorScheme.primary else colorScheme.surface,
-                                                    contentColor = if (orderBy == pair) colorScheme.onPrimary else colorScheme.onSurface
+                                                    contentColor = if (orderBy == pair) colorScheme.surfaceTint else colorScheme.onSurface
                                                 )
                                             ) {
                                                 Text(
@@ -352,15 +362,14 @@ fun RoutineItem(routine: Routine, navController: NavHostController) {
             trailingContent = {
                 Column {
                     Row {
-                        Chip2(routine.score.toString(), Icons.Default.Star)
-                        // TODO: time
-                        Chip2(
+                        Chip(routine.score.toString(), Icons.Default.Star)
+                        Chip(
                             stringResource(stringToRes(routine.difficulty)),
                             Icons.Default.FitnessCenter
                         )
                     }
                     Row {
-                        Chip2(
+                        Chip(
                             if(routine.isPublic)
                                 stringResource(R.string.public_routine)
                             else
@@ -369,7 +378,7 @@ fun RoutineItem(routine: Routine, navController: NavHostController) {
                                 Icons.Default.LockOpen
                             else
                                 Icons.Default.Lock)
-                        Chip2(routine.user.username, Icons.Default.Person)
+                        Chip(routine.user.username, Icons.Default.Person)
                     }
                 }
             }

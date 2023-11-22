@@ -23,9 +23,10 @@ private val DarkColorScheme = darkColorScheme(
     secondary = Color(0xFF3B3AE0),
     tertiary = Color(0xFF32ADAD),
     background = Color(0xFF303446),
+    onBackground = Color(0xFFFFFFFF),
     surface = Color(0xFF303446),
     surfaceVariant = Color(0xFF1E1E2E),
-    surfaceTint = Color(0xFFFFFFFF)
+    surfaceTint = Color(0xFFFFFFFF),
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -35,6 +36,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = Color(0xFF3B3AE0),
     tertiary = Color(0xFF297D7D),
     background = Color(0xFFFFFFFF),
+    onBackground = Color(0xFF303446),
     surface = Color(0xFFFFFFFF),
     surfaceVariant = Color(0xFFD9D9D9),
     surfaceTint = Color(0xFFFFFFFF)

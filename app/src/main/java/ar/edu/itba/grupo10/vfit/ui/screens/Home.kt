@@ -22,9 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -38,6 +40,7 @@ import ar.edu.itba.grupo10.vfit.ui.main.rememberWindowInfo
 import ar.edu.itba.grupo10.vfit.utils.OnLifeCycleEvent
 import ar.edu.itba.grupo10.vfit.utils.getViewModelFactory
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
@@ -65,6 +68,15 @@ fun HomeScreen(
         onRefresh = {
             viewModel.getFavorites()
             viewModel.getRoutines()
+        },
+        indicator = { state, trigger ->
+            SwipeRefreshIndicator(
+                state = state,
+                refreshTriggerDistance = trigger,
+                scale = true,
+                backgroundColor = MaterialTheme.colorScheme.onBackground,
+                contentColor = MaterialTheme.colorScheme.background
+            )
         }
     ) {
         Column(
@@ -90,15 +102,17 @@ fun HomeScreen(
                     )
                 }
                 Text(
-                    text = stringResource(R.string.home_title),
+                    text = stringResource(R.string.app_name),
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = stringResource(R.string.home_subtitle),
                     fontSize = 24.sp,
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -116,56 +130,54 @@ fun HomeScreen(
                     Text(
                         text = stringResource(R.string.latest_routines),
                         fontSize = 24.sp,
-                        color = MaterialTheme.colorScheme.background,
-                        modifier = Modifier.padding(horizontal = 10.dp),
+                        color = MaterialTheme.colorScheme.surfaceTint,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
             }
-            if (uiState.isLoading) {
-                CircularProgressIndicator()
-            } else {
-                val list = uiState.routines.orEmpty()
 
-                LazyHorizontalGrid(
-                    state = rememberLazyGridState(),
-                    rows = GridCells.Fixed(1),
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .heightIn(max = 220.dp)
-                ) {
-                    items(
-                        count = list.size,
-                        key = { index -> list[index].id.toString() }
-                    ) { index ->
-                        RoutineCard(
-                            modifier = Modifier
-                                .clickable {
-                                    navController.navigate("routine/${list[index].id}")
-                                }
-                                .padding(horizontal = 5.dp),
-                            data = list[index]
-                        )
-                    }
+            val list = uiState.routines.orEmpty()
+
+            LazyHorizontalGrid(
+                state = rememberLazyGridState(),
+                rows = GridCells.Fixed(1),
+                modifier = Modifier
+                    .padding(5.dp)
+                    .heightIn(max = 220.dp)
+            ) {
+                items(
+                    count = list.size,
+                    key = { index -> list[index].id.toString() }
+                ) { index ->
+                    RoutineCard(
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate("routine/${list[index].id}")
+                            }
+                            .padding(horizontal = 5.dp),
+                        data = list[index]
+                    )
                 }
             }
+
             Surface(
                 shape = RoundedCornerShape(10),
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shadowElevation = 8.dp,
                 modifier = Modifier
                     .padding(vertical = 25.dp, horizontal = 15.dp)
-                    .fillMaxWidth(1f)
+                    .fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .padding(top = 5.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
@@ -173,7 +185,8 @@ fun HomeScreen(
                             text = stringResource(R.string.execute_routines_title),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(horizontal = 5.dp)
+                            modifier = Modifier.padding(horizontal = 5.dp),
+                            textAlign = TextAlign.Center
                         )
                     }
                     Row(
@@ -186,7 +199,7 @@ fun HomeScreen(
                         if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
                             Column(
                                 Modifier
-                                    .fillMaxWidth(0.5f),
+                                    .fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
@@ -194,13 +207,6 @@ fun HomeScreen(
                                     painter = painterResource(R.drawable.workout_1),
                                     contentDescription = null,
                                 )
-                            }
-                            Column(
-                                Modifier
-                                    .fillMaxWidth(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
                                 Text(
                                     text = stringResource(R.string.execute_routines_desc),
                                     fontSize = 16.sp,

@@ -60,6 +60,7 @@ import ar.edu.itba.grupo10.vfit.utils.stringToRes
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 
@@ -88,7 +89,16 @@ fun ProfileScreen(
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(uiState.isLoading),
-        onRefresh = { viewModel.getCurrentUser(true) }
+        onRefresh = { viewModel.getCurrentUser(true) },
+        indicator = { state, trigger ->
+            SwipeRefreshIndicator(
+                state = state,
+                refreshTriggerDistance = trigger,
+                scale = true,
+                backgroundColor = MaterialTheme.colorScheme.onBackground,
+                contentColor = MaterialTheme.colorScheme.background
+            )
+        }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -359,7 +369,9 @@ fun ProfileScreen(
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         if (uiState.isLoading)
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(
+                                color = MaterialTheme.colorScheme.surfaceTint
+                            )
                         else
                             Text(
                                 text = stringResource(R.string.logout),

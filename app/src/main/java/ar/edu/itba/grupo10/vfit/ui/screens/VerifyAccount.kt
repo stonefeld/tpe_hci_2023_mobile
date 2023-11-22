@@ -139,7 +139,9 @@ fun VerifyAccountScreen(
                 .padding(top = 8.dp)
         ) {
             if (uiState.isLoading)
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.surfaceTint
+                )
             else
                 Text(
                     text = stringResource(R.string.send_code),
@@ -155,7 +157,9 @@ fun VerifyAccountScreen(
                 .padding(top = 8.dp, bottom = 32.dp)
         ) {
             if (uiState.isLoading)
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.surfaceTint
+                )
             else
                 Text(
                     text = stringResource(R.string.resend_code),

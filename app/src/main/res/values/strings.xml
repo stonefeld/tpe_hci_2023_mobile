@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">vFit</string>
     <string name="loading">Loading…</string>
-    <string name="home_title">V-Fit</string>
+    <string name="home_title" translatable="false">V-Fit</string>
     <string name="home_subtitle">Start working out right now!</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -69,6 +69,7 @@
     <string name="latest_routines">Latest Routines</string>
     <string name="execute_routines_title">Two unique ways to work out!</string>
     <string name="execute_routines_desc">In detailed mode, you can see the upcoming exercise and various other details, whereas in non-detailed mode you can just be able to see the timer.</string>
+    <string name="share_routine">Share this routine</string>
     <string name="public_routine">Public</string>
     <string name="private_routine">Private</string>
 </resources>

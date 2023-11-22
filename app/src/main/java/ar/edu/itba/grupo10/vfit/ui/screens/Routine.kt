@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -68,31 +69,32 @@ import ar.edu.itba.grupo10.vfit.utils.stringToRes
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun RoutineScreen(
     navController: NavHostController,
     viewModel: MainViewModel = viewModel(factory = getViewModelFactory()),
-    routineID: Int?
+    routineId: Int?
 ) {
-    if (routineID != null) {
+    if (routineId != null) {
         val windowSize = rememberWindowInfo()
+
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            //TODO: poner link valido
-            putExtra(Intent.EXTRA_TEXT, "Link:$routineID")
+            putExtra(Intent.EXTRA_TEXT, "http://www.vfit.com/routine/$routineId")
             type = "text/plain"
         }
-        val shareIntent = Intent.createChooser(sendIntent, null)
         val context = LocalContext.current
+        val shareIntent = Intent.createChooser(sendIntent, stringResource(R.string.share_routine))
 
         OnLifeCycleEvent { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
                     viewModel.getFavorites()
-                    viewModel.getRoutine(routineID)
-                    viewModel.getCyclesFull(routineID)
+                    viewModel.getRoutine(routineId)
+                    viewModel.getCyclesFull(routineId)
                 }
 
                 else -> {}
@@ -103,8 +105,17 @@ fun RoutineScreen(
             state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
             onRefresh = {
                 viewModel.getFavorites()
-                viewModel.getRoutine(routineID)
-                viewModel.getCyclesFull(routineID)
+                viewModel.getRoutine(routineId)
+                viewModel.getCyclesFull(routineId)
+            },
+            indicator = { state, trigger ->
+                SwipeRefreshIndicator(
+                    state = state,
+                    refreshTriggerDistance = trigger,
+                    scale = true,
+                    backgroundColor = MaterialTheme.colorScheme.onBackground,
+                    contentColor = MaterialTheme.colorScheme.background
+                )
             }
         ) {
             Surface(
@@ -253,7 +264,6 @@ fun RoutineScreen(
                                             modifier = Modifier.padding(vertical = 5.dp)
                                         )
                                         Text(
-//                                            text = currentRoutine.date?.day.toString()+"/"+currentRoutine.date?.month.toString(),
                                             text = currentRoutine.date.toString(),
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.padding(top = 5.dp)
@@ -285,15 +295,12 @@ fun RoutineScreen(
                                                         }
                                                 )
                                                 IconButton(onClick = {
-                                                    context.startActivity(
-                                                        shareIntent
-                                                    )
+                                                    context.startActivity(shareIntent)
                                                 }) {
                                                     Icon(
                                                         Icons.Rounded.Share,
                                                         contentDescription = stringResource(R.string.enter_mail),
-                                                        modifier = Modifier
-                                                            .padding(vertical = 5.dp)
+                                                        modifier = Modifier.padding(vertical = 5.dp)
                                                     )
                                                 }
                                             }

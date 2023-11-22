@@ -1,6 +1,7 @@
 package ar.edu.itba.grupo10.vfit.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Chip2(text: String, icon: ImageVector) {
-    Surface(modifier = Modifier.padding(2.dp)) {
+fun Chip(text: String, icon: ImageVector) {
+    Column(modifier = Modifier.padding(2.dp)) {
         Surface(
             color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.clip(RoundedCornerShape(12.dp))
