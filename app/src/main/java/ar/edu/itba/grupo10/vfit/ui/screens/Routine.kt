@@ -116,9 +116,7 @@ fun RoutineScreen(
                 )
             }
         ) {
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-            ) {
+            Surface(color = MaterialTheme.colorScheme.surfaceVariant) {
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -126,9 +124,7 @@ fun RoutineScreen(
                         val currentRoutine = viewModel.uiState.currentRoutine
                         val cyclesList = viewModel.uiState.cycles
                         val favorites = viewModel.uiState.favorites
-                        var liked by remember {
-                            mutableStateOf(favorites?.contains(currentRoutine) ?: false)
-                        }
+                        var liked = favorites?.contains(currentRoutine) ?: false
                         var showReview by remember { mutableStateOf(false) }
                         var review by remember { mutableIntStateOf(0) }
 

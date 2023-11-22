@@ -56,7 +56,7 @@ fun RoutineCard(
     data: Routine
 ) {
     val favorites = viewModel.uiState.favorites
-    var liked by remember { mutableStateOf(favorites?.contains(data) ?: false) }
+    var liked = favorites?.contains(data) ?: false
 
     Card(
         border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 3.dp),
@@ -141,7 +141,7 @@ fun RoutineCard(
                         viewModel.removeFavorite(data.id!!)
                 },
                 containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.onBackground
             ) {
                 Icon(
                     imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
