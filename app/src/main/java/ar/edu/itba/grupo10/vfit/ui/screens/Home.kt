@@ -164,7 +164,7 @@ fun HomeScreen(
             Surface(
                 shape = RoundedCornerShape(10),
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                shadowElevation = 8.dp,
+                shadowElevation = 3.dp,
                 modifier = Modifier
                     .padding(vertical = 25.dp, horizontal = 15.dp)
                     .fillMaxWidth()

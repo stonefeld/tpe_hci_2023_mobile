@@ -83,7 +83,7 @@ fun ExecuteRoutineScreen(
     if (routineID != null) {
         var detailed by rememberSaveable { mutableStateOf(false) }
         var finished by rememberSaveable { mutableStateOf(false) }
-        var paused by remember { mutableStateOf(false) }
+        var paused by rememberSaveable { mutableStateOf(false) }
         val windowSize = rememberWindowInfo()
         var image = R.drawable.execute_routine_phone
         if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
@@ -91,6 +91,7 @@ fun ExecuteRoutineScreen(
         } else if (windowSize.screenWidthInfo == WindowInfo.WindowType.Expanded || windowSize.screenWidthInfo == WindowInfo.WindowType.Medium) {
             image = R.drawable.execute_routine_tablet
         }
+        var next by rememberSaveable { mutableStateOf(false) }
 
         OnLifeCycleEvent { _, event ->
             when (event) {
@@ -138,8 +139,7 @@ fun ExecuteRoutineScreen(
                                                 mutableLongStateOf(
                                                     (viewModel.uiState.cycles!![currentCycleIndex].exercises?.get(
                                                         currentExerciseIndex
-                                                    )?.duration
-                                                        ?: 10f).toLong() * 1000L
+                                                    )?.duration ?: 10f).toLong() * 1000L
                                                 )
                                             }
 
@@ -163,11 +163,13 @@ fun ExecuteRoutineScreen(
                                                 } else {
                                                     currentExerciseIndex += inc
                                                 }
+                                                next = true
                                             }
 
                                             val pauseResume: (bool: Boolean?) -> Unit = { bool ->
                                                 paused = bool ?: !paused
                                             }
+
                                             if (windowSize.screenWidthInfo == WindowInfo.WindowType.Compact) {
                                                 if (detailed) {
                                                     Column(
@@ -209,7 +211,7 @@ fun ExecuteRoutineScreen(
                                                                     text = it.name,
                                                                     fontSize = 35.sp,
                                                                     fontFamily = FontFamily.Default,
-                                                                    color = MaterialTheme.colorScheme.background,
+                                                                    color = MaterialTheme.colorScheme.surfaceTint,
                                                                     textAlign = TextAlign.Center
                                                                 )
                                                             }
@@ -229,7 +231,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps | ${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else if (it.repetitions > 0) {
@@ -237,7 +239,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else {
@@ -245,7 +247,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 }
@@ -258,14 +260,22 @@ fun ExecuteRoutineScreen(
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
                                                         ) {
-                                                            Timer(
-                                                                paused,
-                                                                totalTime = timerTime,
-                                                                handleColor = MaterialTheme.colorScheme.tertiary,
-                                                                inactiveBarColor = Color.White,
-                                                                activeBarColor = MaterialTheme.colorScheme.tertiary,
-                                                                modifier = Modifier.size(200.dp),
-                                                            )
+                                                            viewModel.uiState.cycles?.let { cycles ->
+                                                                cycles[currentCycleIndex].exercises?.let {
+                                                                    Timer(
+                                                                        paused,
+                                                                        totalTime = it[currentExerciseIndex].duration.toLong() * 1000L,
+                                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                                        inactiveBarColor = Color.White,
+                                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                                        modifier = Modifier.size(
+                                                                            200.dp
+                                                                        ),
+                                                                        next = next
+                                                                    )
+                                                                    next = false
+                                                                }
+                                                            }
                                                         }
                                                         Row(
                                                             modifier = Modifier
@@ -314,7 +324,7 @@ fun ExecuteRoutineScreen(
                                                                     text = it.name,
                                                                     fontSize = 35.sp,
                                                                     fontFamily = FontFamily.Default,
-                                                                    color = MaterialTheme.colorScheme.background,
+                                                                    color = MaterialTheme.colorScheme.surfaceTint,
                                                                     textAlign = TextAlign.Center
                                                                 )
                                                             }
@@ -334,7 +344,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps | ${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else if (it.repetitions > 0) {
@@ -342,7 +352,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else {
@@ -350,7 +360,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 }
@@ -363,14 +373,22 @@ fun ExecuteRoutineScreen(
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
                                                         ) {
-                                                            Timer(
-                                                                paused,
-                                                                totalTime = timerTime,
-                                                                handleColor = MaterialTheme.colorScheme.tertiary,
-                                                                inactiveBarColor = Color.White,
-                                                                activeBarColor = MaterialTheme.colorScheme.tertiary,
-                                                                modifier = Modifier.size(200.dp)
-                                                            )
+                                                            viewModel.uiState.cycles?.let { cycles ->
+                                                                cycles[currentCycleIndex].exercises?.let {
+                                                                    Timer(
+                                                                        paused,
+                                                                        totalTime = it[currentExerciseIndex].duration.toLong() * 1000L,
+                                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                                        inactiveBarColor = Color.White,
+                                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                                        modifier = Modifier.size(
+                                                                            200.dp
+                                                                        ),
+                                                                        next = next
+                                                                    )
+                                                                    next = false
+                                                                }
+                                                            }
                                                         }
                                                         Row(
                                                             modifier = Modifier
@@ -424,7 +442,7 @@ fun ExecuteRoutineScreen(
                                                                     text = it.name,
                                                                     fontSize = 35.sp,
                                                                     fontFamily = FontFamily.Default,
-                                                                    color = MaterialTheme.colorScheme.background,
+                                                                    color = MaterialTheme.colorScheme.surfaceTint,
                                                                     textAlign = TextAlign.Center
                                                                 )
                                                             }
@@ -444,7 +462,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps | ${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else if (it.repetitions > 0) {
@@ -452,7 +470,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else {
@@ -460,7 +478,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 }
@@ -479,14 +497,22 @@ fun ExecuteRoutineScreen(
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
                                                         ) {
-                                                            Timer(
-                                                                paused,
-                                                                totalTime = timerTime,
-                                                                handleColor = MaterialTheme.colorScheme.tertiary,
-                                                                inactiveBarColor = Color.White,
-                                                                activeBarColor = MaterialTheme.colorScheme.tertiary,
-                                                                modifier = Modifier.size(200.dp),
-                                                            )
+                                                            viewModel.uiState.cycles?.let { cycles ->
+                                                                cycles[currentCycleIndex].exercises?.let {
+                                                                    Timer(
+                                                                        paused,
+                                                                        totalTime = it[currentExerciseIndex].duration.toLong() * 1000L,
+                                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                                        inactiveBarColor = Color.White,
+                                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                                        modifier = Modifier.size(
+                                                                            200.dp
+                                                                        ),
+                                                                        next = next
+                                                                    )
+                                                                    next = false
+                                                                }
+                                                            }
                                                         }
                                                         Row(
                                                             modifier = Modifier
@@ -535,7 +561,7 @@ fun ExecuteRoutineScreen(
                                                                     text = it.name,
                                                                     fontSize = 35.sp,
                                                                     fontFamily = FontFamily.Default,
-                                                                    color = MaterialTheme.colorScheme.background,
+                                                                    color = MaterialTheme.colorScheme.surfaceTint,
                                                                     textAlign = TextAlign.Center
                                                                 )
                                                             }
@@ -555,7 +581,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps | ${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else if (it.repetitions > 0) {
@@ -563,7 +589,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else {
@@ -571,7 +597,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 }
@@ -590,14 +616,22 @@ fun ExecuteRoutineScreen(
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
                                                         ) {
-                                                            Timer(
-                                                                paused,
-                                                                totalTime = timerTime,
-                                                                handleColor = MaterialTheme.colorScheme.tertiary,
-                                                                inactiveBarColor = Color.White,
-                                                                activeBarColor = MaterialTheme.colorScheme.tertiary,
-                                                                modifier = Modifier.size(200.dp),
-                                                            )
+                                                            viewModel.uiState.cycles?.let { cycles ->
+                                                                cycles[currentCycleIndex].exercises?.let {
+                                                                    Timer(
+                                                                        paused,
+                                                                        totalTime = it[currentExerciseIndex].duration.toLong() * 1000L,
+                                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                                        inactiveBarColor = Color.White,
+                                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                                        modifier = Modifier.size(
+                                                                            200.dp
+                                                                        ),
+                                                                        next = next
+                                                                    )
+                                                                    next = false
+                                                                }
+                                                            }
                                                         }
                                                         Row(
                                                             modifier = Modifier
@@ -654,7 +688,7 @@ fun ExecuteRoutineScreen(
                                                                     text = it.name,
                                                                     fontSize = 35.sp,
                                                                     fontFamily = FontFamily.Default,
-                                                                    color = MaterialTheme.colorScheme.background,
+                                                                    color = MaterialTheme.colorScheme.surfaceTint,
                                                                     textAlign = TextAlign.Center
                                                                 )
                                                             }
@@ -674,7 +708,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps | ${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else if (it.repetitions > 0) {
@@ -682,7 +716,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else {
@@ -690,7 +724,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 }
@@ -703,14 +737,22 @@ fun ExecuteRoutineScreen(
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
                                                         ) {
-                                                            Timer(
-                                                                paused,
-                                                                totalTime = timerTime,
-                                                                handleColor = MaterialTheme.colorScheme.tertiary,
-                                                                inactiveBarColor = Color.White,
-                                                                activeBarColor = MaterialTheme.colorScheme.tertiary,
-                                                                modifier = Modifier.size(200.dp),
-                                                            )
+                                                            viewModel.uiState.cycles?.let { cycles ->
+                                                                cycles[currentCycleIndex].exercises?.let {
+                                                                    Timer(
+                                                                        paused,
+                                                                        totalTime = it[currentExerciseIndex].duration.toLong() * 1000L,
+                                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                                        inactiveBarColor = Color.White,
+                                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                                        modifier = Modifier.size(
+                                                                            200.dp
+                                                                        ),
+                                                                        next = next
+                                                                    )
+                                                                    next = false
+                                                                }
+                                                            }
                                                         }
                                                         Row(
                                                             modifier = Modifier
@@ -787,7 +829,7 @@ fun ExecuteRoutineScreen(
                                                                     text = it.name,
                                                                     fontSize = 35.sp,
                                                                     fontFamily = FontFamily.Default,
-                                                                    color = MaterialTheme.colorScheme.background,
+                                                                    color = MaterialTheme.colorScheme.surfaceTint,
                                                                     textAlign = TextAlign.Center
                                                                 )
                                                             }
@@ -803,7 +845,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps | ${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else if (it.repetitions > 0) {
@@ -811,7 +853,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.repetitions} reps",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 } else {
@@ -819,7 +861,7 @@ fun ExecuteRoutineScreen(
                                                                         text = "${it.duration}’’",
                                                                         fontSize = 35.sp,
                                                                         fontFamily = FontFamily.Default,
-                                                                        color = MaterialTheme.colorScheme.background,
+                                                                        color = MaterialTheme.colorScheme.surfaceTint,
                                                                         textAlign = TextAlign.Center
                                                                     )
                                                                 }
@@ -838,14 +880,22 @@ fun ExecuteRoutineScreen(
                                                             verticalAlignment = Alignment.CenterVertically,
                                                             horizontalArrangement = Arrangement.Center
                                                         ) {
-                                                            Timer(
-                                                                paused,
-                                                                totalTime = timerTime,
-                                                                handleColor = MaterialTheme.colorScheme.tertiary,
-                                                                inactiveBarColor = Color.White,
-                                                                activeBarColor = MaterialTheme.colorScheme.tertiary,
-                                                                modifier = Modifier.size(200.dp),
-                                                            )
+                                                            viewModel.uiState.cycles?.let { cycles ->
+                                                                cycles[currentCycleIndex].exercises?.let {
+                                                                    Timer(
+                                                                        paused,
+                                                                        totalTime = it[currentExerciseIndex].duration.toLong() * 1000L,
+                                                                        handleColor = MaterialTheme.colorScheme.tertiary,
+                                                                        inactiveBarColor = Color.White,
+                                                                        activeBarColor = MaterialTheme.colorScheme.tertiary,
+                                                                        modifier = Modifier.size(
+                                                                            200.dp
+                                                                        ),
+                                                                        next = next
+                                                                    )
+                                                                    next = false
+                                                                }
+                                                            }
                                                         }
                                                         Row(
                                                             modifier = Modifier
@@ -918,7 +968,6 @@ fun ExecuteRoutineScreen(
                                                         painter = painterResource(R.drawable.finished),
                                                         contentDescription = null,
                                                         modifier = Modifier.size(300.dp)
-
                                                     )
                                                 }
                                                 Column(
@@ -1218,7 +1267,6 @@ fun ExecuteRoutineScreen(
                                         }
                                     }
                                 }
-
                             }
                         }
                         Box(
@@ -1246,7 +1294,7 @@ fun ExecuteRoutineScreen(
                                         detailed = !detailed
                                     },
                                     containerColor = MaterialTheme.colorScheme.background,
-                                    contentColor = MaterialTheme.colorScheme.primary
+                                    contentColor = MaterialTheme.colorScheme.onBackground
                                 ) {
                                     Icon(
                                         imageVector = if (detailed) Icons.Default.ZoomInMap else Icons.Default.ZoomOutMap,
@@ -1264,9 +1312,7 @@ fun ExecuteRoutineScreen(
 
 @Composable
 fun AddNextExercise(exercise: CycleExercise?) {
-    Row(
-        modifier = Modifier.padding(20.dp)
-    ) {
+    Row(modifier = Modifier.padding(20.dp)) {
         if (exercise != null) {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -1283,7 +1329,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                         text = stringResource(R.string.next),
                         fontSize = 25.sp,
                         fontFamily = FontFamily.Default,
-                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        color = MaterialTheme.colorScheme.surfaceTint,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -1298,7 +1344,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                             text = it.name,
                             fontSize = 25.sp,
                             fontFamily = FontFamily.Default,
-                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            color = MaterialTheme.colorScheme.surfaceTint,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -1315,7 +1361,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                             text = "${exercise.repetitions} reps | ${exercise.duration}’’",
                             fontSize = 25.sp,
                             fontFamily = FontFamily.Default,
-                            color = MaterialTheme.colorScheme.background,
+                            color = MaterialTheme.colorScheme.surfaceTint,
                             textAlign = TextAlign.Center
                         )
                     } else if (exercise.repetitions > 0) {
@@ -1323,7 +1369,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                             text = "${exercise.repetitions} reps",
                             fontSize = 25.sp,
                             fontFamily = FontFamily.Default,
-                            color = MaterialTheme.colorScheme.background,
+                            color = MaterialTheme.colorScheme.surfaceTint,
                             textAlign = TextAlign.Center
                         )
                     } else {
@@ -1331,7 +1377,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                             text = "${exercise.duration}’’",
                             fontSize = 25.sp,
                             fontFamily = FontFamily.Default,
-                            color = MaterialTheme.colorScheme.background,
+                            color = MaterialTheme.colorScheme.surfaceTint,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -1402,6 +1448,7 @@ fun Timer(
     inactiveBarColor: Color,
     activeBarColor: Color,
     modifier: Modifier = Modifier,
+    next: Boolean = false,
     initialValue: Float = 1f,
     strokeWidth: Dp = 5.dp,
 ) {
@@ -1414,6 +1461,11 @@ fun Timer(
     var currentTime by remember {
         mutableLongStateOf(totalTime)
     }
+    if (next) {
+        currentTime = totalTime
+        value = 1f
+    }
+
     LaunchedEffect(key1 = currentTime, key2 = paused) {
         if (currentTime > 0 && paused) {
             delay(100L)
@@ -1462,7 +1514,7 @@ fun Timer(
             text = (currentTime / 1000L).toString(),
             fontSize = 44.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surfaceTint,
             textAlign = TextAlign.Center
         )
     }

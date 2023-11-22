@@ -60,7 +60,7 @@ fun RoutineCard(
 
     Card(
         border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 3.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
         modifier = modifier
             .aspectRatio(1f)

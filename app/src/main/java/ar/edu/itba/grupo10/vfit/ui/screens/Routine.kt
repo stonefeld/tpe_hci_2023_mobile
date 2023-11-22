@@ -143,7 +143,7 @@ fun RoutineScreen(
                                 modifier = Modifier
                                     .fillMaxWidth(1f)
                                     .heightIn(0.dp, 150.dp),
-                                color = MaterialTheme.colorScheme.background,
+                                color = MaterialTheme.colorScheme.surface,
                             ) {
                                 currentRoutine?.let {
                                     AsyncImage(
@@ -183,7 +183,7 @@ fun RoutineScreen(
                                                     viewModel.removeFavorite(currentRoutine?.id!!)
                                             },
                                             containerColor = MaterialTheme.colorScheme.background,
-                                            contentColor = MaterialTheme.colorScheme.primary
+                                            contentColor = MaterialTheme.colorScheme.onBackground
                                         ) {
                                             Icon(
                                                 imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -194,7 +194,7 @@ fun RoutineScreen(
                                             modifier = Modifier.padding(top = 8.dp),
                                             onClick = { showReview = !showReview },
                                             containerColor = MaterialTheme.colorScheme.background,
-                                            contentColor = MaterialTheme.colorScheme.primary
+                                            contentColor = MaterialTheme.colorScheme.onBackground
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.Star,
@@ -389,7 +389,7 @@ fun AddCycle(cycle: Cycle) {
 @Composable
 fun AddExerciseRoutine(cycleExercise: CycleExercise) {
     Surface(
-        color = Color(0xCCFFFFFF),
+        color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(50),
         modifier = Modifier
             .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
