@@ -35,7 +35,7 @@
     <string name="look_for_results">Búsqueda de rutinas!</string>
     <string name="send_code">Verificar</string>
     <string name="create_account">¡Crea tu cuenta!</string>
-    <string name="difficulty">Dificultad</string>
+    <string name="difficulty">"Dificultad: "</string>
     <string name="rookie">Novato</string>
     <string name="beginner">Principiante</string>
     <string name="intermediate">Intermedia</string>
@@ -68,4 +68,6 @@
     <string name="latest_routines">Últimas Rutinas</string>
     <string name="execute_routines_title">¡Dos formas únicas de hacer ejercicio!</string>
     <string name="execute_routines_desc">En el modo detallado, puede ver el próximo ejercicio y varios otros detalles, mientras que en el modo no detallado solo puede ver el cronómetro.</string>
+    <string name="public_routine">Publica</string>
+    <string name="private_routine">Privada</string>
 </resources>

@@ -11,13 +11,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Mail
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -129,7 +129,7 @@ fun VerifyAccountScreen(
             )
         }
 
-        ElevatedButton(
+        Button(
             onClick = {
                 viewModel.verifyAccount(email, code, onVerifySuccess)
             },
@@ -143,10 +143,11 @@ fun VerifyAccountScreen(
             else
                 Text(
                     text = stringResource(R.string.send_code),
+                    color = MaterialTheme.colorScheme.surfaceTint,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
         }
-        ElevatedButton(
+        Button(
             onClick = { viewModel.resendVerificationCode(email) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -158,6 +159,7 @@ fun VerifyAccountScreen(
             else
                 Text(
                     text = stringResource(R.string.resend_code),
+                    color = MaterialTheme.colorScheme.surfaceTint,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
         }

@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Search
@@ -350,15 +352,23 @@ fun RoutineItem(routine: Routine, navController: NavHostController) {
             trailingContent = {
                 Column {
                     Row {
+                        Chip2(routine.score.toString(), Icons.Default.Star)
                         // TODO: time
-                        Chip2("30'", Icons.Default.Schedule)
                         Chip2(
                             stringResource(stringToRes(routine.difficulty)),
                             Icons.Default.FitnessCenter
                         )
                     }
                     Row {
-                        Chip2(routine.score.toString(), Icons.Default.Star)
+                        Chip2(
+                            if(routine.isPublic)
+                                stringResource(R.string.public_routine)
+                            else
+                                stringResource(R.string.private_routine),
+                            if(routine.isPublic)
+                                Icons.Default.LockOpen
+                            else
+                                Icons.Default.Lock)
                         Chip2(routine.user.username, Icons.Default.Person)
                     }
                 }

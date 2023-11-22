@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.Transgender
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -28,6 +29,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -388,7 +390,7 @@ fun RegisterScreen(
             )
         }
 
-        ElevatedButton(
+        Button(
             onClick = {
                 viewModel.register(
                     username, mail, password,
@@ -406,6 +408,7 @@ fun RegisterScreen(
             else
                 Text(
                     text = stringResource(R.string.register),
+                    color = MaterialTheme.colorScheme.surfaceTint,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
         }

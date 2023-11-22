@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
@@ -126,7 +128,7 @@ fun RoutineCard(
                             Surface(
                                 color = MaterialTheme.colorScheme.tertiary,
                                 shadowElevation = 10.dp,
-                                modifier = Modifier.clip(RoundedCornerShape(12.dp))
+                                modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -134,15 +136,15 @@ fun RoutineCard(
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.AccessTime,
+                                        imageVector = Icons.Default.Star,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.background,
                                         modifier = Modifier
-                                            .padding(end = 3.dp)
+                                            .padding(end = 6.dp)
                                             .size(12.dp)
                                     )
                                     Text(
-                                        text = "30'", // TODO: time
+                                        text = data.score.toString(),
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                     )
@@ -192,7 +194,7 @@ fun RoutineCard(
                             Surface(
                                 color = MaterialTheme.colorScheme.tertiary,
                                 shadowElevation = 10.dp,
-                                modifier = Modifier.clip(shape = RoundedCornerShape(size = 12.dp))
+                                modifier = Modifier.clip(RoundedCornerShape(12.dp))
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -200,15 +202,15 @@ fun RoutineCard(
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Star,
+                                        imageVector = if(data.isPublic) Icons.Default.LockOpen else Icons.Default.Lock,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.background,
                                         modifier = Modifier
-                                            .padding(end = 6.dp)
+                                            .padding(end = 3.dp)
                                             .size(12.dp)
                                     )
                                     Text(
-                                        text = data.score.toString(),
+                                        text = if(data.isPublic) stringResource(R.string.public_routine) else stringResource(R.string.private_routine),
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                     )

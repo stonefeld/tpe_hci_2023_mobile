@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Panorama
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.Transgender
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
@@ -23,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -334,7 +336,7 @@ fun ProfileScreen(
                 }
 
                 if (!edit) {
-                    ElevatedButton(
+                    Button(
                         onClick = { edit = true },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -343,11 +345,12 @@ fun ProfileScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.edit_profile),
+                            color = MaterialTheme.colorScheme.surfaceTint,
                             modifier = Modifier.padding(vertical = 10.dp)
                         )
                     }
 
-                    ElevatedButton(
+                    Button(
                         onClick = {
                             viewModel.logout(onLogoutSuccess)
                         },
@@ -360,6 +363,7 @@ fun ProfileScreen(
                         else
                             Text(
                                 text = stringResource(R.string.logout),
+                                color = MaterialTheme.colorScheme.surfaceTint,
                                 modifier = Modifier.padding(vertical = 10.dp)
                             )
                     }
@@ -381,7 +385,7 @@ fun ProfileScreen(
                         singleLine = true
                     )
 
-                    ElevatedButton(
+                    Button(
                         onClick = {
                             viewModel.modifyCurrentUser(
                                 firstName,
@@ -399,11 +403,12 @@ fun ProfileScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.save_changes),
+                            color = MaterialTheme.colorScheme.surfaceTint,
                             modifier = Modifier.padding(vertical = 10.dp)
                         )
                     }
 
-                    ElevatedButton(
+                    Button(
                         onClick = {
                             firstName = user.firstName
                             lastName = user.lastName
@@ -419,6 +424,7 @@ fun ProfileScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.cancel),
+                            color = MaterialTheme.colorScheme.surfaceTint,
                             modifier = Modifier.padding(vertical = 10.dp)
                         )
                     }
@@ -435,33 +441,3 @@ fun ProfileScreen(
         }
     }
 }
-
-//@Preview(showSystemUi = true, locale = "es")
-//@Composable
-//fun ProfileScreenPreview() {
-//    VFitTheme {
-//        ProfileScreen(
-//            //text = R.string.profile
-//        )
-//    }
-//}
-//
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=1280dp,height=800dp,dpi=240")
-//@Composable
-//fun ProfileScreenPreview1() {
-//    VFitTheme {
-//        ProfileScreen(
-//            //text = R.string.profile
-//        )
-//    }
-//}
-//
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview(showSystemUi = true, locale = "es", device = "spec:width=830dp,height=490dp")
-//@Composable
-//fun ProfileScreenPreview2() {
-//    VFitTheme {
-//        ProfileScreen()
-//    }
-//}

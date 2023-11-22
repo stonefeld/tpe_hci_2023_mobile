@@ -1281,7 +1281,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                             text = "${exercise.repetitions} reps | ${exercise.duration}’’",
                             fontSize = 25.sp,
                             fontFamily = FontFamily.Default,
-                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            color = MaterialTheme.colorScheme.background,
                             textAlign = TextAlign.Center
                         )
                     } else if (exercise.repetitions > 0) {
@@ -1289,7 +1289,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                             text = "${exercise.repetitions} reps",
                             fontSize = 25.sp,
                             fontFamily = FontFamily.Default,
-                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            color = MaterialTheme.colorScheme.background,
                             textAlign = TextAlign.Center
                         )
                     } else {
@@ -1297,7 +1297,7 @@ fun AddNextExercise(exercise: CycleExercise?) {
                             text = "${exercise.duration}’’",
                             fontSize = 25.sp,
                             fontFamily = FontFamily.Default,
-                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            color = MaterialTheme.colorScheme.background,
                             textAlign = TextAlign.Center
                         )
                     }

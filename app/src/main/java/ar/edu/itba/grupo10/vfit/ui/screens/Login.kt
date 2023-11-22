@@ -16,10 +16,12 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -164,7 +166,7 @@ fun LoginScreen(
             )
         }
 
-        ElevatedButton(
+        Button(
             onClick = { viewModel.login(username, password, onLoginSuccess) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -176,10 +178,11 @@ fun LoginScreen(
             else
                 Text(
                     text = stringResource(R.string.login),
+                    color = MaterialTheme.colorScheme.surfaceTint,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
         }
-        ElevatedButton(
+        Button(
             onClick = {
                 navController.navigate(Screen.Register.route)
             },
@@ -190,6 +193,7 @@ fun LoginScreen(
         ) {
             Text(
                 text = stringResource(R.string.create_account),
+                color = MaterialTheme.colorScheme.surfaceTint,
                 modifier = Modifier.padding(vertical = 10.dp)
             )
         }
