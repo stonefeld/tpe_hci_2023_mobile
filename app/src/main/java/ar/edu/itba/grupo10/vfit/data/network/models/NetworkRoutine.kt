@@ -14,7 +14,7 @@ data class NetworkRoutine(
     @SerializedName("date") var date: Date? = null,
     @SerializedName("score") var score: Int? = null,
     @SerializedName("category") var category: List<Unit> = arrayListOf(),
-    @SerializedName("user") var user: User,
+    @SerializedName("user") var user: User? = null,
     @SerializedName("metadata") var metadata: NetworkMetadata? = null
 ) {
 

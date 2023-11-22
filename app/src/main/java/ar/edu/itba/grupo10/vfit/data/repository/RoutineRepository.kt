@@ -13,6 +13,9 @@ class RoutineRepository(
     private val routinesMutex = Mutex()
     private var routines: List<Routine> = emptyList()
 
+    private val myRoutinesMutex = Mutex()
+    private var myRoutines: List<Routine> = emptyList()
+
     private val favoritesMutex = Mutex()
     private var favorites: List<Routine> = emptyList()
 
@@ -51,6 +54,18 @@ class RoutineRepository(
         routinesMutex.withLock {
             this.routines = emptyList()
         }
+    }
+
+    suspend fun getMyRoutines(refresh: Boolean = false, args: Map<String, String>): List<Routine> {
+        if (refresh || myRoutines.isEmpty()) {
+            val result = remoteDataSource.getMyRoutines(args)
+            myRoutinesMutex.withLock {
+                println(result)
+                this.myRoutines = result.content.map { it.asModel() }
+                println(this.myRoutines)
+            }
+        }
+        return myRoutinesMutex.withLock { this.myRoutines }
     }
 
     suspend fun getFavorites(refresh: Boolean = false): List<Routine> {

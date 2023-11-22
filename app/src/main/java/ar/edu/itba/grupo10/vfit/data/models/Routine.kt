@@ -10,7 +10,7 @@ data class Routine(
     var detail: String,
     var difficulty: String,
     var isPublic: Boolean,
-    var user: User,
+    var user: User?,
     var date: Date?,
     var score: Int?,
     var metadata: NetworkMetadata?

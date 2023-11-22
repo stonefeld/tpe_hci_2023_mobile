@@ -33,6 +33,9 @@ interface ApiRoutineService {
     @DELETE("routines/{routineId}")
     suspend fun deleteRoutine(@Path("routineId") routineId: Int): Response<NetworkRoutine>
 
+    @GET("users/current/routines?size=100")
+    suspend fun getMyRoutines(@QueryMap args: Map<String, String>): Response<NetworkPagedContent<NetworkRoutine>>
+
     @GET("favourites?size=100")
     suspend fun getFavorites(): Response<NetworkPagedContent<NetworkRoutine>>
 

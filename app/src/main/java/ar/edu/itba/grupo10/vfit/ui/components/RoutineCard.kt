@@ -125,7 +125,9 @@ fun RoutineCard(
                             stringResource(if (data.isPublic) R.string.public_routine else R.string.private_routine),
                             if (data.isPublic) Icons.Default.LockOpen else Icons.Default.Lock
                         )
-                        Chip(data.user.username, Icons.Default.AccountCircle)
+                        data.user?.let {
+                            Chip(it.username, Icons.Default.AccountCircle)
+                        }
                     }
                 }
             }

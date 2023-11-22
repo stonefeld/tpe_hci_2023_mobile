@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
@@ -95,15 +94,9 @@ fun SearchScreen(
     var openDialog by rememberSaveable { mutableStateOf(false) }
 
     val filterByCriteria = mapOf(
-        R.string.my_routines to {
-            args["userId"] = uiState.currentUser?.id.toString()
-            viewModel.getRoutines(args)
-        },
+        R.string.my_routines to { viewModel.getMyRoutines(args) },
         R.string.liked_routines to { viewModel.getFavorites() },
-        R.string.all_routines to {
-            args.remove("userId")
-            viewModel.getRoutines(args)
-        }
+        R.string.all_routines to { viewModel.getRoutines(args) }
     )
     val orderByCriteria = mapOf(
         Pair(R.string.creation_date, "asc") to "date",
@@ -123,12 +116,8 @@ fun SearchScreen(
 
     OnLifeCycleEvent { _, event ->
         when (event) {
-            Lifecycle.Event.ON_CREATE -> {
-                viewModel.getFavorites()
-                viewModel.getCurrentUserFull()
-            }
-
-            Lifecycle.Event.ON_START -> {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.getMyRoutines(args)
                 viewModel.getFavorites()
                 viewModel.getRoutines(args)
             }
@@ -150,10 +139,10 @@ fun SearchScreen(
             onValueChange = {
                 search = it
                 args["search"] = search
-                if (search.isEmpty())
+                if (search.length < 3)
                     args.remove("search")
-                if (search.length >= 3)
-                    viewModel.getRoutines(args)
+                viewModel.getMyRoutines(args)
+                viewModel.getRoutines(args)
             },
             placeholder = { Text(stringResource(R.string.search)) },
             singleLine = true,
@@ -162,6 +151,7 @@ fun SearchScreen(
                     IconButton(onClick = {
                         search = ""
                         args.remove("search")
+                        viewModel.getMyRoutines(args)
                         viewModel.getRoutines(args)
                     }) {
                         Icon(Icons.Filled.Cancel, contentDescription = null)
@@ -205,6 +195,7 @@ fun SearchScreen(
         SwipeRefresh(
             state = rememberSwipeRefreshState(viewModel.uiState.isLoading),
             onRefresh = {
+                viewModel.getMyRoutines(args)
                 viewModel.getFavorites()
                 viewModel.getRoutines(args)
             },
@@ -223,11 +214,11 @@ fun SearchScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        val routines =
-                            if (filterBy == R.string.liked_routines)
-                                uiState.favorites.orEmpty()
-                            else
-                                uiState.routines.orEmpty()
+                        val routines = when (filterBy) {
+                            R.string.my_routines -> uiState.myRoutines.orEmpty()
+                            R.string.liked_routines -> uiState.favorites.orEmpty()
+                            else -> uiState.routines.orEmpty()
+                        }
 
                         routines.let {
                             items(
@@ -370,15 +361,18 @@ fun RoutineItem(routine: Routine, navController: NavHostController) {
                     }
                     Row {
                         Chip(
-                            if(routine.isPublic)
+                            if (routine.isPublic)
                                 stringResource(R.string.public_routine)
                             else
                                 stringResource(R.string.private_routine),
-                            if(routine.isPublic)
+                            if (routine.isPublic)
                                 Icons.Default.LockOpen
                             else
-                                Icons.Default.Lock)
-                        Chip(routine.user.username, Icons.Default.Person)
+                                Icons.Default.Lock
+                        )
+                        routine.user?.let {
+                            Chip(it.username, Icons.Default.Person)
+                        }
                     }
                 }
             }
