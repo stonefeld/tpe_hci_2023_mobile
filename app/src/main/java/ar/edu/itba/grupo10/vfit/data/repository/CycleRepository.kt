@@ -2,7 +2,6 @@ package ar.edu.itba.grupo10.vfit.data.repository
 
 import ar.edu.itba.grupo10.vfit.MainApplication
 import ar.edu.itba.grupo10.vfit.data.models.Cycle
-import ar.edu.itba.grupo10.vfit.data.network.CycleExerciseRemoteDataSource
 import ar.edu.itba.grupo10.vfit.data.network.CycleRemoteDataSource
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

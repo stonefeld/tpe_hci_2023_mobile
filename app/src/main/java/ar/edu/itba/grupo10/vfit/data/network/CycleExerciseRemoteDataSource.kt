@@ -20,15 +20,29 @@ class CycleExerciseRemoteDataSource(
         }
     }
 
-    suspend fun createCycleExercise(cycleId: Int, cycleExercise: NetworkCycleExercise): NetworkCycleExercise {
+    suspend fun createCycleExercise(
+        cycleId: Int,
+        cycleExercise: NetworkCycleExercise
+    ): NetworkCycleExercise {
         return handleApiResponse {
-            apiCycleExerciseService.createCycleExercise(cycleId, cycleExercise.exercise?.id!!, cycleExercise)
+            apiCycleExerciseService.createCycleExercise(
+                cycleId,
+                cycleExercise.exercise?.id!!,
+                cycleExercise
+            )
         }
     }
 
-    suspend fun modifyCycleExercise(cycleId: Int, cycleExercise: NetworkCycleExercise): NetworkCycleExercise {
+    suspend fun modifyCycleExercise(
+        cycleId: Int,
+        cycleExercise: NetworkCycleExercise
+    ): NetworkCycleExercise {
         return handleApiResponse {
-            apiCycleExerciseService.modifyCycleExercise(cycleId, cycleExercise.exercise?.id!!, cycleExercise)
+            apiCycleExerciseService.modifyCycleExercise(
+                cycleId,
+                cycleExercise.exercise?.id!!,
+                cycleExercise
+            )
         }
     }
 

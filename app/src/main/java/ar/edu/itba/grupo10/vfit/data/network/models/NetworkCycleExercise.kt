@@ -1,7 +1,6 @@
 package ar.edu.itba.grupo10.vfit.data.network.models
 
 import ar.edu.itba.grupo10.vfit.data.models.CycleExercise
-import ar.edu.itba.grupo10.vfit.data.network.models.NetworkExercise
 import com.google.gson.annotations.SerializedName
 
 data class NetworkCycleExercise(

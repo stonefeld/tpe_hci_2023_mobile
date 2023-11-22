@@ -17,7 +17,6 @@ import ar.edu.itba.grupo10.vfit.data.repository.ExerciseRepository
 import ar.edu.itba.grupo10.vfit.data.repository.RoutineRepository
 import ar.edu.itba.grupo10.vfit.data.repository.UserRepository
 import ar.edu.itba.grupo10.vfit.utils.SessionManager
-import com.squareup.wire.internal.copyOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -156,10 +155,11 @@ class MainViewModel(
         }
     )
 
-    fun getMyRoutines(args: Map<String, String> = mapOf("direction" to "desc")) = runOnViewModelScope(
-        { routineRepository.getMyRoutines(true, args) },
-        { state, response -> state.copy(myRoutines = response) }
-    )
+    fun getMyRoutines(args: Map<String, String> = mapOf("direction" to "desc")) =
+        runOnViewModelScope(
+            { routineRepository.getMyRoutines(true, args) },
+            { state, response -> state.copy(myRoutines = response) }
+        )
 
     fun getFavorites() = runOnViewModelScope(
         { routineRepository.getFavorites(true) },

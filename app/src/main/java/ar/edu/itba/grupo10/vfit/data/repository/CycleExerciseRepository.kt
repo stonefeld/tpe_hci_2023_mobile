@@ -28,7 +28,8 @@ class CycleExerciseRepository(
     }
 
     suspend fun createCycleExercise(cycleId: Int, cycleExercise: CycleExercise): CycleExercise {
-        val ret = remoteDataSource.createCycleExercise(cycleId, cycleExercise.asNetworkModel()).asModel()
+        val ret =
+            remoteDataSource.createCycleExercise(cycleId, cycleExercise.asNetworkModel()).asModel()
         cycleExercisesMutex.withLock {
             this.cycleExercises = emptyList()
         }
@@ -36,7 +37,8 @@ class CycleExerciseRepository(
     }
 
     suspend fun modifyCycleExercise(cycleId: Int, cycleExercise: CycleExercise): CycleExercise {
-        val ret = remoteDataSource.modifyCycleExercise(cycleId, cycleExercise.asNetworkModel()).asModel()
+        val ret =
+            remoteDataSource.modifyCycleExercise(cycleId, cycleExercise.asNetworkModel()).asModel()
         cycleExercisesMutex.withLock {
             this.cycleExercises = emptyList()
         }

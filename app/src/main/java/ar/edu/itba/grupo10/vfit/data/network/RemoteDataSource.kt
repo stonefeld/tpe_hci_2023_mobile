@@ -23,12 +23,12 @@ abstract class RemoteDataSource {
                 val gson = Gson()
                 val error = gson.fromJson<NetworkError>(
                     it.string(),
-                    object: TypeToken<NetworkError?>() {}.type
+                    object : TypeToken<NetworkError?>() {}.type
                 )
                 throw DataSourceException(error.code, error.description, error.details)
             }
             throw DataSourceException(UNEXPECTED_ERROR_CODE, "Missing error", null)
-        } catch(e: DataSourceException) {
+        } catch (e: DataSourceException) {
             throw e
         } catch (e: IOException) {
             throw DataSourceException(

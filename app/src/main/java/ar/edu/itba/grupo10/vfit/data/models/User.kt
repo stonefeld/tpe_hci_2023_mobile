@@ -1,7 +1,6 @@
 package ar.edu.itba.grupo10.vfit.data.models
 
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkUser
-import java.util.Date
 
 data class User(
     var id: Int?,

@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -21,24 +20,22 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import ar.edu.itba.grupo10.vfit.R
 import ar.edu.itba.grupo10.vfit.ui.screens.ExecuteRoutineScreen
-import ar.edu.itba.grupo10.vfit.ui.screens.RoutineScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.HomeScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.LoginScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.ProfileScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.RegisterScreen
+import ar.edu.itba.grupo10.vfit.ui.screens.RoutineScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.SearchScreen
-import ar.edu.itba.grupo10.vfit.ui.screens.SettingsScreen
 import ar.edu.itba.grupo10.vfit.ui.screens.VerifyAccountScreen
 
 sealed class Screen(val route: String, @StringRes val resourceId: Int?, val icon: ImageVector?) {
     object Home : Screen("home", R.string.home, Icons.Default.Home)
     object Routine : Screen("routine/{routine_id}", R.string.routines, Icons.Default.FitnessCenter)
     object Search : Screen("search", R.string.search, Icons.Default.Search)
+    object ExecuteRoutine :
+        Screen("routine/{routine_id}/execute", R.string.execute, Icons.Default.FitnessCenter)
 
-    object ExecuteRoutine : Screen("routine/{routine_id}/execute", R.string.execute, Icons.Default.FitnessCenter)
     object Profile : Screen("profile", R.string.profile, Icons.Default.Person)
-    object Settings : Screen("settings", R.string.settings, Icons.Default.Settings)
-
     object Login : Screen("login", null, null)
     object Register : Screen("register", null, null)
     object Verify : Screen("verify", null, null)
@@ -108,7 +105,6 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController, appState: MainAp
                 }
             }
         }
-        composable(Screen.Settings.route) { SettingsScreen() }
     }
 }
 

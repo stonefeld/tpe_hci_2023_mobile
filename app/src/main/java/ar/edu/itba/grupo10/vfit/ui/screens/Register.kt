@@ -23,7 +23,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -220,7 +219,12 @@ fun RegisterScreen(
                             .menuAnchor()
                             .fillMaxWidth()
                             .padding(start = 4.dp),
-                        leadingIcon = { Icon(Icons.Default.Transgender, contentDescription = null) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Transgender,
+                                contentDescription = null
+                            )
+                        },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     )
 

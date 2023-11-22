@@ -1,6 +1,5 @@
 package ar.edu.itba.grupo10.vfit.data.network.api
 
-import ar.edu.itba.grupo10.vfit.data.models.Routine
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkPagedContent
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkReview
 import ar.edu.itba.grupo10.vfit.data.network.models.NetworkRoutine

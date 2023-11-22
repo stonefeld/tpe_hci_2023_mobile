@@ -30,7 +30,16 @@ class UserRepository(
         gender: String,
         avatarUrl: String
     ) {
-        remoteDataSource.register(username, email, password, firstName, lastName, phone, gender, avatarUrl)
+        remoteDataSource.register(
+            username,
+            email,
+            password,
+            firstName,
+            lastName,
+            phone,
+            gender,
+            avatarUrl
+        )
     }
 
     suspend fun verifyAccount(email: String, code: String) {

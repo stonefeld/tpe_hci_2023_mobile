@@ -15,14 +15,12 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -210,6 +208,7 @@ fun HomeScreen(
                                 Text(
                                     text = stringResource(R.string.execute_routines_desc),
                                     fontSize = 16.sp,
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         } else {
@@ -236,7 +235,8 @@ fun HomeScreen(
                                 ) {
                                     Text(
                                         text = stringResource(R.string.execute_routines_desc),
-                                        fontSize = 16.sp,
+                                        fontSize = 20.sp,
+                                        textAlign = TextAlign.Center
                                     )
                                 }
                                 Column(

@@ -2,7 +2,6 @@ package ar.edu.itba.grupo10.vfit.data.network.models
 
 import ar.edu.itba.grupo10.vfit.data.models.User
 import com.google.gson.annotations.SerializedName
-import java.util.Date
 
 data class NetworkUser(
     @SerializedName("id") var id: Int?,
