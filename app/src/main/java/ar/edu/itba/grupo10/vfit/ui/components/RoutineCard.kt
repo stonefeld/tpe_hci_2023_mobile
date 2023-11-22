@@ -1,6 +1,7 @@
 package ar.edu.itba.grupo10.vfit.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
@@ -32,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -62,17 +65,18 @@ fun RoutineCard(
         border = BorderStroke(color = MaterialTheme.colorScheme.primary, width = 3.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
-        modifier = modifier
+        modifier = Modifier
             .aspectRatio(1f)
+            .padding(horizontal = 5.dp)
             .size(100.dp),
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .padding(8.dp)
                 .fillMaxSize()
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight(1f),
+                modifier = Modifier.fillMaxHeight().padding(top = 4.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -88,8 +92,10 @@ fun RoutineCard(
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .fillMaxSize(0.45f)
                             .padding(bottom = 5.dp)
+                            .fillMaxSize(0.4f)
+                            .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(20))
+                            .clip(RoundedCornerShape(20))
                     )
                     Text(
                         text = data.name,

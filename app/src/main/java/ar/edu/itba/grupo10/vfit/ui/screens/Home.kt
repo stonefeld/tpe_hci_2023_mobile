@@ -155,8 +155,7 @@ fun HomeScreen(
                         modifier = Modifier
                             .clickable {
                                 navController.navigate("routine/${list[index].id}")
-                            }
-                            .padding(horizontal = 5.dp),
+                            },
                         data = list[index]
                     )
                 }
