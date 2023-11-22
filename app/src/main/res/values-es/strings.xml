@@ -8,8 +8,8 @@
     <string name="execute">Ejecutar rutina</string>
     <string name="welcome_back">Bienvenido!</string>
     <string name="login">Ingresar</string>
-    <string name="home_title">¿Listo para entrenar?</string>
-    <string name="home_subtitle">¡Estás a punto de alcanzar tu objetivo semanal!</string>
+    <string name="home_title">V-Fit</string>
+    <string name="home_subtitle">¡Empiece a hacer ejercicio ahora mismo!</string>
     <string name="register">Registrarse</string>
     <string name="welcome">Bienvenido!</string>
     <string name="enter_username">Nombre de usuario</string>
@@ -57,4 +57,7 @@
     <string name="review">"Enviar puntuación: "</string>
     <string name="no_exercises">Error: No hay ejercicios en el ciclo</string>
     <string name="no_cycles">Error: No hay ciclos en la rutina</string>
+    <string name="latest_routines">Últimas Rutinas</string>
+    <string name="execute_routines_title">¡Dos formas únicas de hacer ejercicio!</string>
+    <string name="execute_routines_desc">En el modo detallado, puede ver el próximo ejercicio y varios otros detalles, mientras que en el modo no detallado solo puede ver el cronómetro.</string>
 </resources>

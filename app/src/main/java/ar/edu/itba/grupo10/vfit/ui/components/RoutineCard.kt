@@ -82,26 +82,9 @@ fun RoutineCard(
                 .padding(8.dp)
                 .fillMaxSize()
         ) {
-            FloatingActionButton(
-                modifier = Modifier.align(alignment = Alignment.TopEnd),
-                onClick = {
-                    liked = !liked
-                    if (liked)
-                        viewModel.addFavorite(data.id!!)
-                    else
-                        viewModel.removeFavorite(data.id!!)
-                },
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = null
-                )
-            }
 
             Column(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight(1f),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -124,11 +107,14 @@ fun RoutineCard(
                         text = data.name,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(5.dp)
                     )
                 }
 
-                Column {
+                Column(
+                    modifier = Modifier.padding(10.dp)
+                ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(1f),
                         verticalAlignment = Alignment.CenterVertically,
@@ -268,6 +254,23 @@ fun RoutineCard(
                         }
                     }
                 }
+            }
+            FloatingActionButton(
+                modifier = Modifier.align(alignment = Alignment.TopEnd),
+                onClick = {
+                    liked = !liked
+                    if (liked)
+                        viewModel.addFavorite(data.id!!)
+                    else
+                        viewModel.removeFavorite(data.id!!)
+                },
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = if (liked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = null
+                )
             }
         }
     }
