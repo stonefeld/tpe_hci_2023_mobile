@@ -248,7 +248,7 @@ fun ProfileScreen(
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(user.avatarUrl?.ifEmpty { R.drawable.guest })
+                                .data(user.avatarUrl.ifEmpty { R.drawable.guest })
                                 .crossfade(true).build(),
                             placeholder = painterResource(R.drawable.guest),
                             contentDescription = null,
